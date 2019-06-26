@@ -1,0 +1,40 @@
+{
+    "name": "js-verify",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "jest",
+        "dev": "node_modules/.bin/rollup -c ./build/rollup.bundle.config.js -w",
+        "build": "node_modules/.bin/rollup -c ./build/rollup.bundle.config.js"
+    },
+    "author": "gintamamadao",
+    "license": "MIT",
+    "repository": {
+        "url": "https://github.com/gintamamadao/js-verify"
+    },
+    "keywords": [
+        "js",
+        "verify"
+    ],
+    "dependencies": {
+        "is-function-x": "^3.3.0",
+        "is-integer": "^1.0.7",
+        "is-number": "^7.0.0",
+        "isarray": "^2.0.4",
+        "isobject": "^4.0.0"
+    },
+    "devDependencies": {
+        "babel-runtime": "^6.26.0",
+        "@babel/core": "^7.4.5",
+        "@babel/plugin-external-helpers": "^7.2.0",
+        "@babel/plugin-transform-runtime": "^7.4.4",
+        "@babel/preset-env": "^7.4.5",
+        "jest": "^24.8.0",
+        "rollup": "^1.14.3",
+        "rollup-plugin-babel": "^4.3.2",
+        "rollup-plugin-commonjs": "^10.0.0",
+        "rollup-plugin-node-resolve": "^5.0.1",
+        "rollup-plugin-uglify-es": "0.0.1"
+    }
+}

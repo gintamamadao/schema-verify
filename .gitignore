@@ -1,0 +1,13 @@
+*.sublime-workspace
+.idea/
+.DS_Store
+node_modules
+logs/
+*.rb
+.ftpconfig
+.ftpignore
+*.sh
+npm-debug.log
+.vscode/
+log/
+access.log
