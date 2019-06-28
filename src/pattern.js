@@ -1,4 +1,4 @@
-const type = require("./type.js");
+const Type = require("./type.js");
 
 const phoneReg = new RegExp(/^1\d{10}$/);
 const emailReg = new RegExp(
@@ -15,13 +15,13 @@ const commonTimeReg = new RegExp(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?/);
 const Pattern = {
     phone: {
         is(v) {
-            return type.string.isNotEmpty(v) && phoneReg.test(v);
+            return Type.string.isNotEmpty(v) && phoneReg.test(v);
         }
     },
     uri: {
         is(v) {
             try {
-                return type.string.isNotEmpty(v) && type.object.is(new URL(v));
+                return Type.string.isNotEmpty(v) && Type.object.is(new URL(v));
             } catch (e) {
                 return false;
             }
@@ -29,27 +29,36 @@ const Pattern = {
     },
     email: {
         is(v) {
-            return type.string.isNotEmpty(v) && emailReg.test(v);
+            return Type.string.isNotEmpty(v) && emailReg.test(v);
         }
     },
     color: {
         is(v) {
-            return type.string.isNotEmpty(v) && colorReg.test(v);
+            return Type.string.isNotEmpty(v) && colorReg.test(v);
         }
     },
     version: {
         is(v) {
-            return type.string.isNotEmpty(v) && versionReg.test(v);
+            return Type.string.isNotEmpty(v) && versionReg.test(v);
         }
     },
     sign: {
         is(v) {
-            return type.string.isNotEmpty(v) && signReg.test(v);
+            return Type.string.isNotEmpty(v) && signReg.test(v);
         }
     },
     numStr: {
         is(v) {
-            return type.string.isNotEmpty(v) && numStrReg.test(v);
+            return Type.string.isNotEmpty(v) && numStrReg.test(v);
+        }
+    },
+    jsonStr: {
+        is(v) {
+            try {
+                return Type.string.isNotEmpty(v) && JSON.parse(v);
+            } catch (e) {
+                return false;
+            }
         }
     },
     time: {
@@ -57,7 +66,7 @@ const Pattern = {
             try {
                 const timeInfo = new Date(v);
                 return (
-                    type.object.is(timeInfo) &&
+                    Type.object.is(timeInfo) &&
                     timeInfo.toString() !== "Invalid Date"
                 );
             } catch (e) {
@@ -65,7 +74,7 @@ const Pattern = {
             }
         },
         isCommon(v) {
-            return type.string.isNotEmpty(v) && commonTimeReg.test(v);
+            return Type.string.isNotEmpty(v) && commonTimeReg.test(v);
         }
     }
 };

@@ -279,3 +279,23 @@ test(`undefinedNull:isNot`, () => {
 test(`undefinedNull:isNot`, () => {
     expect(type.undefinedNull.isNot(undefined)).toBeFalsy();
 });
+
+test(`boolean:is`, () => {
+    expect(type.boolean.is(undefined)).toBeFalsy();
+});
+
+test(`boolean:is`, () => {
+    expect(type.boolean.is(false)).toBeTruthy();
+});
+
+test(`boolean:is`, () => {
+    expect(type.boolean.is(true)).toBeTruthy();
+});
+
+test(`boolean:isNot`, () => {
+    expect(type.boolean.isNot(undefined)).toBeTruthy();
+});
+
+test(`boolean:isNot`, () => {
+    expect(type.boolean.isNot(true)).toBeFalsy();
+});

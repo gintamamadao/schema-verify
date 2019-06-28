@@ -47,6 +47,14 @@ const Type = {
             return isnumber(v) ? v : 0;
         }
     },
+    boolean: {
+        is(v) {
+            return v === true || v === false;
+        },
+        isNot(v) {
+            return v !== true && v !== false;
+        }
+    },
     array: {
         is(v) {
             return isarray(v);
