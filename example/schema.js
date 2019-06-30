@@ -14,6 +14,16 @@ const info = {
             type: String,
             pattern: "email",
             length: { min: 3, max: 32 },
+            hint: {
+                type: "Title must be a string.",
+                required: "Title is required."
+            }
+        },
+        str: {
+            index: "email",
+            required: true,
+            type: String,
+            length: { min: 3, max: 32 },
             enum: ["cat", "dog", "cow"],
             hint: {
                 type: "Title must be a string.",
@@ -28,7 +38,7 @@ const info = {
             integer: true,
             natural: true,
             enum: [1, 2],
-            custom: () => {},
+            custom: () => true,
             hint: {}
         },
         obj: {
@@ -86,10 +96,17 @@ const aaa = new Schema(info);
 const bbb = {
     email: "abc@abc.abc",
     no: 1,
+    str: "cat",
     obj: {
         version: "v1.0"
     },
-    arr: [""]
+    arr: [
+        {
+            version: "v1.0"
+        },
+        "b",
+        "d"
+    ]
 };
 
 aaa.verify(bbb, true);

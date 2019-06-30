@@ -2,17 +2,9 @@ const verify = require("./verify.js");
 const Type = require("./type.js");
 const ErrorMsg = require("./error.js");
 const Pattern = require("./pattern.js");
+const { COMMON_METHODS, TYPE_METHODS } = require("./constant.js");
 
 const PATTERNS = Object.keys(Pattern);
-
-const COMMON_METHODS = ["index", "required", "type", "custom", "hint"];
-
-const TYPE_METHODS = {
-    string: ["pattern", "length", "enum"],
-    number: ["range", "integer", "natural", "enum"],
-    object: ["restrict", "props"],
-    array: ["elements", "length"]
-};
 
 const schemaCheck = function(info) {
     if (Type.object.isNot(info)) {
@@ -97,7 +89,10 @@ const stringCheck = function(info) {
         if (Type.object.isEmpty(length)) {
             throw new Error(ErrorMsg.emptyLengthInfo);
         }
-        if (Type.number.isNot(length.min) && Type.number.isNot(length.max)) {
+        if (
+            !Type.number.isNatural(length.min) &&
+            !Type.number.isNatural(length.max)
+        ) {
             throw new Error(ErrorMsg.emptyLengthInfo);
         }
         length.min = +length.min;
@@ -196,7 +191,10 @@ const arrayCheck = function(info) {
         if (Type.object.isEmpty(length)) {
             throw new Error(ErrorMsg.emptyLengthInfo);
         }
-        if (Type.number.isNot(length.min) && Type.number.isNot(length.max)) {
+        if (
+            !Type.number.isNatural(length.min) &&
+            !Type.number.isNatural(length.max)
+        ) {
             throw new Error(ErrorMsg.emptyLengthInfo);
         }
         length.min = +length.min;

@@ -1,6 +1,9 @@
 const Type = require("./type.js");
 const Pattern = require("./pattern.js");
 const ErrorMsg = require("./error.js");
+const { COMMON_METHODS, TYPE_METHODS } = require("./constant.js");
+
+const CHECK_METHODS = COMMON_METHODS.slice(0, COMMON_METHODS.length - 2);
 
 const typeVerify = (data, claim, hint) => {
     let isPass = false;
@@ -50,6 +53,15 @@ const propsVerify = (data, claimsMap) => {
         for (const key in claimsMap) {
             const propClaims = claimsMap[key];
             const propData = data[key];
+            const required = propClaims.required;
+            const isRequiredPass = requiredVerify(
+                propData,
+                required,
+                `属性 ${key}: 缺少数据`
+            );
+            if (isRequiredPass) {
+                continue;
+            }
             try {
                 verify(propData, propClaims);
             } catch (e) {
@@ -63,6 +75,17 @@ const propsVerify = (data, claimsMap) => {
     } catch (e) {
         throw e;
     }
+};
+
+const requiredVerify = (data, claim, hint) => {
+    if (Type.undefinedNull.is(data)) {
+        if (claim) {
+            throw new Error(hint);
+        } else {
+            return true;
+        }
+    }
+    return false;
 };
 
 const patternVerify = (data, claim, hint) => {
@@ -79,10 +102,95 @@ const patternVerify = (data, claim, hint) => {
     return true;
 };
 
+const lengthVerify = (data, claim, hint) => {
+    const min = claim.min;
+    const max = claim.max;
+    const length = data.length;
+    if (Type.number.is(min) && length < min) {
+        throw new Error(
+            ErrorMsg.verifyErrorHint("length", hint || `小于最小长度`)
+        );
+    }
+    if (Type.number.is(max) && length > max) {
+        throw new Error(
+            ErrorMsg.verifyErrorHint("length", hint || `大于最大长度`)
+        );
+    }
+    return true;
+};
+
+const enumVerify = (data, claim, hint) => {
+    if (!claim.includes(data)) {
+        throw new Error(ErrorMsg.verifyErrorHint("enum", hint || `非有效值`));
+    }
+    return true;
+};
+
+const elementsVerify = (data, claim) => {
+    const verifyItem = (itemData, itemClaim, index) => {
+        const required = itemClaim.required;
+        const isRequiredPass = requiredVerify(
+            itemData,
+            required,
+            `第 ${index} 项: 缺少数据`
+        );
+        if (isRequiredPass) {
+            return;
+        }
+        try {
+            verify(itemData, itemClaim);
+        } catch (e) {
+            throw new Error(`第 ${index} 项 ${key}: ${e.message}`);
+        }
+    };
+    const fn = () => {
+        const checkedMap = {};
+        for (const itemClaim of claim) {
+            const index = itemClaim.index;
+            if (Type.number.isNatural(index)) {
+                const itemData = data[index];
+                verifyItem(itemData, itemClaim, index);
+                checkedMap[index] = true;
+            } else {
+                for (let i = 0; i < data.length; i++) {
+                    if (!checkedMap[i]) {
+                        const itemData = data[i];
+                        verifyItem(itemData, itemClaim, i);
+                        checkedMap[i] = true;
+                    }
+                }
+            }
+        }
+    };
+    try {
+        fn();
+    } catch (e) {
+        throw e;
+    }
+};
+
+const customVerify = (data, claim, hint) => {
+    try {
+        const isPass = claim(data);
+        if (!isPass) {
+            throw new Error(hint || "未知");
+        }
+    } catch (e) {
+        throw new Error(ErrorMsg.verifyErrorHint("claim", `${e.message}`));
+    }
+    return true;
+};
+
 const verify = (data, claims) => {
     const fn = () => {
         const hint = Type.object.safe(claims.hint);
-        for (const claimKey in claims) {
+        const type = claims.type;
+        const claimMethods = [].concat(CHECK_METHODS, TYPE_METHODS[type]);
+        claimMethods.push("custom");
+        for (const claimKey of claimMethods) {
+            if (!claims.hasOwnProperty(claimKey)) {
+                continue;
+            }
             const claimValue = claims[claimKey];
             const propsClaims = claims.props;
             const claimHint = hint[claimKey];
@@ -92,11 +200,24 @@ const verify = (data, claims) => {
                     break;
                 case "restrict":
                     restrictVerify(data, claimValue, propsClaims, claimHint);
+                    break;
                 case "pattern":
                     patternVerify(data, claimValue, claimHint);
                     break;
+                case "length":
+                    lengthVerify(data, claimValue, claimHint);
+                    break;
+                case "enum":
+                    enumVerify(data, claimValue, claimHint);
+                    break;
+                case "elements":
+                    elementsVerify(data, claimValue);
+                    break;
                 case "props":
-                    propsVerify(data, propsClaims);
+                    propsVerify(data, claimValue);
+                    break;
+                case "custom":
+                    customVerify(data, claimValue, claimHint);
                     break;
             }
         }
