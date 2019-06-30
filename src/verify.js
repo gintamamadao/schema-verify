@@ -140,7 +140,7 @@ const elementsVerify = (data, claim) => {
         try {
             verify(itemData, itemClaim);
         } catch (e) {
-            throw new Error(`第 ${index} 项 ${key}: ${e.message}`);
+            throw new Error(`第 ${index} 项: ${e.message}`);
         }
     };
     const fn = () => {

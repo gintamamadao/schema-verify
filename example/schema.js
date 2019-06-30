@@ -81,6 +81,11 @@ const info = {
                         type: "Title must be a string.",
                         required: "Title is required."
                     }
+                },
+                {
+                    type: String,
+                    length: { min: 1, max: 32 },
+                    enum: ["b", "d", "cow"]
                 }
             ],
             hint: {
@@ -105,7 +110,7 @@ const bbb = {
             version: "v1.0"
         },
         "b",
-        "d"
+        "cow"
     ]
 };
 
