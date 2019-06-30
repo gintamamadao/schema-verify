@@ -1,301 +1,301 @@
-const { type } = require("../dist/js-verify.js");
+const { Type } = require("../dist/js-verify.js");
 
 test(`string:is`, () => {
-    expect(type.string.is("")).toBeTruthy();
+    expect(Type.string.is("")).toBeTruthy();
 });
 
 test(`string:is`, () => {
-    expect(type.string.is("a")).toBeTruthy();
+    expect(Type.string.is("a")).toBeTruthy();
 });
 
 test(`string:is`, () => {
-    expect(type.string.is(null)).toBeFalsy();
+    expect(Type.string.is(null)).toBeFalsy();
 });
 
 test(`string:is`, () => {
-    expect(type.string.is(0)).toBeFalsy();
+    expect(Type.string.is(0)).toBeFalsy();
 });
 
 test(`string:isNot`, () => {
-    expect(type.string.isNot(null)).toBeTruthy();
+    expect(Type.string.isNot(null)).toBeTruthy();
 });
 
 test(`string:isNot`, () => {
-    expect(type.string.isNot("")).toBeFalsy();
+    expect(Type.string.isNot("")).toBeFalsy();
 });
 
 test(`string:isNot`, () => {
-    expect(type.string.isNot(0)).toBeTruthy();
+    expect(Type.string.isNot(0)).toBeTruthy();
 });
 
 test(`string:isEmpty`, () => {
-    expect(type.string.isEmpty("")).toBeTruthy();
+    expect(Type.string.isEmpty("")).toBeTruthy();
 });
 
 test(`string:isEmpty`, () => {
-    expect(type.string.isEmpty("a")).toBeFalsy();
+    expect(Type.string.isEmpty("a")).toBeFalsy();
 });
 
 test(`string:isNotEmpty`, () => {
-    expect(type.string.isNotEmpty("a")).toBeTruthy();
+    expect(Type.string.isNotEmpty("a")).toBeTruthy();
 });
 
 test(`string:isNotEmpty`, () => {
-    expect(type.string.isNotEmpty("")).toBeFalsy();
+    expect(Type.string.isNotEmpty("")).toBeFalsy();
 });
 
 test(`string:safe`, () => {
-    expect(type.string.safe(null)).toEqual("");
+    expect(Type.string.safe(null)).toEqual("");
 });
 
 test(`string:safe`, () => {
-    expect(type.string.safe("a")).toEqual("a");
+    expect(Type.string.safe("a")).toEqual("a");
 });
 
 test(`number:is`, () => {
-    expect(type.number.is("a")).toBeFalsy();
+    expect(Type.number.is("a")).toBeFalsy();
 });
 
 test(`number:is`, () => {
-    expect(type.number.is("1")).toBeTruthy();
+    expect(Type.number.is("1")).toBeTruthy();
 });
 
 test(`number:is`, () => {
-    expect(type.number.is(1)).toBeTruthy();
+    expect(Type.number.is(1)).toBeTruthy();
 });
 
 test(`number:is`, () => {
-    expect(type.number.is("1a")).toBeFalsy();
+    expect(Type.number.is("1a")).toBeFalsy();
 });
 
 test(`number:isNot`, () => {
-    expect(type.number.isNot(1)).toBeFalsy();
+    expect(Type.number.isNot(1)).toBeFalsy();
 });
 
 test(`number:isNot`, () => {
-    expect(type.number.isNot("1")).toBeFalsy();
+    expect(Type.number.isNot("1")).toBeFalsy();
 });
 
 test(`number:isNot`, () => {
-    expect(type.number.isNot("1")).toBeFalsy();
+    expect(Type.number.isNot("1")).toBeFalsy();
 });
 
 test(`number:isNot`, () => {
-    expect(type.number.isNot("1a")).toBeTruthy();
+    expect(Type.number.isNot("1a")).toBeTruthy();
 });
 
 test(`number:isinteger`, () => {
-    expect(type.number.isinteger(1)).toBeTruthy();
+    expect(Type.number.isinteger(1)).toBeTruthy();
 });
 
 test(`number:isinteger`, () => {
-    expect(type.number.isinteger("1")).toBeFalsy();
+    expect(Type.number.isinteger("1")).toBeFalsy();
 });
 
 test(`number:isinteger`, () => {
-    expect(type.number.isinteger(1.1)).toBeFalsy();
+    expect(Type.number.isinteger(1.1)).toBeFalsy();
 });
 
 test(`number:isinteger`, () => {
-    expect(type.number.isinteger(-1)).toBeTruthy();
+    expect(Type.number.isinteger(-1)).toBeTruthy();
 });
 
 test(`number:isNatural`, () => {
-    expect(type.number.isNatural(1.1)).toBeFalsy();
+    expect(Type.number.isNatural(1.1)).toBeFalsy();
 });
 
 test(`number:isNatural`, () => {
-    expect(type.number.isNatural(-1)).toBeFalsy();
+    expect(Type.number.isNatural(-1)).toBeFalsy();
 });
 
 test(`number:isNatural`, () => {
-    expect(type.number.isNatural(1)).toBeTruthy();
+    expect(Type.number.isNatural(1)).toBeTruthy();
 });
 
 test(`number:isNatural`, () => {
-    expect(type.number.isNatural(0)).toBeTruthy();
+    expect(Type.number.isNatural(0)).toBeTruthy();
 });
 
 test(`number:safe`, () => {
-    expect(type.number.safe(null)).toEqual(0);
+    expect(Type.number.safe(null)).toEqual(0);
 });
 
 test(`array:is`, () => {
-    expect(type.array.is([])).toBeTruthy();
+    expect(Type.array.is([])).toBeTruthy();
 });
 
 test(`array:is`, () => {
-    expect(type.array.is({})).toBeFalsy();
+    expect(Type.array.is({})).toBeFalsy();
 });
 
 test(`array:is`, () => {
-    expect(type.array.is(null)).toBeFalsy();
+    expect(Type.array.is(null)).toBeFalsy();
 });
 
 test(`array:isNot`, () => {
-    expect(type.array.isNot([])).toBeFalsy();
+    expect(Type.array.isNot([])).toBeFalsy();
 });
 
 test(`array:isNot`, () => {
-    expect(type.array.isNot({})).toBeTruthy();
+    expect(Type.array.isNot({})).toBeTruthy();
 });
 
 test(`array:isNot`, () => {
-    expect(type.array.isNot(null)).toBeTruthy();
+    expect(Type.array.isNot(null)).toBeTruthy();
 });
 
 test(`array:isEmpty`, () => {
-    expect(type.array.isEmpty([])).toBeTruthy();
+    expect(Type.array.isEmpty([])).toBeTruthy();
 });
 
 test(`array:isEmpty`, () => {
-    expect(type.array.isEmpty(["a"])).toBeFalsy();
+    expect(Type.array.isEmpty(["a"])).toBeFalsy();
 });
 
 test(`array:isNotEmpty`, () => {
-    expect(type.array.isNotEmpty(["a"])).toBeTruthy();
+    expect(Type.array.isNotEmpty(["a"])).toBeTruthy();
 });
 
 test(`array:isNotEmpty`, () => {
-    expect(type.array.isNotEmpty([])).toBeFalsy();
+    expect(Type.array.isNotEmpty([])).toBeFalsy();
 });
 
 test(`array:isNotEmpty`, () => {
-    expect(type.array.isNotEmpty(null)).toBeFalsy();
+    expect(Type.array.isNotEmpty(null)).toBeFalsy();
 });
 
 test(`array:safe`, () => {
-    expect(type.array.safe(null)).toEqual([]);
+    expect(Type.array.safe(null)).toEqual([]);
 });
 
 test(`object:is`, () => {
-    expect(type.object.is({})).toBeTruthy();
+    expect(Type.object.is({})).toBeTruthy();
 });
 
 test(`object:is`, () => {
     expect(
-        type.object.is({
+        Type.object.is({
             a: 1
         })
     ).toBeTruthy();
 });
 
 test(`object:is`, () => {
-    expect(type.object.is(null)).toBeFalsy();
+    expect(Type.object.is(null)).toBeFalsy();
 });
 
 test(`object:isNot`, () => {
-    expect(type.object.isNot(null)).toBeTruthy();
+    expect(Type.object.isNot(null)).toBeTruthy();
 });
 
 test(`object:isNot`, () => {
-    expect(type.object.isNot(1)).toBeTruthy();
+    expect(Type.object.isNot(1)).toBeTruthy();
 });
 
 test(`object:isNot`, () => {
-    expect(type.object.isNot([])).toBeTruthy();
+    expect(Type.object.isNot([])).toBeTruthy();
 });
 
 test(`object:isNot`, () => {
-    expect(type.object.isNot({})).toBeFalsy();
+    expect(Type.object.isNot({})).toBeFalsy();
 });
 
 test(`object:isEmpty`, () => {
-    expect(type.object.isEmpty({})).toBeTruthy();
+    expect(Type.object.isEmpty({})).toBeTruthy();
 });
 
 test(`object:isEmpty`, () => {
     expect(
-        type.object.isEmpty({
+        Type.object.isEmpty({
             a: 1
         })
     ).toBeFalsy();
 });
 
 test(`object:isNotEmpty`, () => {
-    expect(type.object.isNotEmpty({})).toBeFalsy();
+    expect(Type.object.isNotEmpty({})).toBeFalsy();
 });
 
 test(`object:isNotEmpty`, () => {
     expect(
-        type.object.isNotEmpty({
+        Type.object.isNotEmpty({
             a: 1
         })
     ).toBeTruthy();
 });
 
 test(`object:safe`, () => {
-    expect(type.object.safe(null)).toEqual({});
+    expect(Type.object.safe(null)).toEqual({});
 });
 
 test(`function:is`, () => {
-    expect(type.function.is(null)).toBeFalsy();
+    expect(Type.function.is(null)).toBeFalsy();
 });
 
 test(`function:is`, () => {
-    expect(type.function.is(() => {})).toBeTruthy();
+    expect(Type.function.is(() => {})).toBeTruthy();
 });
 
 test(`function:is`, () => {
-    expect(type.function.is(async () => {})).toBeTruthy();
+    expect(Type.function.is(async () => {})).toBeTruthy();
 });
 
 test(`function:is`, () => {
-    expect(type.function.is(0)).toBeFalsy();
+    expect(Type.function.is(0)).toBeFalsy();
 });
 
 test(`function:isNot`, () => {
-    expect(type.function.isNot("a")).toBeTruthy();
+    expect(Type.function.isNot("a")).toBeTruthy();
 });
 
 test(`function:isNot`, () => {
-    expect(type.function.isNot(1)).toBeTruthy();
+    expect(Type.function.isNot(1)).toBeTruthy();
 });
 
 test(`function:isNot`, () => {
-    expect(type.function.isNot(() => {})).toBeFalsy();
+    expect(Type.function.isNot(() => {})).toBeFalsy();
 });
 
 test(`undefinedNull:is`, () => {
-    expect(type.undefinedNull.is(null)).toBeTruthy();
+    expect(Type.undefinedNull.is(null)).toBeTruthy();
 });
 
 test(`undefinedNull:is`, () => {
-    expect(type.undefinedNull.is(undefined)).toBeTruthy();
+    expect(Type.undefinedNull.is(undefined)).toBeTruthy();
 });
 
 test(`undefinedNull:is`, () => {
-    expect(type.undefinedNull.is(0)).toBeFalsy();
+    expect(Type.undefinedNull.is(0)).toBeFalsy();
 });
 
 test(`undefinedNull:isNot`, () => {
-    expect(type.undefinedNull.isNot(0)).toBeTruthy();
+    expect(Type.undefinedNull.isNot(0)).toBeTruthy();
 });
 
 test(`undefinedNull:isNot`, () => {
-    expect(type.undefinedNull.isNot(null)).toBeFalsy();
+    expect(Type.undefinedNull.isNot(null)).toBeFalsy();
 });
 
 test(`undefinedNull:isNot`, () => {
-    expect(type.undefinedNull.isNot(undefined)).toBeFalsy();
+    expect(Type.undefinedNull.isNot(undefined)).toBeFalsy();
 });
 
 test(`boolean:is`, () => {
-    expect(type.boolean.is(undefined)).toBeFalsy();
+    expect(Type.boolean.is(undefined)).toBeFalsy();
 });
 
 test(`boolean:is`, () => {
-    expect(type.boolean.is(false)).toBeTruthy();
+    expect(Type.boolean.is(false)).toBeTruthy();
 });
 
 test(`boolean:is`, () => {
-    expect(type.boolean.is(true)).toBeTruthy();
+    expect(Type.boolean.is(true)).toBeTruthy();
 });
 
 test(`boolean:isNot`, () => {
-    expect(type.boolean.isNot(undefined)).toBeTruthy();
+    expect(Type.boolean.isNot(undefined)).toBeTruthy();
 });
 
 test(`boolean:isNot`, () => {
-    expect(type.boolean.isNot(true)).toBeFalsy();
+    expect(Type.boolean.isNot(true)).toBeFalsy();
 });
