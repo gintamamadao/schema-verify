@@ -25,6 +25,7 @@ const info = {
             type: String,
             length: { min: 3, max: 32 },
             enum: ["cat", "dog", "cow"],
+            match: /a/,
             hint: {
                 type: "Title must be a string.",
                 required: "Title is required."

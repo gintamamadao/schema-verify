@@ -54,16 +54,18 @@ const propsVerify = (data, claimsMap) => {
             const propClaims = claimsMap[key];
             const propData = data[key];
             const required = propClaims.required;
+            const hint = Type.object.safe(propClaims.hint);
+            const requiredHint = hint["required"] || `属性 ${key}: 缺少数据`;
             const isRequiredPass = requiredVerify(
                 propData,
                 required,
-                `属性 ${key}: 缺少数据`
+                requiredHint
             );
             if (isRequiredPass) {
                 continue;
             }
             try {
-                verify(propData, propClaims);
+                verify(propData, propClaims, data);
             } catch (e) {
                 throw new Error(`属性 ${key}: ${e.message}`);
             }
@@ -126,19 +128,29 @@ const enumVerify = (data, claim, hint) => {
     return true;
 };
 
+const matchVerify = (data, claim, hint) => {
+    if (Type.string.is(claim)) {
+        claim = new RegExp(claim);
+    }
+    if (!claim.test(data)) {
+        throw new Error(
+            ErrorMsg.verifyErrorHint("match", hint || `匹配规则不通过`)
+        );
+    }
+    return true;
+};
+
 const elementsVerify = (data, claim) => {
     const verifyItem = (itemData, itemClaim, index) => {
         const required = itemClaim.required;
-        const isRequiredPass = requiredVerify(
-            itemData,
-            required,
-            `第 ${index} 项: 缺少数据`
-        );
+        const hint = Type.object.safe(itemClaim.hint);
+        const requiredHint = hint["required"] || `第 ${index} 项: 缺少数据`;
+        const isRequiredPass = requiredVerify(itemData, required, requiredHint);
         if (isRequiredPass) {
             return;
         }
         try {
-            verify(itemData, itemClaim);
+            verify(itemData, itemClaim, data);
         } catch (e) {
             throw new Error(`第 ${index} 项: ${e.message}`);
         }
@@ -169,19 +181,20 @@ const elementsVerify = (data, claim) => {
     }
 };
 
-const customVerify = (data, claim, hint) => {
+const customVerify = (data, claim, hint, parent) => {
     try {
-        const isPass = claim(data);
+        const isPass = claim(data, parent);
         if (!isPass) {
             throw new Error(hint || "未知");
         }
     } catch (e) {
-        throw new Error(ErrorMsg.verifyErrorHint("claim", `${e.message}`));
+        const msg = Type.string.is(e) ? e : e && e.message ? e.message : "未知";
+        throw new Error(ErrorMsg.verifyErrorHint("claim", `${msg}`));
     }
     return true;
 };
 
-const verify = (data, claims) => {
+const verify = (data, claims, parent) => {
     const fn = () => {
         const hint = Type.object.safe(claims.hint);
         const type = claims.type;
@@ -210,6 +223,9 @@ const verify = (data, claims) => {
                 case "enum":
                     enumVerify(data, claimValue, claimHint);
                     break;
+                case "match":
+                    matchVerify(data, claimValue, claimHint);
+                    break;
                 case "elements":
                     elementsVerify(data, claimValue);
                     break;
@@ -217,7 +233,7 @@ const verify = (data, claims) => {
                     propsVerify(data, claimValue);
                     break;
                 case "custom":
-                    customVerify(data, claimValue, claimHint);
+                    customVerify(data, claimValue, claimHint, parent);
                     break;
             }
         }

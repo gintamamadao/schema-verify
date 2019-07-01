@@ -99,13 +99,19 @@ const stringCheck = function(info) {
         length.max = +length.max;
     }
     if (info.hasOwnProperty("enum")) {
-        const strEnum = info.enum;
-        if (Type.array.isEmpty(strEnum)) {
+        const arr = info.enum;
+        if (Type.array.isNot(arr) || Type.array.isEmpty(arr)) {
             throw new Error(ErrorMsg.emptyEnumInfo);
         }
-        const isAllStr = strEnum.every(s => Type.string.is(s));
+        const isAllStr = arr.every(s => Type.string.is(s));
         if (!isAllStr) {
             throw new Error(ErrorMsg.errorEnumInfo);
+        }
+    }
+    if (info.hasOwnProperty("match")) {
+        const match = info.match;
+        if (!Type.string.isNotEmpty(match) && !(match instanceof RegExp)) {
+            throw new Error(ErrorMsg.illegalVerifyProps("match"));
         }
     }
     return info;
@@ -136,11 +142,11 @@ const numberCheck = function(info) {
         }
     }
     if (info.hasOwnProperty("enum")) {
-        const strEnum = info.enum;
-        if (Type.array.isEmpty(strEnum)) {
+        const arr = info.enum;
+        if (Type.array.isNot(arr) || Type.array.isEmpty(arr)) {
             throw new Error(ErrorMsg.emptyEnumInfo);
         }
-        const isAllNum = strEnum.every(s => Type.number.is(s));
+        const isAllNum = arr.every(s => Type.number.is(s));
         if (!isAllNum) {
             throw new Error(ErrorMsg.errorEnumInfo);
         }
@@ -175,10 +181,13 @@ const objectCheck = function(info) {
 const arrayCheck = function(info) {
     if (info.hasOwnProperty("elements")) {
         const elements = info.elements;
-        if (Type.object.isNot(elements) && Type.array.isNot(elements)) {
+        if (
+            !Type.object.isNotEmpty(elements) &&
+            !Type.array.isNotEmpty(elements)
+        ) {
             throw new Error(ErrorMsg.illegalVerifyProps("elements"));
         }
-        if (Type.object.is(elements)) {
+        if (Type.object.isNotEmpty(elements)) {
             info.elements = [schemaCheck(elements)];
         } else {
             info.elements = elements.map(item => {
