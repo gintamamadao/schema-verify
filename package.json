@@ -1,5 +1,5 @@
 {
-    "name": "js-verify",
+    "name": "schema-verify",
     "version": "1.0.0",
     "description": "",
     "main": "./src/index.js",
