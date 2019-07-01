@@ -344,3 +344,114 @@ describe("common:custom", () => {
         ).toBeTruthy();
     });
 });
+
+describe("common:index", () => {
+    test(`index`, () => {
+        expect(
+            (() => {
+                const schemaInfo = {
+                    type: Array,
+                    elements: [
+                        {
+                            index: 0,
+                            type: String,
+                            required: true
+                        }
+                    ]
+                };
+                const schema = new Schema(schemaInfo);
+                const data = ["a"];
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+    });
+    test(`index`, () => {
+        expect(
+            (() => {
+                const schemaInfo = {
+                    type: Array,
+                    elements: [
+                        {
+                            index: 0,
+                            type: String
+                        }
+                    ]
+                };
+                const schema = new Schema(schemaInfo);
+                const data = [];
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+    });
+    test(`index`, () => {
+        expect(
+            (() => {
+                const schemaInfo = {
+                    type: Array,
+                    elements: [
+                        {
+                            index: 0,
+                            type: String,
+                            required: true
+                        },
+                        {
+                            index: 1,
+                            type: String,
+                            required: true
+                        }
+                    ]
+                };
+                const schema = new Schema(schemaInfo);
+                const data = ["a", "b"];
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+    });
+    test(`index`, () => {
+        expect(
+            (() => {
+                const schemaInfo = {
+                    type: Array,
+                    elements: [
+                        {
+                            index: 0,
+                            type: String,
+                            required: true
+                        },
+                        {
+                            index: 1,
+                            type: String,
+                            required: true
+                        }
+                    ]
+                };
+                const schema = new Schema(schemaInfo);
+                const data = ["a"];
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
+    test(`index`, () => {
+        expect(
+            (() => {
+                const schemaInfo = {
+                    type: Array,
+                    elements: [
+                        {
+                            index: 0,
+                            type: String,
+                            required: true
+                        },
+                        {
+                            index: 1,
+                            type: String
+                        }
+                    ]
+                };
+                const schema = new Schema(schemaInfo);
+                const data = ["a"];
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+    });
+});

@@ -128,6 +128,24 @@ const enumVerify = (data, claim, hint) => {
     return true;
 };
 
+const integerVerify = (data, claim, hint) => {
+    if (claim && !Type.number.isinteger(data)) {
+        throw new Error(
+            ErrorMsg.verifyErrorHint("integer", hint || `要求数字为整形`)
+        );
+    }
+    return true;
+};
+
+const naturalVerify = (data, claim, hint) => {
+    if (claim && !Type.number.isNatural(data)) {
+        throw new Error(
+            ErrorMsg.verifyErrorHint("natural", hint || `要求数字为自然数`)
+        );
+    }
+    return true;
+};
+
 const matchVerify = (data, claim, hint) => {
     if (Type.string.is(claim)) {
         claim = new RegExp(claim);
@@ -135,6 +153,22 @@ const matchVerify = (data, claim, hint) => {
     if (!claim.test(data)) {
         throw new Error(
             ErrorMsg.verifyErrorHint("match", hint || `匹配规则不通过`)
+        );
+    }
+    return true;
+};
+
+const rangeVerify = (data, claim, hint) => {
+    const min = claim.min;
+    const max = claim.max;
+    if (Type.number.is(min) && data < min) {
+        throw new Error(
+            ErrorMsg.verifyErrorHint("range", hint || `小于最小值`)
+        );
+    }
+    if (Type.number.is(max) && data > max) {
+        throw new Error(
+            ErrorMsg.verifyErrorHint("range", hint || `大于最大值`)
         );
     }
     return true;
@@ -225,6 +259,14 @@ const verify = (data, claims, parent) => {
                     break;
                 case "match":
                     matchVerify(data, claimValue, claimHint);
+                case "range":
+                    rangeVerify(data, claimValue, claimHint);
+                    break;
+                case "integer":
+                    integerVerify(data, claimValue, claimHint);
+                    break;
+                case "natural":
+                    naturalVerify(data, claimValue, claimHint);
                     break;
                 case "elements":
                     elementsVerify(data, claimValue);
