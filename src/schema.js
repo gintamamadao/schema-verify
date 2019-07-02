@@ -1,6 +1,6 @@
 const verify = require("./verify.js");
 const Type = require("./type.js");
-const ErrorMsg = require("./error.js");
+const ErrorMsg = require("./error/schema_error.js");
 const Pattern = require("./pattern.js");
 const { COMMON_METHODS, TYPE_METHODS } = require("./constant.js");
 

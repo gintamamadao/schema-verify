@@ -1,6 +1,6 @@
 const Type = require("./type.js");
 const Pattern = require("./pattern.js");
-const ErrorMsg = require("./error.js");
+const ErrorMsg = require("./error/verify_error.js");
 const { COMMON_METHODS, TYPE_METHODS } = require("./constant.js");
 
 const CHECK_METHODS = COMMON_METHODS.slice(0, COMMON_METHODS.length - 2);
@@ -23,7 +23,7 @@ const typeVerify = (data, claim, hint) => {
     }
     if (!isPass) {
         throw new Error(
-            ErrorMsg.verifyErrorHint("type", hint || `需要${claim}`)
+            ErrorMsg.verifyErrorHint("type", hint, ErrorMsg.typeNeedHint(claim))
         );
     }
     return true;
@@ -40,7 +40,8 @@ const restrictVerify = (data, claim, propsClaims, hint) => {
             throw new Error(
                 ErrorMsg.verifyErrorHint(
                     "restrict",
-                    hint || `属性 ${key} 不允许`
+                    hint,
+                    ErrorMsg.propRestrictHint(key)
                 )
             );
         }
@@ -55,7 +56,7 @@ const propsVerify = (data, claimsMap) => {
             const propData = data[key];
             const required = propClaims.required;
             const hint = Type.object.safe(propClaims.hint);
-            const requiredHint = hint["required"] || `属性 ${key}: 缺少数据`;
+            const requiredHint = hint["required"] || ErrorMsg.propNeedHint(key);
             const isRequiredPass = requiredVerify(
                 propData,
                 required,
@@ -67,7 +68,7 @@ const propsVerify = (data, claimsMap) => {
             try {
                 verify(propData, propClaims, data);
             } catch (e) {
-                throw new Error(`属性 ${key}: ${e.message}`);
+                throw new Error(ErrorMsg.propErrorHint(key, e));
             }
         }
     };
@@ -98,7 +99,11 @@ const patternVerify = (data, claim, hint) => {
     const isPass = isFn.call(Pattern[claim], data);
     if (!isPass) {
         throw new Error(
-            ErrorMsg.verifyErrorHint("pattern", hint || `需要${claim}格式`)
+            ErrorMsg.verifyErrorHint(
+                "pattern",
+                hint,
+                ErrorMsg.patternNeedHint(claim)
+            )
         );
     }
     return true;
@@ -110,12 +115,12 @@ const lengthVerify = (data, claim, hint) => {
     const length = data.length;
     if (Type.number.is(min) && length < min) {
         throw new Error(
-            ErrorMsg.verifyErrorHint("length", hint || `小于最小长度`)
+            ErrorMsg.verifyErrorHint("length", hint, ErrorMsg.minLenHint(min))
         );
     }
     if (Type.number.is(max) && length > max) {
         throw new Error(
-            ErrorMsg.verifyErrorHint("length", hint || `大于最大长度`)
+            ErrorMsg.verifyErrorHint("length", hint, ErrorMsg.maxLenHint(max))
         );
     }
     return true;
@@ -123,7 +128,9 @@ const lengthVerify = (data, claim, hint) => {
 
 const enumVerify = (data, claim, hint) => {
     if (!claim.includes(data)) {
-        throw new Error(ErrorMsg.verifyErrorHint("enum", hint || `非有效值`));
+        throw new Error(
+            ErrorMsg.verifyErrorHint("enum", hint, ErrorMsg.enumHint(data))
+        );
     }
     return true;
 };
@@ -131,7 +138,11 @@ const enumVerify = (data, claim, hint) => {
 const integerVerify = (data, claim, hint) => {
     if (claim && !Type.number.isinteger(data)) {
         throw new Error(
-            ErrorMsg.verifyErrorHint("integer", hint || `要求数字为整形`)
+            ErrorMsg.verifyErrorHint(
+                "integer",
+                hint,
+                ErrorMsg.integerHint(data)
+            )
         );
     }
     return true;
@@ -140,7 +151,11 @@ const integerVerify = (data, claim, hint) => {
 const naturalVerify = (data, claim, hint) => {
     if (claim && !Type.number.isNatural(data)) {
         throw new Error(
-            ErrorMsg.verifyErrorHint("natural", hint || `要求数字为自然数`)
+            ErrorMsg.verifyErrorHint(
+                "natural",
+                hint,
+                ErrorMsg.naturalHint(data)
+            )
         );
     }
     return true;
@@ -152,7 +167,7 @@ const matchVerify = (data, claim, hint) => {
     }
     if (!claim.test(data)) {
         throw new Error(
-            ErrorMsg.verifyErrorHint("match", hint || `匹配规则不通过`)
+            ErrorMsg.verifyErrorHint("match", hint, ErrorMsg.matchHint(data))
         );
     }
     return true;
@@ -163,12 +178,12 @@ const rangeVerify = (data, claim, hint) => {
     const max = claim.max;
     if (Type.number.is(min) && data < min) {
         throw new Error(
-            ErrorMsg.verifyErrorHint("range", hint || `小于最小值`)
+            ErrorMsg.verifyErrorHint("range", hint, ErrorMsg.minValueHint(min))
         );
     }
     if (Type.number.is(max) && data > max) {
         throw new Error(
-            ErrorMsg.verifyErrorHint("range", hint || `大于最大值`)
+            ErrorMsg.verifyErrorHint("range", hint, ErrorMsg.maxValueHint(max))
         );
     }
     return true;
@@ -178,7 +193,8 @@ const elementsVerify = (data, claim) => {
     const verifyItem = (itemData, itemClaim, index) => {
         const required = itemClaim.required;
         const hint = Type.object.safe(itemClaim.hint);
-        const requiredHint = hint["required"] || `第 ${index} 项: 缺少数据`;
+        const requiredHint =
+            hint["required"] || ErrorMsg.elementNeedHint(index);
         const isRequiredPass = requiredVerify(itemData, required, requiredHint);
         if (isRequiredPass) {
             return;
@@ -186,7 +202,7 @@ const elementsVerify = (data, claim) => {
         try {
             verify(itemData, itemClaim, data);
         } catch (e) {
-            throw new Error(`第 ${index} 项: ${e.message}`);
+            throw new Error(ErrorMsg.elementErrorHint(index, e));
         }
     };
     const fn = () => {
@@ -222,8 +238,9 @@ const customVerify = (data, claim, hint, parent) => {
             throw new Error(hint || "未知");
         }
     } catch (e) {
-        const msg = Type.string.is(e) ? e : e && e.message ? e.message : "未知";
-        throw new Error(ErrorMsg.verifyErrorHint("claim", `${msg}`));
+        throw new Error(
+            ErrorMsg.verifyErrorHint("custom", `${ErrorMsg.safeErrorHint(e)}`)
+        );
     }
     return true;
 };

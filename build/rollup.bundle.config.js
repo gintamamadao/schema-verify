@@ -6,7 +6,7 @@ module.exports = {
     ...baseConfig,
     plugins: [...baseConfig.plugins, uglify()],
     output: {
-        file: util.resolve("dist/js-verify.js"),
+        file: util.resolve("dist/schema_verify.min.js"),
         format: "cjs"
     }
 };
