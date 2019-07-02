@@ -1,29 +1,38 @@
 const Type = require("./type.js");
 const Pattern = require("./pattern.js");
 const ErrorMsg = require("./error/verify_error.js");
-const { COMMON_METHODS, TYPE_METHODS } = require("./constant.js");
+const {
+    COMMON_METHODS,
+    TYPE_METHODS,
+    TYPES,
+    METHODS
+} = require("./constant.js");
 
 const CHECK_METHODS = COMMON_METHODS.slice(0, COMMON_METHODS.length - 2);
 
 const typeVerify = (data, claim, hint) => {
     let isPass = false;
     switch (claim) {
-        case "string":
+        case TYPES.string:
             isPass = Type.string.is(data);
             break;
-        case "number":
+        case TYPES.number:
             isPass = Type.number.is(data);
             break;
-        case "object":
+        case TYPES.object:
             isPass = Type.object.is(data);
             break;
-        case "array":
+        case TYPES.array:
             isPass = Type.array.is(data);
             break;
     }
     if (!isPass) {
         throw new Error(
-            ErrorMsg.verifyErrorHint("type", hint, ErrorMsg.typeNeedHint(claim))
+            ErrorMsg.verifyErrorHint(
+                METHODS.type,
+                hint,
+                ErrorMsg.typeNeedHint(claim)
+            )
         );
     }
     return true;
@@ -39,7 +48,7 @@ const restrictVerify = (data, claim, propsClaims, hint) => {
         if (!restrictKeys.includes(key)) {
             throw new Error(
                 ErrorMsg.verifyErrorHint(
-                    "restrict",
+                    METHODS.restrict,
                     hint,
                     ErrorMsg.propRestrictHint(key)
                 )
@@ -56,7 +65,8 @@ const propsVerify = (data, claimsMap) => {
             const propData = data[key];
             const required = propClaims.required;
             const hint = Type.object.safe(propClaims.hint);
-            const requiredHint = hint["required"] || ErrorMsg.propNeedHint(key);
+            const requiredHint =
+                hint[METHODS.required] || ErrorMsg.propNeedHint(key);
             const isRequiredPass = requiredVerify(
                 propData,
                 required,
@@ -100,7 +110,7 @@ const patternVerify = (data, claim, hint) => {
     if (!isPass) {
         throw new Error(
             ErrorMsg.verifyErrorHint(
-                "pattern",
+                METHODS.pattern,
                 hint,
                 ErrorMsg.patternNeedHint(claim)
             )
@@ -115,12 +125,20 @@ const lengthVerify = (data, claim, hint) => {
     const length = data.length;
     if (Type.number.is(min) && length < min) {
         throw new Error(
-            ErrorMsg.verifyErrorHint("length", hint, ErrorMsg.minLenHint(min))
+            ErrorMsg.verifyErrorHint(
+                METHODS.length,
+                hint,
+                ErrorMsg.minLenHint(min)
+            )
         );
     }
     if (Type.number.is(max) && length > max) {
         throw new Error(
-            ErrorMsg.verifyErrorHint("length", hint, ErrorMsg.maxLenHint(max))
+            ErrorMsg.verifyErrorHint(
+                METHODS.length,
+                hint,
+                ErrorMsg.maxLenHint(max)
+            )
         );
     }
     return true;
@@ -129,7 +147,11 @@ const lengthVerify = (data, claim, hint) => {
 const enumVerify = (data, claim, hint) => {
     if (!claim.includes(data)) {
         throw new Error(
-            ErrorMsg.verifyErrorHint("enum", hint, ErrorMsg.enumHint(data))
+            ErrorMsg.verifyErrorHint(
+                METHODS.enum,
+                hint,
+                ErrorMsg.enumHint(data)
+            )
         );
     }
     return true;
@@ -139,7 +161,7 @@ const integerVerify = (data, claim, hint) => {
     if (claim && !Type.number.isinteger(data)) {
         throw new Error(
             ErrorMsg.verifyErrorHint(
-                "integer",
+                METHODS.integer,
                 hint,
                 ErrorMsg.integerHint(data)
             )
@@ -152,7 +174,7 @@ const naturalVerify = (data, claim, hint) => {
     if (claim && !Type.number.isNatural(data)) {
         throw new Error(
             ErrorMsg.verifyErrorHint(
-                "natural",
+                METHODS.natural,
                 hint,
                 ErrorMsg.naturalHint(data)
             )
@@ -167,7 +189,11 @@ const matchVerify = (data, claim, hint) => {
     }
     if (!claim.test(data)) {
         throw new Error(
-            ErrorMsg.verifyErrorHint("match", hint, ErrorMsg.matchHint(data))
+            ErrorMsg.verifyErrorHint(
+                METHODS.match,
+                hint,
+                ErrorMsg.matchHint(data)
+            )
         );
     }
     return true;
@@ -178,12 +204,20 @@ const rangeVerify = (data, claim, hint) => {
     const max = claim.max;
     if (Type.number.is(min) && data < min) {
         throw new Error(
-            ErrorMsg.verifyErrorHint("range", hint, ErrorMsg.minValueHint(min))
+            ErrorMsg.verifyErrorHint(
+                METHODS.range,
+                hint,
+                ErrorMsg.minValueHint(min)
+            )
         );
     }
     if (Type.number.is(max) && data > max) {
         throw new Error(
-            ErrorMsg.verifyErrorHint("range", hint, ErrorMsg.maxValueHint(max))
+            ErrorMsg.verifyErrorHint(
+                METHODS.range,
+                hint,
+                ErrorMsg.maxValueHint(max)
+            )
         );
     }
     return true;
@@ -194,7 +228,7 @@ const elementsVerify = (data, claim) => {
         const required = itemClaim.required;
         const hint = Type.object.safe(itemClaim.hint);
         const requiredHint =
-            hint["required"] || ErrorMsg.elementNeedHint(index);
+            hint[METHODS.required] || ErrorMsg.elementNeedHint(index);
         const isRequiredPass = requiredVerify(itemData, required, requiredHint);
         if (isRequiredPass) {
             return;
@@ -239,7 +273,10 @@ const customVerify = (data, claim, hint, parent) => {
         }
     } catch (e) {
         throw new Error(
-            ErrorMsg.verifyErrorHint("custom", `${ErrorMsg.safeErrorHint(e)}`)
+            ErrorMsg.verifyErrorHint(
+                METHODS.custom,
+                `${ErrorMsg.safeErrorHint(e)}`
+            )
         );
     }
     return true;
@@ -250,7 +287,7 @@ const verify = (data, claims, parent) => {
         const hint = Type.object.safe(claims.hint);
         const type = claims.type;
         const claimMethods = [].concat(CHECK_METHODS, TYPE_METHODS[type]);
-        claimMethods.push("custom");
+        claimMethods.push(METHODS.custom);
         for (const claimKey of claimMethods) {
             if (!claims.hasOwnProperty(claimKey)) {
                 continue;
@@ -259,39 +296,51 @@ const verify = (data, claims, parent) => {
             const propsClaims = claims.props;
             const claimHint = hint[claimKey];
             switch (claimKey) {
-                case "type":
+                case METHODS.type:
                     typeVerify(data, claimValue, claimHint);
                     break;
-                case "restrict":
+
+                case METHODS.restrict:
                     restrictVerify(data, claimValue, propsClaims, claimHint);
                     break;
-                case "pattern":
+
+                case METHODS.pattern:
                     patternVerify(data, claimValue, claimHint);
                     break;
-                case "length":
+
+                case METHODS.length:
                     lengthVerify(data, claimValue, claimHint);
                     break;
-                case "enum":
+
+                case METHODS.enum:
                     enumVerify(data, claimValue, claimHint);
                     break;
-                case "match":
+
+                case METHODS.match:
                     matchVerify(data, claimValue, claimHint);
-                case "range":
+                    break;
+
+                case METHODS.range:
                     rangeVerify(data, claimValue, claimHint);
                     break;
-                case "integer":
+
+                case METHODS.integer:
                     integerVerify(data, claimValue, claimHint);
                     break;
-                case "natural":
+
+                case METHODS.natural:
                     naturalVerify(data, claimValue, claimHint);
                     break;
-                case "elements":
+
+                case METHODS.elements:
                     elementsVerify(data, claimValue);
                     break;
-                case "props":
+
+                case METHODS.props:
                     propsVerify(data, claimValue);
                     break;
-                case "custom":
+
+                case METHODS.custom:
                     customVerify(data, claimValue, claimHint, parent);
                     break;
             }
