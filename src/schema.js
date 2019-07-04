@@ -15,6 +15,21 @@ const schemaCheck = function(info) {
     if (Type.object.isNot(info)) {
         throw new Error(ErrorMsg.propsInfoEmpty);
     }
+    if (info.hasOwnProperty(METHODS.schema)) {
+        const schema = info[METHODS.schema];
+        if (Type.object.isNot(schema) || !(schema instanceof Schema)) {
+            throw new Error(ErrorMsg.illegalVerifyProps(METHODS.schema));
+        }
+        const schemaRuleInfo = schema.info;
+        for (const method of [METHODS.type, METHODS.required, METHODS.index]) {
+            if (
+                !info.hasOwnProperty(method) &&
+                schemaRuleInfo.hasOwnProperty(method)
+            ) {
+                info[method] = schemaRuleInfo[method];
+            }
+        }
+    }
     const result = Object.assign({}, info);
     return typeCheck(result);
 };
@@ -26,17 +41,36 @@ const typeCheck = function(info) {
             info = stringCheck(info);
             info.type = TYPES.string;
             break;
+
         case Number:
             info = numberCheck(info);
             info.type = TYPES.number;
             break;
+
         case Object:
             info = objectCheck(info);
             info.type = TYPES.object;
             break;
+
         case Array:
             info = arrayCheck(info);
             info.type = TYPES.array;
+            break;
+
+        case TYPES.string:
+            info = stringCheck(info);
+            break;
+
+        case TYPES.number:
+            info = numberCheck(info);
+            break;
+
+        case TYPES.object:
+            info = objectCheck(info);
+            break;
+
+        case TYPES.array:
+            info = arrayCheck(info);
             break;
     }
     return typeCommonCheck(info);
@@ -193,6 +227,7 @@ const arrayCheck = function(info) {
             throw new Error(ErrorMsg.illegalVerifyProps(METHODS.elements));
         }
         if (Type.object.isNotEmpty(elements)) {
+            delete elements["index"];
             info.elements = [schemaCheck(elements)];
         } else {
             info.elements = elements.map(item => {
@@ -220,9 +255,9 @@ class Schema {
     constructor(info) {
         this.info = schemaCheck(info);
     }
-    verify(data, throwError) {
+    verify(data, throwError, parent) {
         try {
-            verify(data, this.info);
+            verify(data, this.info, parent);
             return true;
         } catch (e) {
             if (throwError) {

@@ -12,6 +12,7 @@ const ErrorMsg = {
     propNeedHint: key => `属性 ${key}: 缺少数据`,
     propRestrictHint: key => `属性 ${key} 不允许`,
     propErrorHint: (key, e) => `属性 ${key}: ${ErrorMsg.safeErrorHint(e)}`,
+    elementEmptyHint: "数组缺少元素",
     elementNeedHint: index => `第 ${index} 项: 缺少数据`,
     elementErrorHint: (index, e) =>
         `第 ${index} 项: ${ErrorMsg.safeErrorHint(e)}`,

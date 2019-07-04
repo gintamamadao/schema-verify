@@ -9,6 +9,7 @@ const METHODS = {
     index: "index",
     required: "required",
     type: "type",
+    schema: "schema",
     custom: "custom",
     hint: "hint",
     pattern: "pattern",
@@ -27,6 +28,7 @@ const COMMON_METHODS = [
     METHODS.index,
     METHODS.required,
     METHODS.type,
+    METHODS.schema,
     METHODS.custom,
     METHODS.hint
 ];

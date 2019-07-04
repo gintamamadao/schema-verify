@@ -248,6 +248,13 @@ const elementsVerify = (data, claim) => {
                 verifyItem(itemData, itemClaim, index);
                 checkedMap[index] = true;
             } else {
+                const required = itemClaim.required;
+                const hint = Type.object.safe(itemClaim.hint);
+                if (required && data.length <= 0) {
+                    throw new Error(
+                        hint[METHODS.required] || ErrorMsg.elementEmptyHint
+                    );
+                }
                 for (let i = 0; i < data.length; i++) {
                     if (!checkedMap[i]) {
                         const itemData = data[i];
@@ -263,6 +270,20 @@ const elementsVerify = (data, claim) => {
     } catch (e) {
         throw e;
     }
+};
+
+const schemaVerify = (data, claim, hint, parent) => {
+    try {
+        claim.verify(data, true, parent);
+    } catch (e) {
+        throw new Error(
+            ErrorMsg.verifyErrorHint(
+                METHODS.schema,
+                hint || `${ErrorMsg.safeErrorHint(e)}`
+            )
+        );
+    }
+    return true;
 };
 
 const customVerify = (data, claim, hint, parent) => {
@@ -338,6 +359,10 @@ const verify = (data, claims, parent) => {
 
                 case METHODS.props:
                     propsVerify(data, claimValue);
+                    break;
+
+                case METHODS.schema:
+                    schemaVerify(data, claimValue, claimHint, parent);
                     break;
 
                 case METHODS.custom:

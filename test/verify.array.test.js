@@ -7,7 +7,6 @@ describe("object:elements", () => {
                 const schemaInfo = {
                     type: Array,
                     elements: {
-                        index: 0,
                         type: String,
                         required: true
                     }
@@ -24,12 +23,12 @@ describe("object:elements", () => {
                 const schemaInfo = {
                     type: Array,
                     elements: {
-                        index: 0,
-                        type: String
+                        type: String,
+                        required: true
                     }
                 };
                 const schema = new Schema(schemaInfo);
-                const data = [];
+                const data = ["a", "b"];
                 return schema.verify(data);
             })()
         ).toBeTruthy();
@@ -40,7 +39,38 @@ describe("object:elements", () => {
                 const schemaInfo = {
                     type: Array,
                     elements: {
-                        index: 0,
+                        type: String,
+                        required: true
+                    }
+                };
+                const schema = new Schema(schemaInfo);
+                const data = ["a", 1];
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
+    test(`elements`, () => {
+        expect(
+            (() => {
+                const schemaInfo = {
+                    type: Array,
+                    elements: {
+                        type: String,
+                        required: true
+                    }
+                };
+                const schema = new Schema(schemaInfo);
+                const data = [];
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
+    test(`elements`, () => {
+        expect(
+            (() => {
+                const schemaInfo = {
+                    type: Array,
+                    elements: {
                         type: String
                     }
                 };
@@ -49,6 +79,21 @@ describe("object:elements", () => {
                 return schema.verify(data);
             })()
         ).toBeFalsy();
+    });
+    test(`elements`, () => {
+        expect(
+            (() => {
+                const schemaInfo = {
+                    type: Array,
+                    elements: {
+                        type: String
+                    }
+                };
+                const schema = new Schema(schemaInfo);
+                const data = [];
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
     });
     test(`elements`, () => {
         expect(

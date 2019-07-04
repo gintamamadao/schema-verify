@@ -161,7 +161,6 @@ describe("common:required", () => {
                 const schemaInfo = {
                     type: Array,
                     elements: {
-                        index: 0,
                         type: String,
                         required: true
                     }
@@ -178,7 +177,6 @@ describe("common:required", () => {
                 const schemaInfo = {
                     type: Array,
                     elements: {
-                        index: 0,
                         type: String,
                         required: true
                     }
@@ -265,6 +263,105 @@ describe("common:hint", () => {
             const data = [];
             return schema.verify(data, true);
         }).toThrowError("required error hint text");
+    });
+});
+
+describe("common:schema", () => {
+    test(`schema`, () => {
+        const schemaRule = new Schema({
+            type: String,
+            pattern: "email"
+        });
+        const schemaInfo = {
+            schema: schemaRule
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = "abc@abc.abc";
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = "aaa";
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
+    test(`schema`, () => {
+        const schemaRule = new Schema({
+            type: String,
+            required: true,
+            pattern: "email",
+            length: { min: 3, max: 12 }
+        });
+        const schemaInfo = {
+            type: Object,
+            props: {
+                a: {
+                    schema: schemaRule
+                },
+                b: {
+                    schema: schemaRule
+                }
+            }
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = {
+                    a: "abc@abc.abc",
+                    b: "bcd@bcd.bcd"
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    a: "abc@abc.abc",
+                    b: "bcd@bcd.bcd",
+                    c: "c"
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    a: "abc@abc.abc",
+                    b: "abc"
+                };
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = {
+                    a: "abc@abc.abc"
+                };
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = {
+                    a: "abc@abc.abc",
+                    b: "a"
+                };
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = {
+                    a: "abc@abc.abc",
+                    a: "abcabcabcabc@abc.abc"
+                };
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
     });
 });
 
