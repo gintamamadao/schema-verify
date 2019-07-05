@@ -322,6 +322,38 @@ schema.verify({
 // false
 ```
 
+也可以用一个校验实例作为是对象属性的校验规则。
+
+```js
+const schemaRule = new Schema({
+    type: Number
+});
+const schemaInfo = {
+    type: Object,
+    props: {
+        a: schemaRule,
+        b: schemaRule
+    }
+};
+const schema = new Schema(schemaInfo);
+schema.verify({
+    a: 1
+});
+// true
+schema.verify({
+    b: 1
+});
+// true
+schema.verify({
+    a: "a"
+});
+// false
+schema.verify({
+    b: "b"
+});
+// false
+```
+
 ### required
 
 属性是否必须存在，该规则只有 props 或者 elements 里的规则设置才有效。
@@ -406,6 +438,30 @@ schema.verify(["a", "b"]);
 schema.verify([]);
 // false，因为 required 为 true，所以数组不能为空
 schema.verify([1]);
+// false
+```
+
+也可以用一个校验实例作为是对象属性的校验规则。
+
+```js
+const schemaRuleA = new Schema({
+    index: 0,
+    type: String
+});
+
+const schemaRuleB = new Schema({
+    index: 1,
+    type: Number
+});
+
+const schemaInfo = {
+    type: Array,
+    elements: [schemaRuleA, schemaRuleB]
+};
+const schema = new Schema(schemaInfo);
+schema.verify(["a", 1]);
+// true
+schema.verify(["a", "b"]);
 // false
 ```
 

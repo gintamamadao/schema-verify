@@ -15,6 +15,11 @@ const schemaCheck = function(info) {
     if (Type.object.isNot(info)) {
         throw new Error(ErrorMsg.propsInfoEmpty);
     }
+    if (info instanceof Schema) {
+        info = {
+            schema: info
+        };
+    }
     if (info.hasOwnProperty(METHODS.schema)) {
         const schema = info[METHODS.schema];
         if (Type.object.isNot(schema) || !(schema instanceof Schema)) {
