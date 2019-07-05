@@ -322,7 +322,7 @@ schema.verify({
 // false
 ```
 
-也可以用一个校验实例作为是对象属性的校验规则。
+也可以用一个校验实例作为对象属性的校验规则。
 
 ```js
 const schemaRule = new Schema({
@@ -441,7 +441,7 @@ schema.verify([1]);
 // false
 ```
 
-也可以用一个校验实例作为是对象属性的校验规则。
+也可以用一个校验实例作为元素的校验规则。
 
 ```js
 const schemaRuleA = new Schema({
