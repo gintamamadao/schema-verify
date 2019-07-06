@@ -1,6 +1,6 @@
 {
     "name": "schema-verify",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "description": "",
     "main": "./src/index.js",
     "scripts": {
@@ -34,7 +34,6 @@
         "rollup": "^1.14.3",
         "rollup-plugin-babel": "^4.3.2",
         "rollup-plugin-commonjs": "^10.0.0",
-        "rollup-plugin-node-resolve": "^5.0.1",
-        "rollup-plugin-uglify-es": "0.0.1"
+        "rollup-plugin-node-resolve": "^5.0.1"
     }
 }

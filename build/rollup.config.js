@@ -28,5 +28,12 @@ module.exports = {
         nodeResolve({ extensions }),
         commonjs({ extensions }),
         babel(babelOptions)
+    ],
+    external: [
+        "is-function-x",
+        "is-integer",
+        "is-number",
+        "isarray",
+        "isobject"
     ]
 };
