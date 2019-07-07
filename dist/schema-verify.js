@@ -233,6 +233,7 @@ const ErrorMsg = {
   naturalHint: value => `${value} 不是自然数`,
   matchHint: value => `${value} 未通过正则规则`,
   patternNeedHint: pattern => `需要 ${pattern} 格式`,
+  propEmptyHint: "对象缺少属性",
   propNeedHint: key => `属性 ${key}: 缺少数据`,
   propRestrictHint: key => `属性 ${key} 不允许`,
   propErrorHint: (key, e) => `属性 ${key}: ${ErrorMsg.safeErrorHint(e)}`,
@@ -328,7 +329,7 @@ const restrictVerify = (data, claim, propsClaims, hint) => {
   }
 
   const dataKeys = Object.keys(data);
-  const restrictKeys = Object.keys(propsClaims);
+  const restrictKeys = propsClaims.map(item => item.index).filter(s => s);
 
   for (const key of dataKeys) {
     if (!restrictKeys.includes(key)) {
@@ -337,35 +338,6 @@ const restrictVerify = (data, claim, propsClaims, hint) => {
   }
 
   return true;
-};
-
-const propsVerify = (data, claimsMap) => {
-  const fn = () => {
-    for (const key in claimsMap) {
-      const propClaims = claimsMap[key];
-      const propData = data[key];
-      const required = propClaims.required;
-      const hint = type.object.safe(propClaims.hint);
-      const requiredHint = hint[METHODS$1.required] || verify_error.propNeedHint(key);
-      const isRequiredPass = requiredVerify(propData, required, requiredHint);
-
-      if (isRequiredPass) {
-        continue;
-      }
-
-      try {
-        verify(propData, propClaims, data);
-      } catch (e) {
-        throw new Error(verify_error.propErrorHint(key, e));
-      }
-    }
-  };
-
-  try {
-    fn();
-  } catch (e) {
-    throw e;
-  }
 };
 
 const requiredVerify = (data, claim, hint) => {
@@ -463,11 +435,12 @@ const rangeVerify = (data, claim, hint) => {
   return true;
 };
 
-const elementsVerify = (data, claim) => {
+const elePropVerify = (data, claim, type$1) => {
   const verifyItem = (itemData, itemClaim, index) => {
     const required = itemClaim.required;
     const hint = type.object.safe(itemClaim.hint);
-    const requiredHint = hint[METHODS$1.required] || verify_error.elementNeedHint(index);
+    const getHint = type$1 === TYPES$1.object ? verify_error.propNeedHint : verify_error.elementNeedHint;
+    const requiredHint = hint[METHODS$1.required] || getHint(index);
     const isRequiredPass = requiredVerify(itemData, required, requiredHint);
 
     if (isRequiredPass) {
@@ -481,31 +454,37 @@ const elementsVerify = (data, claim) => {
     }
   };
 
+  const verifyArr = (itemClaim, checkedMap) => {
+    const required = itemClaim.required;
+    const hint = type.object.safe(itemClaim.hint);
+    const indexArr = type$1 === TYPES$1.object ? Object.keys(data) : Array.from("a".repeat(data.length)).map((s, i) => i);
+    const emptyHint = type$1 === TYPES$1.object ? verify_error.propEmptyHint : verify_error.elementEmptyHint;
+
+    if (required && indexArr.length <= 0) {
+      throw new Error(hint[METHODS$1.required] || emptyHint);
+    }
+
+    for (let index of indexArr) {
+      if (!checkedMap[index]) {
+        const itemData = data[index];
+        verifyItem(itemData, itemClaim, index);
+        checkedMap[index] = true;
+      }
+    }
+  };
+
   const fn = () => {
     const checkedMap = {};
 
     for (const itemClaim of claim) {
       const index = itemClaim.index;
 
-      if (type.number.isNatural(index)) {
+      if (type.number.isNatural(index) || type.string.isNotEmpty(index)) {
         const itemData = data[index];
         verifyItem(itemData, itemClaim, index);
         checkedMap[index] = true;
       } else {
-        const required = itemClaim.required;
-        const hint = type.object.safe(itemClaim.hint);
-
-        if (required && data.length <= 0) {
-          throw new Error(hint[METHODS$1.required] || verify_error.elementEmptyHint);
-        }
-
-        for (let i = 0; i < data.length; i++) {
-          if (!checkedMap[i]) {
-            const itemData = data[i];
-            verifyItem(itemData, itemClaim, i);
-            checkedMap[i] = true;
-          }
-        }
+        verifyArr(itemClaim, checkedMap);
       }
     }
   };
@@ -595,11 +574,11 @@ const verify = (data, claims, parent) => {
           break;
 
         case METHODS$1.elements:
-          elementsVerify(data, claimValue);
+          elePropVerify(data, claimValue, type$1);
           break;
 
         case METHODS$1.props:
-          propsVerify(data, claimValue);
+          elePropVerify(data, claimValue, type$1);
           break;
 
         case METHODS$1.schema:
@@ -868,6 +847,26 @@ const numberCheck = function (info) {
 };
 
 const objectCheck = function (info) {
+  if (info.hasOwnProperty(METHODS$2.props)) {
+    const props = info[METHODS$2.props];
+
+    if (!type.object.isNotEmpty(props) && !type.array.is(props)) {
+      throw new Error(schema_error.illegalVerifyProps(METHODS$2.props));
+    }
+
+    if (type.object.isNotEmpty(props)) {
+      delete props["index"];
+      info.props = [schemaCheck(props)];
+    } else {
+      const propMap = props.reduce((map, item) => {
+        const index = item.index;
+        map[index] = schemaCheck(item);
+        return map;
+      }, {});
+      info.props = Object.keys(propMap).map(prop => propMap[prop]);
+    }
+  }
+
   if (info.hasOwnProperty(METHODS$2.restrict)) {
     const restrict = info[METHODS$2.restrict];
     const props = info[METHODS$2.props];
@@ -876,23 +875,9 @@ const objectCheck = function (info) {
       throw new Error(schema_error.illegalVerifyProps(METHODS$2.restrict));
     }
 
-    if (restrict && type.object.isNot(props)) {
+    if (restrict && type.array.isNot(props)) {
       throw new Error(schema_error.illegalVerifyProps(METHODS$2.props));
     }
-  }
-
-  if (info.hasOwnProperty(METHODS$2.props)) {
-    const props = info[METHODS$2.props];
-
-    if (type.object.isNot(props)) {
-      throw new Error(schema_error.illegalVerifyProps(METHODS$2.props));
-    }
-
-    for (const propkey in props) {
-      props[propkey] = schemaCheck(props[propkey]);
-    }
-
-    info.props = props;
   }
 
   return info;
@@ -902,7 +887,7 @@ const arrayCheck = function (info) {
   if (info.hasOwnProperty(METHODS$2.elements)) {
     const elements = info[METHODS$2.elements];
 
-    if (!type.object.isNotEmpty(elements) && !type.array.isNotEmpty(elements)) {
+    if (!type.object.isNotEmpty(elements) && !type.array.is(elements)) {
       throw new Error(schema_error.illegalVerifyProps(METHODS$2.elements));
     }
 

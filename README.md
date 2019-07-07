@@ -25,20 +25,23 @@ const schemaInfo = {
         type: "type error hint text",
         restrict: "restrict error hint text"
     },
-    props: {
-        email: {
+    props: [
+        {
+            index: "email",
             required: true,
             type: String,
             pattern: "email",
             length: { min: 3, max: 32 },
             match: /abc/
         },
-        str: {
+        {
+            index: "str",
             required: true,
             type: String,
             enum: ["a", "b", "c"]
         },
-        no: {
+        {
+            index: "no",
             required: true,
             type: Number,
             range: { min: 0, max: 2 },
@@ -46,19 +49,22 @@ const schemaInfo = {
             enum: [1, 2],
             custom: () => true
         },
-        obj: {
+        {
+            index: "obj",
             required: true,
             type: Object,
             restrict: true,
-            props: {
-                phone: {
+            props: [
+                {
+                    index: "phone",
                     required: true,
                     type: String,
                     pattern: "phone"
                 }
-            }
+            ]
         },
-        arr: {
+        {
+            index: "arr",
             required: true,
             type: Array,
             length: { min: 0, max: 2 },
@@ -66,14 +72,16 @@ const schemaInfo = {
                 {
                     index: 0,
                     type: Object,
+                    required: true,
                     restrict: true,
-                    props: {
-                        uri: {
+                    props: [
+                        {
+                            index: "uri",
                             required: true,
                             type: String,
                             pattern: "uri"
                         }
-                    }
+                    ]
                 },
                 {
                     type: String,
@@ -81,7 +89,7 @@ const schemaInfo = {
                 }
             ]
         }
-    }
+    ]
 };
 
 const schema = new Schema(schemaInfo);
@@ -301,11 +309,12 @@ schema.verify(0.5);
 ```js
 const schemaInfo = {
     type: Object,
-    props: {
-        a: {
+    props: [
+        {
+            index: "a",
             type: Number
         }
-    }
+    ]
 };
 const schema = new Schema(schemaInfo);
 schema.verify({
@@ -330,10 +339,7 @@ const schemaRule = new Schema({
 });
 const schemaInfo = {
     type: Object,
-    props: {
-        a: schemaRule,
-        b: schemaRule
-    }
+    props: schemaRule
 };
 const schema = new Schema(schemaInfo);
 schema.verify({
@@ -361,12 +367,13 @@ schema.verify({
 ```js
 const schemaInfo = {
     type: Object,
-    props: {
-        a: {
+    props: [
+        {
+            index: "a",
             type: String,
             required: true
         }
-    }
+    ]
 };
 const schema = new Schema(schemaInfo);
 schema.verify({
@@ -389,14 +396,16 @@ schema.verify({
 const schemaInfo = {
     type: Object,
     restrict: true,
-    props: {
-        a: {
+    props: [
+        {
+            index: "a",
             type: String
         },
-        b: {
+        {
+            index: "b:",
             type: String
         }
-    }
+    ]
 };
 const schema = new Schema(schemaInfo);
 schema.verify({

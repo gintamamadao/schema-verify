@@ -199,25 +199,32 @@ const numberCheck = function(info) {
 };
 
 const objectCheck = function(info) {
+    if (info.hasOwnProperty(METHODS.props)) {
+        const props = info[METHODS.props];
+        if (!Type.object.isNotEmpty(props) && !Type.array.is(props)) {
+            throw new Error(ErrorMsg.illegalVerifyProps(METHODS.props));
+        }
+        if (Type.object.isNotEmpty(props)) {
+            delete props["index"];
+            info.props = [schemaCheck(props)];
+        } else {
+            const propMap = props.reduce((map, item) => {
+                const index = item.index;
+                map[index] = schemaCheck(item);
+                return map;
+            }, {});
+            info.props = Object.keys(propMap).map(prop => propMap[prop]);
+        }
+    }
     if (info.hasOwnProperty(METHODS.restrict)) {
         const restrict = info[METHODS.restrict];
         const props = info[METHODS.props];
         if (Type.boolean.isNot(restrict)) {
             throw new Error(ErrorMsg.illegalVerifyProps(METHODS.restrict));
         }
-        if (restrict && Type.object.isNot(props)) {
+        if (restrict && Type.array.isNot(props)) {
             throw new Error(ErrorMsg.illegalVerifyProps(METHODS.props));
         }
-    }
-    if (info.hasOwnProperty(METHODS.props)) {
-        const props = info[METHODS.props];
-        if (Type.object.isNot(props)) {
-            throw new Error(ErrorMsg.illegalVerifyProps(METHODS.props));
-        }
-        for (const propkey in props) {
-            props[propkey] = schemaCheck(props[propkey]);
-        }
-        info.props = props;
     }
     return info;
 };
@@ -225,10 +232,7 @@ const objectCheck = function(info) {
 const arrayCheck = function(info) {
     if (info.hasOwnProperty(METHODS.elements)) {
         const elements = info[METHODS.elements];
-        if (
-            !Type.object.isNotEmpty(elements) &&
-            !Type.array.isNotEmpty(elements)
-        ) {
+        if (!Type.object.isNotEmpty(elements) && !Type.array.is(elements)) {
             throw new Error(ErrorMsg.illegalVerifyProps(METHODS.elements));
         }
         if (Type.object.isNotEmpty(elements)) {

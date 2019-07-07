@@ -288,7 +288,7 @@ describe("object", () => {
         const schemaInfo = {
             type: Object,
             restrict: true,
-            props: {}
+            props: []
         };
         new Schema(schemaInfo);
     });
@@ -304,7 +304,25 @@ describe("object", () => {
     test(`restrict`, () => {
         const schemaInfo = {
             type: Object,
-            props: {}
+            props: {
+                type: String
+            }
+        };
+        new Schema(schemaInfo);
+    });
+    test(`restrict`, () => {
+        const schemaInfo = {
+            type: Object,
+            props: [
+                {
+                    index: "a",
+                    type: String
+                },
+                {
+                    index: "b",
+                    type: Number
+                }
+            ]
         };
         new Schema(schemaInfo);
     });
@@ -312,7 +330,7 @@ describe("object", () => {
         expect(() => {
             const schemaInfo = {
                 type: Object,
-                props: []
+                props: {}
             };
             new Schema(schemaInfo);
         }).toThrowError("非法的校验属性");

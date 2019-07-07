@@ -43,7 +43,7 @@ const restrictVerify = (data, claim, propsClaims, hint) => {
         return true;
     }
     const dataKeys = Object.keys(data);
-    const restrictKeys = Object.keys(propsClaims);
+    const restrictKeys = propsClaims.map(item => item.index).filter(s => s);
     for (const key of dataKeys) {
         if (!restrictKeys.includes(key)) {
             throw new Error(
@@ -56,38 +56,6 @@ const restrictVerify = (data, claim, propsClaims, hint) => {
         }
     }
     return true;
-};
-
-const propsVerify = (data, claimsMap) => {
-    const fn = () => {
-        for (const key in claimsMap) {
-            const propClaims = claimsMap[key];
-            const propData = data[key];
-            const required = propClaims.required;
-            const hint = Type.object.safe(propClaims.hint);
-            const requiredHint =
-                hint[METHODS.required] || ErrorMsg.propNeedHint(key);
-            const isRequiredPass = requiredVerify(
-                propData,
-                required,
-                requiredHint
-            );
-            if (isRequiredPass) {
-                continue;
-            }
-            try {
-                verify(propData, propClaims, data);
-            } catch (e) {
-                throw new Error(ErrorMsg.propErrorHint(key, e));
-            }
-        }
-    };
-
-    try {
-        fn();
-    } catch (e) {
-        throw e;
-    }
 };
 
 const requiredVerify = (data, claim, hint) => {
@@ -223,12 +191,15 @@ const rangeVerify = (data, claim, hint) => {
     return true;
 };
 
-const elementsVerify = (data, claim) => {
+const elePropVerify = (data, claim, type) => {
     const verifyItem = (itemData, itemClaim, index) => {
         const required = itemClaim.required;
         const hint = Type.object.safe(itemClaim.hint);
-        const requiredHint =
-            hint[METHODS.required] || ErrorMsg.elementNeedHint(index);
+        const getHint =
+            type === TYPES.object
+                ? ErrorMsg.propNeedHint
+                : ErrorMsg.elementNeedHint;
+        const requiredHint = hint[METHODS.required] || getHint(index);
         const isRequiredPass = requiredVerify(itemData, required, requiredHint);
         if (isRequiredPass) {
             return;
@@ -239,29 +210,38 @@ const elementsVerify = (data, claim) => {
             throw new Error(ErrorMsg.elementErrorHint(index, e));
         }
     };
+    const verifyArr = (itemClaim, checkedMap) => {
+        const required = itemClaim.required;
+        const hint = Type.object.safe(itemClaim.hint);
+        const indexArr =
+            type === TYPES.object
+                ? Object.keys(data)
+                : Array.from("a".repeat(data.length)).map((s, i) => i);
+        const emptyHint =
+            type === TYPES.object
+                ? ErrorMsg.propEmptyHint
+                : ErrorMsg.elementEmptyHint;
+        if (required && indexArr.length <= 0) {
+            throw new Error(hint[METHODS.required] || emptyHint);
+        }
+        for (let index of indexArr) {
+            if (!checkedMap[index]) {
+                const itemData = data[index];
+                verifyItem(itemData, itemClaim, index);
+                checkedMap[index] = true;
+            }
+        }
+    };
     const fn = () => {
         const checkedMap = {};
         for (const itemClaim of claim) {
             const index = itemClaim.index;
-            if (Type.number.isNatural(index)) {
+            if (Type.number.isNatural(index) || Type.string.isNotEmpty(index)) {
                 const itemData = data[index];
                 verifyItem(itemData, itemClaim, index);
                 checkedMap[index] = true;
             } else {
-                const required = itemClaim.required;
-                const hint = Type.object.safe(itemClaim.hint);
-                if (required && data.length <= 0) {
-                    throw new Error(
-                        hint[METHODS.required] || ErrorMsg.elementEmptyHint
-                    );
-                }
-                for (let i = 0; i < data.length; i++) {
-                    if (!checkedMap[i]) {
-                        const itemData = data[i];
-                        verifyItem(itemData, itemClaim, i);
-                        checkedMap[i] = true;
-                    }
-                }
+                verifyArr(itemClaim, checkedMap);
             }
         }
     };
@@ -354,11 +334,11 @@ const verify = (data, claims, parent) => {
                     break;
 
                 case METHODS.elements:
-                    elementsVerify(data, claimValue);
+                    elePropVerify(data, claimValue, type);
                     break;
 
                 case METHODS.props:
-                    propsVerify(data, claimValue);
+                    elePropVerify(data, claimValue, type);
                     break;
 
                 case METHODS.schema:

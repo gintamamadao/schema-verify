@@ -9,6 +9,7 @@ const ErrorMsg = {
     naturalHint: value => `${value} 不是自然数`,
     matchHint: value => `${value} 未通过正则规则`,
     patternNeedHint: pattern => `需要 ${pattern} 格式`,
+    propEmptyHint: "对象缺少属性",
     propNeedHint: key => `属性 ${key}: 缺少数据`,
     propRestrictHint: key => `属性 ${key} 不允许`,
     propErrorHint: (key, e) => `属性 ${key}: ${ErrorMsg.safeErrorHint(e)}`,
