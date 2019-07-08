@@ -562,7 +562,7 @@ schema.verify([null]);
 
 ### index
 
-设置要校验元素的索引，该规则只有 elements 里的规则设置才有效。
+设置要校验元素或者属性的索引
 
 ```js
 const schemaInfo = {
