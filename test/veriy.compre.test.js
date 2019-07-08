@@ -227,3 +227,130 @@ describe("compre", () => {
         ).toBeFalsy();
     });
 });
+
+describe("multiple", () => {
+    test(`multiple`, () => {
+        const schemaInfo = [
+            {
+                type: String
+            },
+            {
+                type: Number
+            }
+        ];
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = "a";
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = 0;
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = null;
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = [];
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
+    test(`multiple:Object`, () => {
+        const schemaInfo = {
+            type: Object,
+            props: [
+                [
+                    {
+                        index: "a",
+                        type: String
+                    },
+                    {
+                        type: Number
+                    }
+                ]
+            ]
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = {
+                    a: "a"
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    a: 0
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    a: null
+                };
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = {};
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+    });
+    test(`multiple:Array`, () => {
+        const schemaInfo = {
+            type: Array,
+            elements: [
+                [
+                    {
+                        index: 0,
+                        required: true,
+                        type: String
+                    },
+                    {
+                        type: Number
+                    }
+                ]
+            ]
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = ["a"];
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = [0];
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = [null];
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = [];
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
+});

@@ -12,8 +12,15 @@ const {
 const PATTERNS = Object.keys(Pattern);
 
 const schemaCheck = function(info) {
-    if (Type.object.isNot(info)) {
+    if (Type.object.isNot(info) && !Type.array.isNotEmpty(info)) {
         throw new Error(ErrorMsg.propsInfoEmpty);
+    }
+    if (Type.array.isNotEmpty(info)) {
+        const result = [];
+        for (let i = 0; i < info.length; i++) {
+            result[i] = schemaCheck(info[i]);
+        }
+        return result;
     }
     if (info instanceof Schema) {
         info = {

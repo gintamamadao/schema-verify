@@ -14,7 +14,15 @@ const isstring = function (v) {
   return typeof v === "string";
 };
 
-const isundefinedNull = function (v) {
+const isnull = function (v) {
+  return v === null;
+};
+
+const isundefined = function (v) {
+  return v === undefined;
+};
+
+const isundefinednull = function (v) {
   return v === undefined || v === null;
 };
 
@@ -129,11 +137,31 @@ const Type = {
   },
   undefinedNull: {
     is(v) {
-      return isundefinedNull(v);
+      return isundefinednull(v);
     },
 
     isNot(v) {
-      return !isundefinedNull(v);
+      return !isundefinednull(v);
+    }
+
+  },
+  null: {
+    is(v) {
+      return isnull(v);
+    },
+
+    isNot(v) {
+      return !isnull(v);
+    }
+
+  },
+  undefined: {
+    is(v) {
+      return isundefined(v);
+    },
+
+    isNot(v) {
+      return !isundefined(v);
     }
 
   }
@@ -222,32 +250,89 @@ const Pattern = {
 };
 var pattern = Pattern;
 
-const ErrorMsg = {
-  minValueHint: min => `小于最小值 ${min}`,
-  maxValueHint: max => `大于最大值 ${max}`,
-  minLenHint: min => `小于最小长度 ${min}`,
-  maxLenHint: max => `大于最大长度 ${max}`,
-  typeNeedHint: type => `需要 ${type} 类型`,
-  enumHint: value => `${value} 不是有效值之一`,
-  integerHint: value => `${value} 不是整数`,
-  naturalHint: value => `${value} 不是自然数`,
-  matchHint: value => `${value} 未通过正则规则`,
-  patternNeedHint: pattern => `需要 ${pattern} 格式`,
-  propEmptyHint: "对象缺少属性",
-  propNeedHint: key => `属性 ${key}: 缺少数据`,
-  propRestrictHint: key => `属性 ${key} 不允许`,
-  propErrorHint: (key, e) => `属性 ${key}: ${ErrorMsg.safeErrorHint(e)}`,
-  elementEmptyHint: "数组缺少元素",
-  elementNeedHint: index => `第 ${index} 项: 缺少数据`,
-  elementErrorHint: (index, e) => `第 ${index} 项: ${ErrorMsg.safeErrorHint(e)}`,
-  safeErrorHint: e => {
+class ErrorHint {
+  safeErrorHint(e) {
     return typeof e === "string" ? e : e && e.message ? e.message : "未知";
-  },
-  verifyErrorHint: (type, customHint, originHint) => {
+  }
+
+}
+
+var error = ErrorHint;
+
+class VerifyErrorHint extends error {
+  constructor() {
+    super();
+    this.propEmptyHint = "对象缺少属性";
+    this.elementEmptyHint = "数组缺少元素";
+  }
+
+  minValueHint(min) {
+    return `小于最小值 ${min}`;
+  }
+
+  maxValueHint(max) {
+    return `大于最大值 ${max}`;
+  }
+
+  minLenHint(min) {
+    return `小于最小长度 ${min}`;
+  }
+
+  maxLenHint(max) {
+    return `大于最大长度 ${max}`;
+  }
+
+  typeNeedHint(type) {
+    return `需要 ${type} 类型`;
+  }
+
+  enumHint(value) {
+    return `${value} 不是有效值之一`;
+  }
+
+  integerHint(value) {
+    return `${value} 不是整数`;
+  }
+
+  naturalHint(value) {
+    return `${value} 不是自然数`;
+  }
+
+  matchHint(value) {
+    return `${value} 未通过正则规则`;
+  }
+
+  patternNeedHint(pattern) {
+    return `需要 ${pattern} 格式`;
+  }
+
+  propNeedHint(key) {
+    return `属性 ${key}: 缺少数据`;
+  }
+
+  propRestrictHint(key) {
+    return `属性 ${key} 不允许`;
+  }
+
+  propErrorHint(key, e) {
+    return `属性 ${key}: ${this.safeErrorHint(e)}`;
+  }
+
+  elementNeedHint(index) {
+    return `第 ${index} 项: 缺少数据`;
+  }
+
+  elementErrorHint(index, e) {
+    return `第 ${index} 项: ${this.safeErrorHint(e)}`;
+  }
+
+  verifyErrorHint(type, customHint, originHint) {
     return `${type ? type + " " : ""}校验不通过, 错误信息：${customHint || originHint || "未知"}`;
   }
-};
-var verify_error = ErrorMsg;
+
+}
+
+var verify_error = new VerifyErrorHint();
 
 const TYPES = {
   string: "string",
@@ -340,8 +425,8 @@ const restrictVerify = (data, claim, propsClaims, hint) => {
   return true;
 };
 
-const requiredVerify = (data, claim, hint) => {
-  if (type.undefinedNull.is(data)) {
+const requiredVerify = (data, index, claim, hint) => {
+  if (type.object.is(data) && !data.hasOwnProperty(index) || type.array.is(data) && type.undefined.is(data[index])) {
     if (claim) {
       throw new Error(hint);
     } else {
@@ -435,13 +520,23 @@ const rangeVerify = (data, claim, hint) => {
   return true;
 };
 
-const elePropVerify = (data, claim, type$1) => {
+const elePropVerify = (data, claims, type$1) => {
   const verifyItem = (itemData, itemClaim, index) => {
-    const required = itemClaim.required;
-    const hint = type.object.safe(itemClaim.hint);
+    let required;
+    let hint;
+
+    if (type.array.isNotEmpty(itemClaim)) {
+      const itemItemClaim = itemClaim[0];
+      required = itemItemClaim.required;
+      hint = type.object.safe(itemItemClaim.hint);
+    } else {
+      required = itemClaim.required;
+      hint = type.object.safe(itemClaim.hint);
+    }
+
     const getHint = type$1 === TYPES$1.object ? verify_error.propNeedHint : verify_error.elementNeedHint;
     const requiredHint = hint[METHODS$1.required] || getHint(index);
-    const isRequiredPass = requiredVerify(itemData, required, requiredHint);
+    const isRequiredPass = requiredVerify(data, index, required, requiredHint);
 
     if (isRequiredPass) {
       return;
@@ -473,11 +568,18 @@ const elePropVerify = (data, claim, type$1) => {
     }
   };
 
-  const fn = () => {
+  const fn = claims => {
     const checkedMap = {};
 
-    for (const itemClaim of claim) {
-      const index = itemClaim.index;
+    for (const itemClaim of claims) {
+      let index;
+
+      if (type.array.isNotEmpty(itemClaim)) {
+        const itemItemClaim = itemClaim[0];
+        index = itemItemClaim.index;
+      } else {
+        index = itemClaim.index;
+      }
 
       if (type.number.isNatural(index) || type.string.isNotEmpty(index)) {
         const itemData = data[index];
@@ -490,7 +592,7 @@ const elePropVerify = (data, claim, type$1) => {
   };
 
   try {
-    fn();
+    fn(claims);
   } catch (e) {
     throw e;
   }
@@ -520,7 +622,7 @@ const customVerify = (data, claim, hint, parent) => {
   return true;
 };
 
-const verify = (data, claims, parent) => {
+const claimsVerify = (data, claims, parent) => {
   const fn = () => {
     const hint = type.object.safe(claims.hint);
     const type$1 = claims.type;
@@ -599,21 +701,68 @@ const verify = (data, claims, parent) => {
   }
 };
 
+const verify = (data, info, parent) => {
+  const fn = claimsInfo => {
+    try {
+      claimsVerify(data, claimsInfo, parent);
+    } catch (e) {
+      throw e;
+    }
+  };
+
+  if (type.object.is(info)) {
+    fn(info);
+  }
+
+  if (type.array.is(info)) {
+    const errorMsgs = [];
+
+    for (let i = 0; i < info.length; i++) {
+      try {
+        fn(info[i]);
+        break;
+      } catch (e) {
+        errorMsgs.push(`schema-${i}: ${verify_error.safeErrorHint(e)}`);
+      }
+    }
+
+    if (info.length === errorMsgs.length) {
+      throw new Error(errorMsgs.join(";"));
+    }
+  }
+
+  return true;
+};
+
 var verify_1 = verify;
 
-const ErrorMsg$1 = {
-  propsInfoEmpty: "属性信息不能为空",
-  unIdentifyType: "不可识别的属性类型",
-  emptyLengthInfo: "空的长度信息",
-  emptyEnumInfo: "空的枚举信息",
-  errorEnumInfo: "错误的枚举信息",
-  emptyHintInfo: "空的提示信息",
-  emptyRangeInfo: "空的范围信息",
-  illegalHintInfo: v => `非法的提示信息属性：${v}`,
-  illegalVerifyProps: v => `非法的校验属性：${v}`,
-  illegalPatternType: v => `非法的格式类型：${v}`
-};
-var schema_error = ErrorMsg$1;
+class SchemaErrorHint extends error {
+  constructor() {
+    super();
+    this.propsInfoEmpty = "属性信息不能为空";
+    this.unIdentifyType = "不可识别的属性类型";
+    this.emptyLengthInfo = "空的长度信息";
+    this.emptyEnumInfo = "空的枚举信息";
+    this.errorEnumInfo = "错误的枚举信息";
+    this.emptyHintInfo = "空的提示信息";
+    this.emptyRangeInfo = "空的范围信息";
+  }
+
+  illegalHintInfo(v) {
+    return `非法的提示信息属性：${v}`;
+  }
+
+  illegalVerifyProps(v) {
+    return `非法的校验属性：${v}`;
+  }
+
+  illegalPatternType(v) {
+    return `非法的格式类型：${v}`;
+  }
+
+}
+
+var schema_error = new SchemaErrorHint();
 
 const {
   COMMON_METHODS: COMMON_METHODS$2,
@@ -624,8 +773,18 @@ const {
 const PATTERNS = Object.keys(pattern);
 
 const schemaCheck = function (info) {
-  if (type.object.isNot(info)) {
+  if (type.object.isNot(info) && !type.array.isNotEmpty(info)) {
     throw new Error(schema_error.propsInfoEmpty);
+  }
+
+  if (type.array.isNotEmpty(info)) {
+    const result = [];
+
+    for (let i = 0; i < info.length; i++) {
+      result[i] = schemaCheck(info[i]);
+    }
+
+    return result;
   }
 
   if (info instanceof Schema) {

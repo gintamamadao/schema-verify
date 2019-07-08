@@ -58,8 +58,11 @@ const restrictVerify = (data, claim, propsClaims, hint) => {
     return true;
 };
 
-const requiredVerify = (data, claim, hint) => {
-    if (Type.undefinedNull.is(data)) {
+const requiredVerify = (data, index, claim, hint) => {
+    if (
+        (Type.object.is(data) && !data.hasOwnProperty(index)) ||
+        (Type.array.is(data) && Type.undefined.is(data[index]))
+    ) {
         if (claim) {
             throw new Error(hint);
         } else {
@@ -191,16 +194,29 @@ const rangeVerify = (data, claim, hint) => {
     return true;
 };
 
-const elePropVerify = (data, claim, type) => {
+const elePropVerify = (data, claims, type) => {
     const verifyItem = (itemData, itemClaim, index) => {
-        const required = itemClaim.required;
-        const hint = Type.object.safe(itemClaim.hint);
+        let required;
+        let hint;
+        if (Type.array.isNotEmpty(itemClaim)) {
+            const itemItemClaim = itemClaim[0];
+            required = itemItemClaim.required;
+            hint = Type.object.safe(itemItemClaim.hint);
+        } else {
+            required = itemClaim.required;
+            hint = Type.object.safe(itemClaim.hint);
+        }
         const getHint =
             type === TYPES.object
                 ? ErrorMsg.propNeedHint
                 : ErrorMsg.elementNeedHint;
         const requiredHint = hint[METHODS.required] || getHint(index);
-        const isRequiredPass = requiredVerify(itemData, required, requiredHint);
+        const isRequiredPass = requiredVerify(
+            data,
+            index,
+            required,
+            requiredHint
+        );
         if (isRequiredPass) {
             return;
         }
@@ -232,10 +248,16 @@ const elePropVerify = (data, claim, type) => {
             }
         }
     };
-    const fn = () => {
+    const fn = claims => {
         const checkedMap = {};
-        for (const itemClaim of claim) {
-            const index = itemClaim.index;
+        for (const itemClaim of claims) {
+            let index;
+            if (Type.array.isNotEmpty(itemClaim)) {
+                const itemItemClaim = itemClaim[0];
+                index = itemItemClaim.index;
+            } else {
+                index = itemClaim.index;
+            }
             if (Type.number.isNatural(index) || Type.string.isNotEmpty(index)) {
                 const itemData = data[index];
                 verifyItem(itemData, itemClaim, index);
@@ -246,7 +268,7 @@ const elePropVerify = (data, claim, type) => {
         }
     };
     try {
-        fn();
+        fn(claims);
     } catch (e) {
         throw e;
     }
@@ -283,7 +305,7 @@ const customVerify = (data, claim, hint, parent) => {
     return true;
 };
 
-const verify = (data, claims, parent) => {
+const claimsVerify = (data, claims, parent) => {
     const fn = () => {
         const hint = Type.object.safe(claims.hint);
         const type = claims.type;
@@ -357,6 +379,36 @@ const verify = (data, claims, parent) => {
     } catch (e) {
         throw e;
     }
+};
+
+const verify = (data, info, parent) => {
+    const fn = claimsInfo => {
+        try {
+            claimsVerify(data, claimsInfo, parent);
+        } catch (e) {
+            throw e;
+        }
+    };
+
+    if (Type.object.is(info)) {
+        fn(info);
+    }
+
+    if (Type.array.is(info)) {
+        const errorMsgs = [];
+        for (let i = 0; i < info.length; i++) {
+            try {
+                fn(info[i]);
+                break;
+            } catch (e) {
+                errorMsgs.push(`schema-${i}: ${ErrorMsg.safeErrorHint(e)}`);
+            }
+        }
+        if (info.length === errorMsgs.length) {
+            throw new Error(errorMsgs.join(";"));
+        }
+    }
+    return true;
 };
 
 module.exports = verify;

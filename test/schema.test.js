@@ -410,4 +410,15 @@ describe("array", () => {
             new Schema(schemaInfo);
         }).toThrowError("空的长度信息");
     });
+    test(`multiple`, () => {
+        const schemaInfo = [
+            {
+                type: String
+            },
+            {
+                type: Number
+            }
+        ];
+        new Schema(schemaInfo);
+    });
 });

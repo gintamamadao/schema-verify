@@ -8,7 +8,15 @@ const isstring = function(v) {
     return typeof v === "string";
 };
 
-const isundefinedNull = function(v) {
+const isnull = function(v) {
+    return v === null;
+};
+
+const isundefined = function(v) {
+    return v === undefined;
+};
+
+const isundefinednull = function(v) {
     return v === undefined || v === null;
 };
 
@@ -99,10 +107,26 @@ const Type = {
     },
     undefinedNull: {
         is(v) {
-            return isundefinedNull(v);
+            return isundefinednull(v);
         },
         isNot(v) {
-            return !isundefinedNull(v);
+            return !isundefinednull(v);
+        }
+    },
+    null: {
+        is(v) {
+            return isnull(v);
+        },
+        isNot(v) {
+            return !isnull(v);
+        }
+    },
+    undefined: {
+        is(v) {
+            return isundefined(v);
+        },
+        isNot(v) {
+            return !isundefined(v);
         }
     }
 };
