@@ -259,10 +259,101 @@ describe("multiple", () => {
         ).toBeFalsy();
         expect(
             (() => {
+                const data = {};
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
                 const data = [];
                 return schema.verify(data);
             })()
         ).toBeFalsy();
+    });
+    test(`multiple:Schema`, () => {
+        const schemaRuleA = new Schema({
+            type: String
+        });
+        const schemaRuleB = new Schema({
+            type: Number
+        });
+        const schemaInfo = [schemaRuleA, schemaRuleB];
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = "a";
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = 0;
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = null;
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = {};
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = [];
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
+    test(`multiple:Object Schema`, () => {
+        const schemaRuleA = new Schema({
+            index: "a",
+            type: String
+        });
+        const schemaRuleB = new Schema({
+            index: "a",
+            type: Number
+        });
+        const schemaInfo = {
+            type: Object,
+            props: [[schemaRuleA, schemaRuleB]]
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = {
+                    a: "a"
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    a: 0
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    a: null
+                };
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = {};
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
     });
     test(`multiple:Object`, () => {
         const schemaInfo = {

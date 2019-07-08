@@ -116,6 +116,8 @@ schema.verify(data);
 -   data 就是实际要校验的数据
 -   schema.verify 表示对数据按照规则进行校验
 
+schemaInfo 一般是对象，但也可以为数组，但数组的元素必须为一个数据结构的规则
+
 ## 校验规则
 
 <!-- TOC -->
@@ -139,7 +141,7 @@ schema.verify(data);
 
 ### type
 
-数据类型校验规则，校验实例必须要有的校验规则
+数据类型校验规则，校验实例必须要有的校验规则，但如果规则中有 schema 校验实例规则的话，type 规则可以省略，因为会自动取 schema 校验实例的 type 规则
 
 -   String， 字符串
 -   Number， 数字
@@ -156,6 +158,28 @@ const schema = new Schema(schemaInfo);
 schema.verify("a");
 // true
 schema.verify(1);
+// false
+```
+
+如果一个数据有可能是 String 或者 Number，可以这样设置：
+
+```js
+const schemaInfo = [
+    {
+        type: String
+    },
+    {
+        type: Number
+    }
+];
+const schema = new Schema(schemaInfo);
+schema.verify("a");
+// true
+schema.verify(1);
+// true
+schema.verify(null);
+// false
+schema.verify({});
 // false
 ```
 
@@ -360,6 +384,42 @@ schema.verify({
 // false
 ```
 
+如果一个属性有可能是 String 或者 Number，可以这样设置：
+
+```js
+const schemaInfo = {
+    type: Object,
+    props: [
+        [
+            {
+                index: "a",
+                type: String
+            },
+            {
+                type: Number
+            }
+        ]
+    ]
+};
+const schema = new Schema(schemaInfo);
+schema.verify({
+    a: 1
+});
+// true
+schema.verify({
+    a: "a"
+});
+// true
+schema.verify({
+    a: null
+});
+// false
+schema.verify({
+    a: {}
+});
+// false
+```
+
 ### required
 
 属性是否必须存在，该规则只有 props 或者 elements 里的规则设置才有效。
@@ -471,6 +531,32 @@ const schema = new Schema(schemaInfo);
 schema.verify(["a", 1]);
 // true
 schema.verify(["a", "b"]);
+// false
+```
+
+如果一个元素有可能是 String 或者 Number，可以这样设置：
+
+```js
+const schemaInfo = {
+    type: Object,
+    elements: [
+        [
+            {
+                index: "a",
+                type: String
+            },
+            {
+                type: Number
+            }
+        ]
+    ]
+};
+const schema = new Schema(schemaInfo);
+schema.verify(["a"]);
+// true
+schema.verify([0]);
+// true
+schema.verify([null]);
 // false
 ```
 
