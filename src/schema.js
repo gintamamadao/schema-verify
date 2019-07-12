@@ -49,40 +49,33 @@ const schemaCheck = function(info) {
 const typeCheck = function(info) {
     const type = info.type;
     switch (type) {
+        case TYPES.string:
         case String:
             info = stringCheck(info);
             info.type = TYPES.string;
             break;
 
+        case TYPES.number:
         case Number:
             info = numberCheck(info);
             info.type = TYPES.number;
             break;
 
+        case TYPES.object:
         case Object:
             info = objectCheck(info);
             info.type = TYPES.object;
             break;
 
+        case TYPES.array:
         case Array:
             info = arrayCheck(info);
             info.type = TYPES.array;
             break;
 
-        case TYPES.string:
-            info = stringCheck(info);
-            break;
-
-        case TYPES.number:
-            info = numberCheck(info);
-            break;
-
-        case TYPES.object:
-            info = objectCheck(info);
-            break;
-
-        case TYPES.array:
-            info = arrayCheck(info);
+        case TYPES.function:
+        case Function:
+            info.type = TYPES.function;
             break;
     }
     return typeCommonCheck(info);

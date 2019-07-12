@@ -2,7 +2,8 @@ const TYPES = {
     string: "string",
     number: "number",
     object: "object",
-    array: "array"
+    array: "array",
+    function: "function"
 };
 
 const METHODS = {
@@ -37,7 +38,8 @@ const TYPE_METHODS = {
     string: [METHODS.pattern, METHODS.length, METHODS.enum, METHODS.match],
     number: [METHODS.range, METHODS.integer, METHODS.natural, METHODS.enum],
     object: [METHODS.restrict, METHODS.props],
-    array: [METHODS.elements, METHODS.length]
+    array: [METHODS.elements, METHODS.length],
+    function: []
 };
 
 module.exports = {
