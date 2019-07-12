@@ -25,6 +25,9 @@ const typeVerify = (data, claim, hint) => {
         case TYPES.array:
             isPass = Type.array.is(data);
             break;
+        case TYPES.function:
+            isPass = Type.function.is(data);
+            break;
     }
     if (!isPass) {
         throw new Error(

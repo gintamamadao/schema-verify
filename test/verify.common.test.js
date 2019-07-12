@@ -73,6 +73,24 @@ describe("common:type", () => {
             })()
         ).toBeFalsy();
     });
+    test(`Function`, () => {
+        const schemaInfo = {
+            type: Function
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = () => {};
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {};
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
 });
 
 describe("common:required", () => {
