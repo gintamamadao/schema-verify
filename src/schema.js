@@ -263,6 +263,7 @@ const arrayCheck = function(info) {
 class Schema {
     constructor(info) {
         this.info = schemaCheck(info);
+        this.verify = this.verify.bind(this);
     }
     verify(data, throwError, parent) {
         try {
