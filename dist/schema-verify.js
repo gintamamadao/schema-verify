@@ -338,7 +338,8 @@ const TYPES = {
   string: "string",
   number: "number",
   object: "object",
-  array: "array"
+  array: "array",
+  function: "function"
 };
 const METHODS = {
   index: "index",
@@ -363,7 +364,8 @@ const TYPE_METHODS = {
   string: [METHODS.pattern, METHODS.length, METHODS.enum, METHODS.match],
   number: [METHODS.range, METHODS.integer, METHODS.natural, METHODS.enum],
   object: [METHODS.restrict, METHODS.props],
-  array: [METHODS.elements, METHODS.length]
+  array: [METHODS.elements, METHODS.length],
+  function: []
 };
 var constant = {
   COMMON_METHODS,
@@ -399,6 +401,10 @@ const typeVerify = (data, claim, hint) => {
     case TYPES$1.array:
       isPass = type.array.is(data);
       break;
+
+    case TYPES$1.function:
+      isPass = type.function.is(data);
+      break;
   }
 
   if (!isPass) {
@@ -414,7 +420,21 @@ const restrictVerify = (data, claim, propsClaims, hint) => {
   }
 
   const dataKeys = Object.keys(data);
-  const restrictKeys = propsClaims.map(item => item.index).filter(s => s);
+  let restrictKeys = [];
+
+  for (const item of propsClaims) {
+    if (type.object.is(item)) {
+      restrictKeys.push(item.index);
+      continue;
+    }
+
+    if (type.array.is(item)) {
+      restrictKeys.push(item[0].index);
+      continue;
+    }
+  }
+
+  restrictKeys = restrictKeys.filter(s => s);
 
   for (const key of dataKeys) {
     if (!restrictKeys.includes(key)) {
@@ -817,40 +837,33 @@ const typeCheck = function (info) {
   const type = info.type;
 
   switch (type) {
+    case TYPES$2.string:
     case String:
       info = stringCheck(info);
       info.type = TYPES$2.string;
       break;
 
+    case TYPES$2.number:
     case Number:
       info = numberCheck(info);
       info.type = TYPES$2.number;
       break;
 
+    case TYPES$2.object:
     case Object:
       info = objectCheck(info);
       info.type = TYPES$2.object;
       break;
 
+    case TYPES$2.array:
     case Array:
       info = arrayCheck(info);
       info.type = TYPES$2.array;
       break;
 
-    case TYPES$2.string:
-      info = stringCheck(info);
-      break;
-
-    case TYPES$2.number:
-      info = numberCheck(info);
-      break;
-
-    case TYPES$2.object:
-      info = objectCheck(info);
-      break;
-
-    case TYPES$2.array:
-      info = arrayCheck(info);
+    case TYPES$2.function:
+    case Function:
+      info.type = TYPES$2.function;
       break;
   }
 
@@ -1018,11 +1031,32 @@ const objectCheck = function (info) {
       info.props = [schemaCheck(props)];
     } else {
       const propMap = props.reduce((map, item) => {
-        const index = item.index;
+        let index;
+
+        if (type.object.is(item)) {
+          index = item.index;
+
+          if (!type.string.isNotEmpty(index)) {
+            delete item["index"];
+          }
+        }
+
+        if (type.array.is(item) && type.object.is(item[0])) {
+          index = item[0].index;
+
+          if (!type.string.isNotEmpty(index)) {
+            delete item[0]["index"];
+          }
+        }
+
+        if (!type.string.isNotEmpty(index)) {
+          index = "$_PROPS_ELEMENTS_DEFAULT_SCHEME_INFO";
+        }
+
         map[index] = schemaCheck(item);
         return map;
       }, {});
-      info.props = Object.keys(propMap).map(prop => propMap[prop]);
+      info.props = Object.keys(propMap).map(key => propMap[key]);
     }
   }
 
@@ -1054,9 +1088,33 @@ const arrayCheck = function (info) {
       delete elements["index"];
       info.elements = [schemaCheck(elements)];
     } else {
-      info.elements = elements.map(item => {
-        return schemaCheck(item);
-      });
+      const elementMap = elements.reduce((map, item) => {
+        let index;
+
+        if (type.object.is(item)) {
+          index = item.index;
+
+          if (type.number.isNot(index)) {
+            delete item["index"];
+          }
+        }
+
+        if (type.array.is(item) && type.object.is(item[0])) {
+          index = item[0].index;
+
+          if (type.number.isNot(index)) {
+            delete item[0]["index"];
+          }
+        }
+
+        if (type.number.isNot(index)) {
+          index = "$_PROPS_ELEMENTS_DEFAULT_SCHEME_INFO";
+        }
+
+        map[index] = schemaCheck(item);
+        return map;
+      }, {});
+      info.elements = Object.keys(elementMap).map(key => elementMap[key]);
     }
   }
 
@@ -1081,6 +1139,7 @@ const arrayCheck = function (info) {
 class Schema {
   constructor(info) {
     this.info = schemaCheck(info);
+    this.verify = this.verify.bind(this);
   }
 
   verify(data, throwError, parent) {

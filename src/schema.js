@@ -209,11 +209,26 @@ const objectCheck = function(info) {
             info.props = [schemaCheck(props)];
         } else {
             const propMap = props.reduce((map, item) => {
-                const index = item.index;
+                let index;
+                if (Type.object.is(item)) {
+                    index = item.index;
+                    if (!Type.string.isNotEmpty(index)) {
+                        delete item["index"];
+                    }
+                }
+                if (Type.array.is(item) && Type.object.is(item[0])) {
+                    index = item[0].index;
+                    if (!Type.string.isNotEmpty(index)) {
+                        delete item[0]["index"];
+                    }
+                }
+                if (!Type.string.isNotEmpty(index)) {
+                    index = "$_PROPS_ELEMENTS_DEFAULT_SCHEME_INFO";
+                }
                 map[index] = schemaCheck(item);
                 return map;
             }, {});
-            info.props = Object.keys(propMap).map(prop => propMap[prop]);
+            info.props = Object.keys(propMap).map(key => propMap[key]);
         }
     }
     if (info.hasOwnProperty(METHODS.restrict)) {
@@ -239,9 +254,27 @@ const arrayCheck = function(info) {
             delete elements["index"];
             info.elements = [schemaCheck(elements)];
         } else {
-            info.elements = elements.map(item => {
-                return schemaCheck(item);
-            });
+            const elementMap = elements.reduce((map, item) => {
+                let index;
+                if (Type.object.is(item)) {
+                    index = item.index;
+                    if (Type.number.isNot(index)) {
+                        delete item["index"];
+                    }
+                }
+                if (Type.array.is(item) && Type.object.is(item[0])) {
+                    index = item[0].index;
+                    if (Type.number.isNot(index)) {
+                        delete item[0]["index"];
+                    }
+                }
+                if (Type.number.isNot(index)) {
+                    index = "$_PROPS_ELEMENTS_DEFAULT_SCHEME_INFO";
+                }
+                map[index] = schemaCheck(item);
+                return map;
+            }, {});
+            info.elements = Object.keys(elementMap).map(key => elementMap[key]);
         }
     }
     if (info.hasOwnProperty(METHODS.length)) {

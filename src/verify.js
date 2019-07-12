@@ -46,7 +46,18 @@ const restrictVerify = (data, claim, propsClaims, hint) => {
         return true;
     }
     const dataKeys = Object.keys(data);
-    const restrictKeys = propsClaims.map(item => item.index).filter(s => s);
+    let restrictKeys = [];
+    for (const item of propsClaims) {
+        if (Type.object.is(item)) {
+            restrictKeys.push(item.index);
+            continue;
+        }
+        if (Type.array.is(item)) {
+            restrictKeys.push(item[0].index);
+            continue;
+        }
+    }
+    restrictKeys = restrictKeys.filter(s => s);
     for (const key of dataKeys) {
         if (!restrictKeys.includes(key)) {
             throw new Error(

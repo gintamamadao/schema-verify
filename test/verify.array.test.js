@@ -104,6 +104,84 @@ describe("array:elements", () => {
             })()
         ).toBeFalsy();
     });
+    test(`elements`, () => {
+        const schemaInfo = {
+            type: Array,
+            elements: [
+                {
+                    index: 0,
+                    type: String,
+                    required: true
+                },
+                {
+                    index: 0,
+                    type: Number,
+                    required: true
+                }
+            ]
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = [1];
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = ["a"];
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = [];
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
+    test(`elements`, () => {
+        const schemaInfo = {
+            type: Array,
+            elements: [
+                [
+                    {
+                        index: 0,
+                        type: String,
+                        required: true
+                    },
+                    {
+                        type: Number
+                    }
+                ]
+            ]
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = [1];
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = ["a"];
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = [{}];
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = [];
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
 });
 
 describe("array:schema", () => {

@@ -58,6 +58,93 @@ describe("object:restrict", () => {
             })()
         ).toBeFalsy();
     });
+    test(`restrict`, () => {
+        const schemaInfo = {
+            type: Object,
+            restrict: true,
+            props: [
+                {
+                    index: "a",
+                    type: String
+                },
+                {
+                    index: "a",
+                    type: Number
+                }
+            ]
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = {
+                    a: 1
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {};
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    b: 1
+                };
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
+    test(`restrict`, () => {
+        const schemaInfo = {
+            type: Object,
+            restrict: true,
+            props: [
+                [
+                    {
+                        index: "a",
+                        type: String
+                    },
+                    {
+                        type: Number
+                    }
+                ]
+            ]
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = {
+                    a: "a"
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    a: 1
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {};
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    b: "a"
+                };
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
 });
 
 describe("object:props", () => {
