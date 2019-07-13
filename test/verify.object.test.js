@@ -218,6 +218,66 @@ describe("object:props", () => {
             })()
         ).toBeFalsy();
     });
+    test(`props`, () => {
+        const schemaInfo = {
+            type: Object,
+            props: [
+                [
+                    {
+                        type: String
+                    },
+                    {
+                        type: Number
+                    }
+                ]
+            ]
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = {
+                    a: "a",
+                    b: 2
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    a: "a",
+                    b: 2,
+                    c: "c",
+                    d: 4
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {};
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    a: "a",
+                    b: {}
+                };
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = {
+                    a: 1,
+                    b: null
+                };
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
 });
 
 describe("object:schema", () => {

@@ -570,8 +570,18 @@ const elePropVerify = (data, claims, type$1) => {
   };
 
   const verifyArr = (itemClaim, checkedMap) => {
-    const required = itemClaim.required;
-    const hint = type.object.safe(itemClaim.hint);
+    let required;
+    let hint;
+
+    if (type.array.isNotEmpty(itemClaim)) {
+      const itemItemClaim = itemClaim[0];
+      required = itemItemClaim.required;
+      hint = type.object.safe(itemItemClaim.hint);
+    } else {
+      required = itemClaim.required;
+      hint = type.object.safe(itemClaim.hint);
+    }
+
     const indexArr = type$1 === TYPES$1.object ? Object.keys(data) : Array.from("a".repeat(data.length)).map((s, i) => i);
     const emptyHint = type$1 === TYPES$1.object ? verify_error.propEmptyHint : verify_error.elementEmptyHint;
 
