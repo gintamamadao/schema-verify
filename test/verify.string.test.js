@@ -234,6 +234,41 @@ describe("string:enum", () => {
             })()
         ).toBeFalsy();
     });
+    test(`enum`, () => {
+        const schemaInfo = {
+            type: String,
+            enum: {
+                a: "1",
+                b: "2",
+                c: "3"
+            }
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = "1";
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = "2";
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = "a";
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = "b";
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
 });
 
 describe("string:match", () => {

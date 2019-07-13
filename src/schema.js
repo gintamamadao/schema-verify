@@ -143,14 +143,22 @@ const stringCheck = function(info) {
         length.max = +length.max;
     }
     if (info.hasOwnProperty(METHODS.enum)) {
-        const arr = info[METHODS.enum];
-        if (Type.array.isNot(arr) || Type.array.isEmpty(arr)) {
+        const enumData = info[METHODS.enum];
+        let arr;
+        if (Type.object.isNotEmpty(enumData)) {
+            arr = Object.keys(enumData).map(key => enumData[key]);
+        }
+        if (Type.array.isNotEmpty(enumData)) {
+            arr = enumData;
+        }
+        if (!Type.array.isNotEmpty(arr)) {
             throw new Error(ErrorMsg.emptyEnumInfo);
         }
         const isAllStr = arr.every(s => Type.string.is(s));
         if (!isAllStr) {
             throw new Error(ErrorMsg.errorEnumInfo);
         }
+        info[METHODS.enum] = arr;
     }
     if (info.hasOwnProperty(METHODS.match)) {
         const match = info[METHODS.match];
@@ -186,14 +194,22 @@ const numberCheck = function(info) {
         }
     }
     if (info.hasOwnProperty(METHODS.enum)) {
-        const arr = info[METHODS.enum];
-        if (Type.array.isNot(arr) || Type.array.isEmpty(arr)) {
+        const enumData = info[METHODS.enum];
+        let arr;
+        if (Type.object.isNotEmpty(enumData)) {
+            arr = Object.keys(enumData).map(key => enumData[key]);
+        }
+        if (Type.array.isNotEmpty(enumData)) {
+            arr = enumData;
+        }
+        if (!Type.array.isNotEmpty(arr)) {
             throw new Error(ErrorMsg.emptyEnumInfo);
         }
         const isAllNum = arr.every(s => Type.number.is(s));
         if (!isAllNum) {
             throw new Error(ErrorMsg.errorEnumInfo);
         }
+        info[METHODS.enum] = arr;
     }
     return info;
 };
@@ -228,7 +244,7 @@ const objectCheck = function(info) {
                 map[index] = schemaCheck(item);
                 return map;
             }, {});
-            info.props = Object.keys(propMap).map(key => propMap[key]);
+            info[METHODS.props] = Object.keys(propMap).map(key => propMap[key]);
         }
     }
     if (info.hasOwnProperty(METHODS.restrict)) {
@@ -274,7 +290,9 @@ const arrayCheck = function(info) {
                 map[index] = schemaCheck(item);
                 return map;
             }, {});
-            info.elements = Object.keys(elementMap).map(key => elementMap[key]);
+            info[METHODS.elements] = Object.keys(elementMap).map(
+                key => elementMap[key]
+            );
         }
     }
     if (info.hasOwnProperty(METHODS.length)) {

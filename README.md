@@ -267,6 +267,26 @@ schema.verify("d");
 // false
 ```
 
+enum 规则的值可以是数组，也可以是对象，但规则的值是对象的时候，有效值是对象的所有键值
+
+```js
+const schemaInfo = {
+    type: String,
+    enum: {
+        a: "1",
+        b: "2",
+        c: "3"
+    }
+};
+const schema = new Schema(schemaInfo);
+schema.verify("1");
+// true
+schema.verify("2");
+// true
+schema.verify("a");
+// false
+```
+
 ### range
 
 数值的范围校验规则，仅数值类型可用。

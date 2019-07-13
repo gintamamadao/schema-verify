@@ -955,9 +955,18 @@ const stringCheck = function (info) {
   }
 
   if (info.hasOwnProperty(METHODS$2.enum)) {
-    const arr = info[METHODS$2.enum];
+    const enumData = info[METHODS$2.enum];
+    let arr;
 
-    if (type.array.isNot(arr) || type.array.isEmpty(arr)) {
+    if (type.object.isNotEmpty(enumData)) {
+      arr = Object.keys(enumData).map(key => enumData[key]);
+    }
+
+    if (type.array.isNotEmpty(enumData)) {
+      arr = enumData;
+    }
+
+    if (!type.array.isNotEmpty(arr)) {
       throw new Error(schema_error.emptyEnumInfo);
     }
 
@@ -966,6 +975,8 @@ const stringCheck = function (info) {
     if (!isAllStr) {
       throw new Error(schema_error.errorEnumInfo);
     }
+
+    info[METHODS$2.enum] = arr;
   }
 
   if (info.hasOwnProperty(METHODS$2.match)) {
@@ -1012,9 +1023,18 @@ const numberCheck = function (info) {
   }
 
   if (info.hasOwnProperty(METHODS$2.enum)) {
-    const arr = info[METHODS$2.enum];
+    const enumData = info[METHODS$2.enum];
+    let arr;
 
-    if (type.array.isNot(arr) || type.array.isEmpty(arr)) {
+    if (type.object.isNotEmpty(enumData)) {
+      arr = Object.keys(enumData).map(key => enumData[key]);
+    }
+
+    if (type.array.isNotEmpty(enumData)) {
+      arr = enumData;
+    }
+
+    if (!type.array.isNotEmpty(arr)) {
       throw new Error(schema_error.emptyEnumInfo);
     }
 
@@ -1023,6 +1043,8 @@ const numberCheck = function (info) {
     if (!isAllNum) {
       throw new Error(schema_error.errorEnumInfo);
     }
+
+    info[METHODS$2.enum] = arr;
   }
 
   return info;
@@ -1066,7 +1088,7 @@ const objectCheck = function (info) {
         map[index] = schemaCheck(item);
         return map;
       }, {});
-      info.props = Object.keys(propMap).map(key => propMap[key]);
+      info[METHODS$2.props] = Object.keys(propMap).map(key => propMap[key]);
     }
   }
 
@@ -1124,7 +1146,7 @@ const arrayCheck = function (info) {
         map[index] = schemaCheck(item);
         return map;
       }, {});
-      info.elements = Object.keys(elementMap).map(key => elementMap[key]);
+      info[METHODS$2.elements] = Object.keys(elementMap).map(key => elementMap[key]);
     }
   }
 
