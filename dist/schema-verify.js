@@ -8,10 +8,13 @@ var isarray = _interopDefault(require('isarray'));
 var isobject = _interopDefault(require('isobject'));
 var isNumber = _interopDefault(require('is-number'));
 var isInteger = _interopDefault(require('is-integer'));
-var isFunctionX = _interopDefault(require('is-function-x'));
 
 const isstring = function (v) {
   return typeof v === "string";
+};
+
+const isfunction = function (v) {
+  return typeof v === "function";
 };
 
 const isnull = function (v) {
@@ -127,11 +130,11 @@ const Type = {
   },
   function: {
     is(v) {
-      return isFunctionX(v);
+      return isfunction(v);
     },
 
     isNot(v) {
-      return !isFunctionX(v);
+      return !isfunction(v);
     }
 
   },
@@ -770,12 +773,15 @@ class SchemaErrorHint extends error {
   constructor() {
     super();
     this.propsInfoEmpty = "属性信息不能为空";
-    this.unIdentifyType = "不可识别的属性类型";
     this.emptyLengthInfo = "空的长度信息";
     this.emptyEnumInfo = "空的枚举信息";
     this.errorEnumInfo = "错误的枚举信息";
     this.emptyHintInfo = "空的提示信息";
     this.emptyRangeInfo = "空的范围信息";
+  }
+
+  unIdentifyType(v) {
+    return `不可识别的属性类型：${v}`;
   }
 
   illegalHintInfo(v) {
@@ -884,7 +890,7 @@ const typeCommonCheck = info => {
   const methods = TYPE_METHODS$2[info.type];
 
   if (type.array.isNot(methods)) {
-    throw new Error(schema_error.unIdentifyType);
+    throw new Error(schema_error.unIdentifyType(methods));
   }
 
   for (const key in info) {
@@ -1065,26 +1071,49 @@ const objectCheck = function (info) {
       throw new Error(schema_error.illegalVerifyProps(METHODS$2.props));
     }
 
-    if (type.object.isNotEmpty(props)) {
-      delete props["index"];
-      info.props = [schemaCheck(props)];
-    } else {
+    const formatObjProps = (props, info) => {
+      if (type.function.isNot(props[METHODS$2.type]) && type.string.isNot(TYPES$2[props[METHODS$2.type]]) && !props.hasOwnProperty(METHODS$2.schema) && !(props instanceof Schema)) {
+        props = Object.keys(props).map(key => {
+          const item = props[key];
+
+          if (key === "$_PROPS_DEFAULT_INFO") {
+            return item;
+          }
+
+          if (type.object.is(item)) {
+            item[METHODS$2.index] = key;
+          }
+
+          if (type.array.is(item) && type.object.is(item[0])) {
+            item[0][METHODS$2.index] = key;
+          }
+
+          return item;
+        });
+        formatArrProps(props, info);
+      } else {
+        delete props[METHODS$2.index];
+        info.props = [schemaCheck(props)];
+      }
+    };
+
+    const formatArrProps = (props, info) => {
       const propMap = props.reduce((map, item) => {
         let index;
 
         if (type.object.is(item)) {
-          index = item.index;
+          index = item[METHODS$2.index];
 
           if (!type.string.isNotEmpty(index)) {
-            delete item["index"];
+            delete item[METHODS$2.index];
           }
         }
 
         if (type.array.is(item) && type.object.is(item[0])) {
-          index = item[0].index;
+          index = item[0][METHODS$2.index];
 
           if (!type.string.isNotEmpty(index)) {
-            delete item[0]["index"];
+            delete item[0][METHODS$2.index];
           }
         }
 
@@ -1096,6 +1125,12 @@ const objectCheck = function (info) {
         return map;
       }, {});
       info[METHODS$2.props] = Object.keys(propMap).map(key => propMap[key]);
+    };
+
+    if (type.object.isNotEmpty(props)) {
+      formatObjProps(props, info);
+    } else {
+      formatArrProps(props, info);
     }
   }
 
