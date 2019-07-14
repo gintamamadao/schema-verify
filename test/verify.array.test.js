@@ -182,6 +182,43 @@ describe("array:elements", () => {
             })()
         ).toBeFalsy();
     });
+    test(`elements`, () => {
+        const schemaInfo = {
+            type: Array,
+            elements: [
+                {
+                    index: 1,
+                    type: String,
+                    required: true
+                }
+            ]
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = [1, "a"];
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = ["a", "b"];
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = [1, 2];
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = [1];
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
 });
 
 describe("array:schema", () => {

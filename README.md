@@ -393,6 +393,38 @@ schema.verify({
 // false
 ```
 
+上面的例子是根据 index 的值来针对某个属性的校验，也可以设置一个属性的通用校验。
+
+```js
+const schemaInfo = {
+    type: Object,
+    props: {
+        type: Number
+    }
+};
+const schema = new Schema(schemaInfo);
+schema.verify({
+    a: 1
+});
+// true
+schema.verify({
+    a: 1,
+    b: 1
+});
+// true
+schema.verify({
+    a: 1,
+    b: 2,
+    c: 3
+});
+// true
+schema.verify({
+    a: 1,
+    b: "a"
+});
+// false
+```
+
 也可以用一个校验实例作为对象属性的校验规则。
 
 ```js
@@ -548,6 +580,30 @@ schema.verify([1]);
 // false
 ```
 
+也可以用 index 指定校验哪个元素
+
+```js
+const schemaInfo = {
+    type: Array,
+    elements: [
+        {
+            index: 1,
+            type: String,
+            required: true
+        }
+    ]
+};
+const schema = new Schema(schemaInfo);
+schema.verify([1, "a"]);
+// true
+schema.verify(["a", "b"]);
+// true
+schema.verify([1, 2]);
+// false
+schema.verify([1]);
+// false，因为 required 为 true，位置在 1 的元素不能为空
+```
+
 也可以用一个校验实例作为元素的校验规则。
 
 ```js
@@ -580,7 +636,6 @@ const schemaInfo = {
     elements: [
         [
             {
-                index: "a",
                 type: String
             },
             {

@@ -940,18 +940,25 @@ const stringCheck = function (info) {
   }
 
   if (info.hasOwnProperty(METHODS$2.length)) {
-    const length = info[METHODS$2.length];
+    let length = info[METHODS$2.length];
 
-    if (type.object.isEmpty(length)) {
+    if (!type.object.isNotEmpty(length) && !type.number.isNatural(length)) {
       throw new Error(schema_error.emptyLengthInfo);
     }
 
-    if (!type.number.isNatural(length.min) && !type.number.isNatural(length.max)) {
-      throw new Error(schema_error.emptyLengthInfo);
-    }
+    if (type.number.isNatural(length)) {
+      info[METHODS$2.length] = {
+        min: length,
+        max: length
+      };
+    } else if (type.object.isNotEmpty(length)) {
+      if (!type.number.isNatural(length.min) && !type.number.isNatural(length.max)) {
+        throw new Error(schema_error.emptyLengthInfo);
+      }
 
-    length.min = +length.min;
-    length.max = +length.max;
+      type.number.isNatural(length.min) && (length.min = +length.min);
+      type.number.isNatural(length.max) && (length.max = +length.max);
+    }
   }
 
   if (info.hasOwnProperty(METHODS$2.enum)) {
@@ -1151,18 +1158,25 @@ const arrayCheck = function (info) {
   }
 
   if (info.hasOwnProperty(METHODS$2.length)) {
-    const length = info[METHODS$2.length];
+    let length = info[METHODS$2.length];
 
-    if (type.object.isEmpty(length)) {
+    if (!type.object.isNotEmpty(length) && !type.number.isNatural(length)) {
       throw new Error(schema_error.emptyLengthInfo);
     }
 
-    if (!type.number.isNatural(length.min) && !type.number.isNatural(length.max)) {
-      throw new Error(schema_error.emptyLengthInfo);
-    }
+    if (type.number.isNatural(length)) {
+      info[METHODS$2.length] = {
+        min: length,
+        max: length
+      };
+    } else if (type.object.isNotEmpty(length)) {
+      if (!type.number.isNatural(length.min) && !type.number.isNatural(length.max)) {
+        throw new Error(schema_error.emptyLengthInfo);
+      }
 
-    length.min = +length.min;
-    length.max = +length.max;
+      type.number.isNatural(length.min) && (length.min = +length.min);
+      type.number.isNatural(length.max) && (length.max = +length.max);
+    }
   }
 
   return info;
