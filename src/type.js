@@ -2,10 +2,13 @@ const isarray = require("isarray");
 const isobject = require("isobject");
 const isnumber = require("is-number");
 const isinteger = require("is-integer");
-const isfunction = require("is-function-x");
 
 const isstring = function(v) {
     return typeof v === "string";
+};
+
+const isfunction = function(v) {
+    return typeof v === "function";
 };
 
 const isnull = function(v) {

@@ -371,6 +371,32 @@ schema.verify(0.5);
 ```js
 const schemaInfo = {
     type: Object,
+    props: {
+        a: {
+            type: Number
+        }
+    }
+};
+const schema = new Schema(schemaInfo);
+schema.verify({
+    a: 1
+});
+// true
+schema.verify({
+    b: 1
+});
+// true
+schema.verify({
+    a: "a"
+});
+// false
+```
+
+props 的规则描述既可以是对象也可以数组，当为数组时需要 index 规则来说明是哪一个属性的校验规则
+
+```js
+const schemaInfo = {
+    type: Object,
     props: [
         {
             index: "a",
@@ -455,6 +481,25 @@ schema.verify({
 ```
 
 如果一个属性有可能是 String 或者 Number，可以这样设置：
+
+```js
+const schemaInfo = {
+    type: Object,
+    props: {
+       a: [
+            {
+                index: ,
+                type: String
+            },
+            {
+                type: Number
+            }
+        ]
+    }
+}
+```
+
+或者以下这样
 
 ```js
 const schemaInfo = {
