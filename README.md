@@ -233,8 +233,6 @@ schema.verify("bcd");
 -   min， 最小长度，字符串（数组）的长度必须大于或等于最小长度
 -   max， 最大长度，字符串（数组）的长度必须小于或等于最大长度
 
-规则中，min，max 两个属性中必须要有一个
-
 ```js
 const schemaInfo = {
     type: String,
@@ -243,6 +241,26 @@ const schemaInfo = {
 const schema = new Schema(schemaInfo);
 schema.verify("aa");
 // true
+schema.verify("a");
+// true
+schema.verify("aaa");
+// false
+schema.verify("");
+// false
+```
+
+规则值也可以为某一个数字，表示固定某一长度
+
+```js
+const schemaInfo = {
+    type: String,
+    length: 2
+};
+const schema = new Schema(schemaInfo);
+schema.verify("aa");
+// true
+schema.verify("a");
+// false
 schema.verify("aaa");
 // false
 schema.verify("");
@@ -267,7 +285,7 @@ schema.verify("d");
 // false
 ```
 
-enum 规则的值可以是数组，也可以是对象，但规则的值是对象的时候，有效值是对象的所有键值
+enum 规则的值可以是数组，也可以是对象，但规则的值是对象的时候，有效值是对象的所有可读键值
 
 ```js
 const schemaInfo = {

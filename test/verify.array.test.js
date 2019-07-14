@@ -284,4 +284,79 @@ describe("array:length", () => {
             })()
         ).toBeFalsy();
     });
+    test(`length`, () => {
+        const schemaInfo = {
+            type: Array,
+            length: { min: 2 }
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = ["a", "a"];
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = ["a", "a", "a"];
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = ["a"];
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
+    test(`length`, () => {
+        const schemaInfo = {
+            type: Array,
+            length: { max: 2 }
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = ["a", "a"];
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = ["a", "a", "a"];
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = ["a"];
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+    });
+    test(`length`, () => {
+        const schemaInfo = {
+            type: Array,
+            length: 2
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = ["a", "a"];
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = ["a", "a", "a"];
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = ["a"];
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
 });

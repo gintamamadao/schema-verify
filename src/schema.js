@@ -129,18 +129,25 @@ const stringCheck = function(info) {
         }
     }
     if (info.hasOwnProperty(METHODS.length)) {
-        const length = info[METHODS.length];
-        if (Type.object.isEmpty(length)) {
+        let length = info[METHODS.length];
+        if (!Type.object.isNotEmpty(length) && !Type.number.isNatural(length)) {
             throw new Error(ErrorMsg.emptyLengthInfo);
         }
-        if (
-            !Type.number.isNatural(length.min) &&
-            !Type.number.isNatural(length.max)
-        ) {
-            throw new Error(ErrorMsg.emptyLengthInfo);
+        if (Type.number.isNatural(length)) {
+            info[METHODS.length] = {
+                min: length,
+                max: length
+            };
+        } else if (Type.object.isNotEmpty(length)) {
+            if (
+                !Type.number.isNatural(length.min) &&
+                !Type.number.isNatural(length.max)
+            ) {
+                throw new Error(ErrorMsg.emptyLengthInfo);
+            }
+            Type.number.isNatural(length.min) && (length.min = +length.min);
+            Type.number.isNatural(length.max) && (length.max = +length.max);
         }
-        length.min = +length.min;
-        length.max = +length.max;
     }
     if (info.hasOwnProperty(METHODS.enum)) {
         const enumData = info[METHODS.enum];
@@ -296,18 +303,25 @@ const arrayCheck = function(info) {
         }
     }
     if (info.hasOwnProperty(METHODS.length)) {
-        const length = info[METHODS.length];
-        if (Type.object.isEmpty(length)) {
+        let length = info[METHODS.length];
+        if (!Type.object.isNotEmpty(length) && !Type.number.isNatural(length)) {
             throw new Error(ErrorMsg.emptyLengthInfo);
         }
-        if (
-            !Type.number.isNatural(length.min) &&
-            !Type.number.isNatural(length.max)
-        ) {
-            throw new Error(ErrorMsg.emptyLengthInfo);
+        if (Type.number.isNatural(length)) {
+            info[METHODS.length] = {
+                min: length,
+                max: length
+            };
+        } else if (Type.object.isNotEmpty(length)) {
+            if (
+                !Type.number.isNatural(length.min) &&
+                !Type.number.isNatural(length.max)
+            ) {
+                throw new Error(ErrorMsg.emptyLengthInfo);
+            }
+            Type.number.isNatural(length.min) && (length.min = +length.min);
+            Type.number.isNatural(length.max) && (length.max = +length.max);
         }
-        length.min = +length.min;
-        length.max = +length.max;
     }
     return info;
 };

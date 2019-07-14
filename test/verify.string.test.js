@@ -206,6 +206,81 @@ describe("string:length", () => {
             })()
         ).toBeFalsy();
     });
+    test(`length`, () => {
+        const schemaInfo = {
+            type: String,
+            length: { min: 3 }
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = "aaa";
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = "aaaa";
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = "aa";
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
+    test(`length`, () => {
+        const schemaInfo = {
+            type: String,
+            length: { max: 3 }
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = "aaa";
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = "aaaa";
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = "aa";
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+    });
+    test(`length`, () => {
+        const schemaInfo = {
+            type: String,
+            length: 3
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = "aaa";
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = "aaaa";
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = "aa";
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
 });
 
 describe("string:enum", () => {
