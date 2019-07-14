@@ -4,12 +4,14 @@ class SchemaErrorHint extends ErrorHint {
     constructor() {
         super();
         this.propsInfoEmpty = "属性信息不能为空";
-        this.unIdentifyType = "不可识别的属性类型";
         this.emptyLengthInfo = "空的长度信息";
         this.emptyEnumInfo = "空的枚举信息";
         this.errorEnumInfo = "错误的枚举信息";
         this.emptyHintInfo = "空的提示信息";
         this.emptyRangeInfo = "空的范围信息";
+    }
+    unIdentifyType(v) {
+        return `不可识别的属性类型：${v}`;
     }
     illegalHintInfo(v) {
         return `非法的提示信息属性：${v}`;

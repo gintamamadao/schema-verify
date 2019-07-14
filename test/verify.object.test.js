@@ -148,7 +148,7 @@ describe("object:restrict", () => {
 });
 
 describe("object:props", () => {
-    test(`props`, () => {
+    test(`props:arr`, () => {
         const schemaInfo = {
             type: Object,
             props: [
@@ -182,7 +182,7 @@ describe("object:props", () => {
             })()
         ).toBeFalsy();
     });
-    test(`props`, () => {
+    test(`props:arr`, () => {
         const schemaInfo = {
             type: Object,
             props: [
@@ -218,7 +218,66 @@ describe("object:props", () => {
             })()
         ).toBeFalsy();
     });
-    test(`props`, () => {
+    test(`props:arr`, () => {
+        const schemaInfo = {
+            type: Object,
+            props: [
+                [
+                    {
+                        index: "a",
+                        type: String
+                    },
+                    {
+                        type: Number
+                    }
+                ]
+            ]
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = {
+                    a: "a",
+                    b: {}
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    a: "a",
+                    b: null
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {};
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    a: {},
+                    b: {}
+                };
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = {
+                    a: null,
+                    b: null
+                };
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
+    test(`props:arr`, () => {
         const schemaInfo = {
             type: Object,
             props: [
@@ -231,6 +290,201 @@ describe("object:props", () => {
                     }
                 ]
             ]
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = {
+                    a: "a",
+                    b: 2
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    a: "a",
+                    b: 2,
+                    c: "c",
+                    d: 4
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {};
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    a: "a",
+                    b: {}
+                };
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = {
+                    a: 1,
+                    b: null
+                };
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
+    test(`props:obj`, () => {
+        const schemaInfo = {
+            type: Object,
+            props: {
+                a: {
+                    type: Number
+                }
+            }
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = {
+                    a: 1
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {};
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    a: "a"
+                };
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
+    test(`props:obj`, () => {
+        const schemaInfo = {
+            type: Object,
+            props: {
+                a: {
+                    type: String,
+                    required: true
+                }
+            }
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = {
+                    a: "a"
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    a: "a",
+                    b: "b"
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    a: "a",
+                    b: null
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {};
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
+    test(`props:arr`, () => {
+        const schemaInfo = {
+            type: Object,
+            props: {
+                a: [
+                    {
+                        type: String
+                    },
+                    {
+                        type: Number
+                    }
+                ]
+            }
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = {
+                    a: "a",
+                    b: {}
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    a: "a",
+                    b: null
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {};
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    a: {},
+                    b: {}
+                };
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = {
+                    a: null,
+                    b: null
+                };
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
+    test(`props:obj`, () => {
+        const schemaInfo = {
+            type: Object,
+            props: {
+                $_PROPS_DEFAULT_INFO: [
+                    {
+                        type: String
+                    },
+                    {
+                        type: Number
+                    }
+                ]
+            }
         };
         const schema = new Schema(schemaInfo);
         expect(

@@ -84,7 +84,7 @@ const typeCheck = function(info) {
 const typeCommonCheck = info => {
     const methods = TYPE_METHODS[info.type];
     if (Type.array.isNot(methods)) {
-        throw new Error(ErrorMsg.unIdentifyType);
+        throw new Error(ErrorMsg.unIdentifyType(methods));
     }
     for (const key in info) {
         if (COMMON_METHODS.includes(key) || methods.includes(key)) {
@@ -227,22 +227,45 @@ const objectCheck = function(info) {
         if (!Type.object.isNotEmpty(props) && !Type.array.is(props)) {
             throw new Error(ErrorMsg.illegalVerifyProps(METHODS.props));
         }
-        if (Type.object.isNotEmpty(props)) {
-            delete props["index"];
-            info.props = [schemaCheck(props)];
-        } else {
+        const formatObjProps = (props, info) => {
+            if (
+                Type.function.isNot(props[METHODS.type]) &&
+                Type.string.isNot(TYPES[props[METHODS.type]]) &&
+                !props.hasOwnProperty(METHODS.schema) &&
+                !(props instanceof Schema)
+            ) {
+                props = Object.keys(props).map(key => {
+                    const item = props[key];
+                    if (key === "$_PROPS_DEFAULT_INFO") {
+                        return item;
+                    }
+                    if (Type.object.is(item)) {
+                        item[METHODS.index] = key;
+                    }
+                    if (Type.array.is(item) && Type.object.is(item[0])) {
+                        item[0][METHODS.index] = key;
+                    }
+                    return item;
+                });
+                formatArrProps(props, info);
+            } else {
+                delete props[METHODS.index];
+                info.props = [schemaCheck(props)];
+            }
+        };
+        const formatArrProps = (props, info) => {
             const propMap = props.reduce((map, item) => {
                 let index;
                 if (Type.object.is(item)) {
-                    index = item.index;
+                    index = item[METHODS.index];
                     if (!Type.string.isNotEmpty(index)) {
-                        delete item["index"];
+                        delete item[METHODS.index];
                     }
                 }
                 if (Type.array.is(item) && Type.object.is(item[0])) {
-                    index = item[0].index;
+                    index = item[0][METHODS.index];
                     if (!Type.string.isNotEmpty(index)) {
-                        delete item[0]["index"];
+                        delete item[0][METHODS.index];
                     }
                 }
                 if (!Type.string.isNotEmpty(index)) {
@@ -252,6 +275,11 @@ const objectCheck = function(info) {
                 return map;
             }, {});
             info[METHODS.props] = Object.keys(propMap).map(key => propMap[key]);
+        };
+        if (Type.object.isNotEmpty(props)) {
+            formatObjProps(props, info);
+        } else {
+            formatArrProps(props, info);
         }
     }
     if (info.hasOwnProperty(METHODS.restrict)) {
