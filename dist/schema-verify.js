@@ -361,6 +361,10 @@ const METHODS = {
   hint: "hint",
   pattern: "pattern",
   length: "length",
+  minLength: "minLength",
+  maxLength: "maxLength",
+  min: "min",
+  max: "max",
   enum: "enum",
   match: "match",
   range: "range",
@@ -372,10 +376,10 @@ const METHODS = {
 };
 const COMMON_METHODS = [METHODS.index, METHODS.required, METHODS.type, METHODS.schema, METHODS.custom, METHODS.hint];
 const TYPE_METHODS = {
-  string: [METHODS.pattern, METHODS.length, METHODS.enum, METHODS.match],
-  number: [METHODS.range, METHODS.integer, METHODS.natural, METHODS.enum],
+  string: [METHODS.pattern, METHODS.length, METHODS.enum, METHODS.match, METHODS.minLength, METHODS.maxLength],
+  number: [METHODS.range, METHODS.integer, METHODS.natural, METHODS.enum, METHODS.min, METHODS.max],
   object: [METHODS.restrict, METHODS.props],
-  array: [METHODS.elements, METHODS.length],
+  array: [METHODS.elements, METHODS.length, METHODS.minLength, METHODS.maxLength],
   function: [],
   boolean: [],
   null: []
@@ -973,6 +977,32 @@ const stringCheck = function (info) {
     }
   }
 
+  if (info.hasOwnProperty(METHODS$2.minLength)) {
+    const minLength = info[METHODS$2.minLength];
+
+    if (type.number.isNatural(minLength)) {
+      let length = info[METHODS$2.length];
+      const minInfo = {
+        min: minLength
+      };
+      info[METHODS$2.length] = type.object.is(length) ? Object.assign({}, length, minInfo) : minInfo;
+      delete info[METHODS$2.minLength];
+    }
+  }
+
+  if (info.hasOwnProperty(METHODS$2.maxLength)) {
+    const maxLength = info[METHODS$2.maxLength];
+
+    if (type.number.isNatural(maxLength)) {
+      let length = info[METHODS$2.length];
+      const maxInfo = {
+        max: maxLength
+      };
+      info[METHODS$2.length] = type.object.is(length) ? Object.assign({}, length, maxInfo) : maxInfo;
+      delete info[METHODS$2.maxLength];
+    }
+  }
+
   if (info.hasOwnProperty(METHODS$2.length)) {
     let length = info[METHODS$2.length];
 
@@ -1032,6 +1062,32 @@ const stringCheck = function (info) {
 };
 
 const numberCheck = function (info) {
+  if (info.hasOwnProperty(METHODS$2.min)) {
+    const min = info[METHODS$2.min];
+
+    if (type.number.isNatural(min)) {
+      let range = info[METHODS$2.range];
+      const minInfo = {
+        min
+      };
+      info[METHODS$2.range] = type.object.is(range) ? Object.assign({}, range, minInfo) : minInfo;
+      delete info[METHODS$2.min];
+    }
+  }
+
+  if (info.hasOwnProperty(METHODS$2.max)) {
+    const max = info[METHODS$2.max];
+
+    if (type.number.isNatural(max)) {
+      let range = info[METHODS$2.range];
+      const maxInfo = {
+        max
+      };
+      info[METHODS$2.range] = type.object.is(range) ? Object.assign({}, range, maxInfo) : maxInfo;
+      delete info[METHODS$2.max];
+    }
+  }
+
   if (info.hasOwnProperty(METHODS$2.range)) {
     const range = info[METHODS$2.range];
 
@@ -1217,6 +1273,32 @@ const arrayCheck = function (info) {
         return map;
       }, {});
       info[METHODS$2.elements] = Object.keys(elementMap).map(key => elementMap[key]);
+    }
+  }
+
+  if (info.hasOwnProperty(METHODS$2.minLength)) {
+    const minLength = info[METHODS$2.minLength];
+
+    if (type.number.isNatural(minLength)) {
+      let length = info[METHODS$2.length];
+      const minInfo = {
+        min: minLength
+      };
+      info[METHODS$2.length] = type.object.is(length) ? Object.assign({}, length, minInfo) : minInfo;
+      delete info[METHODS$2.minLength];
+    }
+  }
+
+  if (info.hasOwnProperty(METHODS$2.maxLength)) {
+    const maxLength = info[METHODS$2.maxLength];
+
+    if (type.number.isNatural(maxLength)) {
+      let length = info[METHODS$2.length];
+      const maxInfo = {
+        max: maxLength
+      };
+      info[METHODS$2.length] = type.object.is(length) ? Object.assign({}, length, maxInfo) : maxInfo;
+      delete info[METHODS$2.maxLength];
     }
   }
 

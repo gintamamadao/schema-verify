@@ -281,6 +281,56 @@ describe("string:length", () => {
             })()
         ).toBeFalsy();
     });
+    test(`minLength`, () => {
+        const schemaInfo = {
+            type: String,
+            minLength: 3
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = "aaa";
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = "aaaa";
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = "aa";
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
+    test(`maxLength`, () => {
+        const schemaInfo = {
+            type: String,
+            maxLength: 3
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = "aaa";
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = "aaaa";
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = "aa";
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+    });
 });
 
 describe("string:enum", () => {

@@ -17,6 +17,10 @@ const METHODS = {
     hint: "hint",
     pattern: "pattern",
     length: "length",
+    minLength: "minLength",
+    maxLength: "maxLength",
+    min: "min",
+    max: "max",
     enum: "enum",
     match: "match",
     range: "range",
@@ -37,10 +41,29 @@ const COMMON_METHODS = [
 ];
 
 const TYPE_METHODS = {
-    string: [METHODS.pattern, METHODS.length, METHODS.enum, METHODS.match],
-    number: [METHODS.range, METHODS.integer, METHODS.natural, METHODS.enum],
+    string: [
+        METHODS.pattern,
+        METHODS.length,
+        METHODS.enum,
+        METHODS.match,
+        METHODS.minLength,
+        METHODS.maxLength
+    ],
+    number: [
+        METHODS.range,
+        METHODS.integer,
+        METHODS.natural,
+        METHODS.enum,
+        METHODS.min,
+        METHODS.max
+    ],
     object: [METHODS.restrict, METHODS.props],
-    array: [METHODS.elements, METHODS.length],
+    array: [
+        METHODS.elements,
+        METHODS.length,
+        METHODS.minLength,
+        METHODS.maxLength
+    ],
     function: [],
     boolean: [],
     null: []

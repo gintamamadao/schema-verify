@@ -126,8 +126,12 @@ schemaInfo 一般是对象，但也可以为数组，但数组的元素必须为
 -   [pattern](#pattern)
 -   [match](#match)
 -   [length](#length)
+-   [minLength](#minLength)
+-   [maxLength](#maxLength)
 -   [enum](#enum)
 -   [range](#range)
+-   [min](#min)
+-   [max](#max)
 -   [integer](#integer)
 -   [natural](#natural)
 -   [props](#props)
@@ -248,7 +252,7 @@ schema.verify("bcd");
 
 ### length
 
-字符串长度或者数组的长度校验规则。
+字符串或者数组的长度校验规则。
 
 -   min， 最小长度，字符串（数组）的长度必须大于或等于最小长度
 -   max， 最大长度，字符串（数组）的长度必须小于或等于最大长度
@@ -284,6 +288,42 @@ schema.verify("a");
 schema.verify("aaa");
 // false
 schema.verify("");
+// false
+```
+
+### minLength
+
+字符串或者数组的最小长度校验规则。
+
+```js
+const schemaInfo = {
+    type: String,
+    minLength: 2
+};
+const schema = new Schema(schemaInfo);
+schema.verify("aa");
+// true
+schema.verify("a");
+// false
+schema.verify("aaa");
+// true
+```
+
+### maxLength
+
+字符串或者数组的最大长度校验规则。
+
+```js
+const schemaInfo = {
+    type: String,
+    maxLength: 2
+};
+const schema = new Schema(schemaInfo);
+schema.verify("aa");
+// true
+schema.verify("a");
+// true
+schema.verify("aaa");
 // false
 ```
 
@@ -345,6 +385,42 @@ schema.verify(1);
 schema.verify(2);
 // true
 schema.verify(0);
+// false
+```
+
+### min
+
+数值的最小值校验规则。
+
+```js
+const schemaInfo = {
+    type: Number,
+    min: 2
+};
+const schema = new Schema(schemaInfo);
+schema.verify(2);
+// true
+schema.verify(1);
+// false
+schema.verify(3);
+// true
+```
+
+### max
+
+数值的最大值校验规则。
+
+```js
+const schemaInfo = {
+    type: String,
+    max: 2
+};
+const schema = new Schema(schemaInfo);
+schema.verify(2);
+// true
+schema.verify(1);
+// true
+schema.verify(3);
 // false
 ```
 

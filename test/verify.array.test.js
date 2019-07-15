@@ -396,4 +396,54 @@ describe("array:length", () => {
             })()
         ).toBeFalsy();
     });
+    test(`minLength`, () => {
+        const schemaInfo = {
+            type: Array,
+            minLength: 2
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = ["a", "a"];
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = ["a", "a", "a"];
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = ["a"];
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
+    test(`maxLength`, () => {
+        const schemaInfo = {
+            type: Array,
+            maxLength: 2
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = ["a", "a"];
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = ["a", "a", "a"];
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = ["a"];
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+    });
 });
