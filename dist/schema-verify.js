@@ -135,6 +135,12 @@ const Type = {
 
     isNot(v) {
       return !isfunction(v);
+    },
+
+    safeExecu(v, ...arg) {
+      if (isfunction(v)) {
+        return v.apply(null, arg);
+      }
     }
 
   },
@@ -643,7 +649,7 @@ const schemaVerify = (data, claim, hint, parent) => {
 
 const customVerify = (data, claim, hint, parent) => {
   try {
-    const isPass = claim(data, parent);
+    const isPass = type.function.safeExecu(claim, data, parent);
 
     if (!isPass) {
       throw new Error(hint || "未知");

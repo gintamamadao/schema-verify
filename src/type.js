@@ -106,6 +106,11 @@ const Type = {
         },
         isNot(v) {
             return !isfunction(v);
+        },
+        safeExecu(v, ...arg) {
+            if (isfunction(v)) {
+                return v.apply(null, arg);
+            }
         }
     },
     undefinedNull: {
