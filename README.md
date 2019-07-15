@@ -147,6 +147,9 @@ schemaInfo 一般是对象，但也可以为数组，但数组的元素必须为
 -   Number， 数字
 -   Object， 对象
 -   Array， 数组
+-   Function， 函数
+-   Boolean， 布尔
+-   null， 空值
 
 有些校验规则是某特定类型才能设置
 
@@ -181,6 +184,23 @@ schema.verify(null);
 // false
 schema.verify({});
 // false
+```
+
+也可以用字符串表示
+
+-   string， 字符串
+-   number， 数字
+-   object， 对象
+-   array， 数组
+-   function， 函数
+-   boolean， 布尔
+-   null， 空值
+
+```js
+const schemaInfo = {
+    type: "string"
+};
+const schema = new Schema(schemaInfo);
 ```
 
 ### pattern
