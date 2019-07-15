@@ -3,7 +3,9 @@ const TYPES = {
     number: "number",
     object: "object",
     array: "array",
-    function: "function"
+    function: "function",
+    boolean: "boolean",
+    null: "null"
 };
 
 const METHODS = {
@@ -39,7 +41,9 @@ const TYPE_METHODS = {
     number: [METHODS.range, METHODS.integer, METHODS.natural, METHODS.enum],
     object: [METHODS.restrict, METHODS.props],
     array: [METHODS.elements, METHODS.length],
-    function: []
+    function: [],
+    boolean: [],
+    null: []
 };
 
 module.exports = {

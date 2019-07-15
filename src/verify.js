@@ -28,6 +28,12 @@ const typeVerify = (data, claim, hint) => {
         case TYPES.function:
             isPass = Type.function.is(data);
             break;
+        case TYPES.boolean:
+            isPass = Type.boolean.is(data);
+            break;
+        case TYPES.null:
+            isPass = Type.null.is(data);
+            break;
     }
     if (!isPass) {
         throw new Error(

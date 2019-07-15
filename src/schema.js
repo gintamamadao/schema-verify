@@ -77,6 +77,16 @@ const typeCheck = function(info) {
         case Function:
             info.type = TYPES.function;
             break;
+
+        case TYPES.boolean:
+        case Boolean:
+            info.type = TYPES.boolean;
+            break;
+
+        case TYPES.null:
+        case null:
+            info.type = TYPES.null;
+            break;
     }
     return typeCommonCheck(info);
 };
@@ -230,6 +240,7 @@ const objectCheck = function(info) {
         const formatObjProps = (props, info) => {
             if (
                 Type.function.isNot(props[METHODS.type]) &&
+                Type.null.isNot(props[METHODS.type]) &&
                 Type.string.isNot(TYPES[props[METHODS.type]]) &&
                 !props.hasOwnProperty(METHODS.schema) &&
                 !(props instanceof Schema)

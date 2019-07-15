@@ -348,7 +348,9 @@ const TYPES = {
   number: "number",
   object: "object",
   array: "array",
-  function: "function"
+  function: "function",
+  boolean: "boolean",
+  null: "null"
 };
 const METHODS = {
   index: "index",
@@ -374,7 +376,9 @@ const TYPE_METHODS = {
   number: [METHODS.range, METHODS.integer, METHODS.natural, METHODS.enum],
   object: [METHODS.restrict, METHODS.props],
   array: [METHODS.elements, METHODS.length],
-  function: []
+  function: [],
+  boolean: [],
+  null: []
 };
 var constant = {
   COMMON_METHODS,
@@ -413,6 +417,14 @@ const typeVerify = (data, claim, hint) => {
 
     case TYPES$1.function:
       isPass = type.function.is(data);
+      break;
+
+    case TYPES$1.boolean:
+      isPass = type.boolean.is(data);
+      break;
+
+    case TYPES$1.null:
+      isPass = type.null.is(data);
       break;
   }
 
@@ -887,6 +899,16 @@ const typeCheck = function (info) {
     case Function:
       info.type = TYPES$2.function;
       break;
+
+    case TYPES$2.boolean:
+    case Boolean:
+      info.type = TYPES$2.boolean;
+      break;
+
+    case TYPES$2.null:
+    case null:
+      info.type = TYPES$2.null;
+      break;
   }
 
   return typeCommonCheck(info);
@@ -1078,7 +1100,7 @@ const objectCheck = function (info) {
     }
 
     const formatObjProps = (props, info) => {
-      if (type.function.isNot(props[METHODS$2.type]) && type.string.isNot(TYPES$2[props[METHODS$2.type]]) && !props.hasOwnProperty(METHODS$2.schema) && !(props instanceof Schema)) {
+      if (type.function.isNot(props[METHODS$2.type]) && type.null.isNot(props[METHODS$2.type]) && type.string.isNot(TYPES$2[props[METHODS$2.type]]) && !props.hasOwnProperty(METHODS$2.schema) && !(props instanceof Schema)) {
         props = Object.keys(props).map(key => {
           const item = props[key];
 

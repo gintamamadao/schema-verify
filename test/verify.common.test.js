@@ -91,6 +91,66 @@ describe("common:type", () => {
             })()
         ).toBeFalsy();
     });
+    test(`Boolean`, () => {
+        const schemaInfo = {
+            type: Boolean
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = true;
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = false;
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = null;
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = {};
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
+    test(`null`, () => {
+        const schemaInfo = {
+            type: null
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = null;
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = false;
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = 0;
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = {};
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
 });
 
 describe("common:required", () => {
