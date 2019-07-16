@@ -243,7 +243,11 @@ const elePropVerify = (data, claims, type) => {
         try {
             verify(itemData, itemClaim, data);
         } catch (e) {
-            throw new Error(ErrorMsg.elementErrorHint(index, e));
+            const getHint =
+                type === TYPES.object
+                    ? ErrorMsg.propErrorHint
+                    : ErrorMsg.elementErrorHint;
+            throw new Error(getHint(index, e));
         }
     };
     const verifyArr = (itemClaim, checkedMap) => {

@@ -590,7 +590,8 @@ const elePropVerify = (data, claims, type$1) => {
     try {
       verify(itemData, itemClaim, data);
     } catch (e) {
-      throw new Error(verify_error.elementErrorHint(index, e));
+      const getHint = type$1 === TYPES$1.object ? verify_error.propErrorHint : verify_error.elementErrorHint;
+      throw new Error(getHint(index, e));
     }
   };
 
