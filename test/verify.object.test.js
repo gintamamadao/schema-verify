@@ -409,10 +409,16 @@ describe("object:props", () => {
         ).toBeTruthy();
         expect(
             (() => {
-                const data = {};
+                const data = {
+                    a: 1
+                };
                 return schema.verify(data);
             })()
         ).toBeFalsy();
+        expect(() => {
+            const data = {};
+            return schema.verify(data, true);
+        }).toThrowError("属性");
     });
     test(`props:arr`, () => {
         const schemaInfo = {

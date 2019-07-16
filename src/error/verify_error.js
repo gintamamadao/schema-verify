@@ -5,6 +5,8 @@ class VerifyErrorHint extends ErrorHint {
         super();
         this.propEmptyHint = "对象缺少属性";
         this.elementEmptyHint = "数组缺少元素";
+        this.propErrorHint = this.propErrorHint.bind(this);
+        this.elementErrorHint = this.elementErrorHint.bind(this);
     }
     minValueHint(min) {
         return `小于最小值 ${min}`;
