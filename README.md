@@ -609,9 +609,8 @@ schema.verify({
 const schemaInfo = {
     type: Object,
     props: {
-       a: [
+        a: [
             {
-                index: ,
                 type: String
             },
             {
@@ -619,7 +618,7 @@ const schemaInfo = {
             }
         ]
     }
-}
+};
 ```
 
 或者以下这样
