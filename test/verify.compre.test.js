@@ -225,6 +225,25 @@ describe("compre", () => {
                 return schema.verify(data);
             })()
         ).toBeFalsy();
+        expect(() => {
+            const data = {
+                email: email,
+                str: str,
+                no: no,
+                obj: {
+                    phone: phone
+                },
+                arr: [
+                    {
+                        uri: "a"
+                    },
+                    str
+                ]
+            };
+            return schema.verify(data, true);
+        }).toThrowError(
+            "属性 arr: 第 0 项: 属性 uri: pattern 校验不通过, 错误信息：需要 uri 格式"
+        );
     });
 });
 

@@ -111,12 +111,39 @@ const data = {
 schema.verify(data);
 ```
 
+### 变量说明
+
 -   schemaInfo 即我们设计的数据结构的规则
 -   schema 就是我们基于规则 schemaInfo 新建的一个校验实例
 -   data 就是实际要校验的数据
 -   schema.verify 表示对数据按照规则进行校验
 
-schemaInfo 一般是对象，但也可以为数组，但数组的元素必须为一个数据结构的规则
+schemaInfo 既可以为对象，也可以为数组，当为数组时只要满足某一个校验规则元素就视为通过。
+
+### 抛出错误
+
+校验可以选择是否抛出错误，错误会带有信息说明校验不通过的地方。
+
+```js
+const data = {
+    email: "abc@abc.abc",
+    str: "a",
+    no: 1,
+    obj: {
+        phone: "12312345123"
+    },
+    arr: [
+        {
+            uri: 0
+        },
+        "a"
+    ]
+};
+schema.verify(data, true);
+// 第二参数为 true 时，校验不通过会抛出错误，上面的例子中 arr 里面的第一个元素的uri属性校验不通过，所以会抛出错误
+
+// 抛出的错误信息：属性 arr: 第 0 项: 属性 uri: type 校验不通过, 错误信息：需要 string 类型
+```
 
 ## 校验规则
 
