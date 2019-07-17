@@ -139,9 +139,9 @@ const data = {
     ]
 };
 schema.verify(data, true);
-// 第二参数为 true 时，校验不通过会抛出错误，上面的例子中 arr 里面的第一个元素的uri属性校验不通过，所以会抛出错误
+// 第二参数为 true 时，校验不通过会抛出错误，上面的例子中data 的属性 arr 里面的第一个元素的属性 uri 校验不通过
 
-// 抛出的错误信息：属性 arr: 第 0 项: 属性 uri: type 校验不通过, 错误信息：需要 string 类型
+// throw Error: 属性 arr: 第 0 项: 属性 uri: type 校验不通过, 错误信息：需要 string 类型
 ```
 
 ## 校验规则
@@ -884,7 +884,7 @@ schema.verify("b");
 
 ### hint
 
-设置某些规则错误后抛出的错误提示，schema.verify 的第二个参数为 true 时错误才会抛出。
+项目本身对各个规则有默认的错误提示，但也可以通过设置 hint 改变某些规则错误后抛出的错误提示，schema.verify 的第二个参数为 true 时错误才会抛出。
 
 ```js
 const schemaInfo = {
