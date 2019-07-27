@@ -106,7 +106,7 @@ schema.verify(data, true);
 
 <!-- TOC -->
 
--   [Schema 规则](#Schema规则)
+-   [Schema 规则](#schema-规则)
     -   [type](#type)
     -   [pattern](#pattern)
     -   [match](#match)
@@ -127,9 +127,9 @@ schema.verify(data, true);
     -   [schema](#schema)
     -   [custom](#custom)
     -   [hint](#hint)
--   [Type 校验](#type校验)
-    -   [Type api](#typeapi)
--   [Pattern 校验](#Pattern校验)
+-   [Type 校验](#type-校验)
+    -   [Type api](#type-api)
+-   [Pattern 校验](#pattern-校验)
 
 ## Schema 规则
 
