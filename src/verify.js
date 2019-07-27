@@ -322,7 +322,7 @@ const schemaVerify = (data, claim, hint, parent) => {
 
 const customVerify = (data, claim, hint, parent) => {
     try {
-        const isPass = Type.function.safeExecu(claim, data, parent);
+        const isPass = Type.function.safe(claim)(data, parent);
         if (!isPass) {
             throw new Error(hint || "未知");
         }

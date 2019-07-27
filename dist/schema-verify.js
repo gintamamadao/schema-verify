@@ -6,11 +6,14 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 
 var isarray = _interopDefault(require('isarray'));
 var isobject = _interopDefault(require('isobject'));
-var isNumber = _interopDefault(require('is-number'));
 var isInteger = _interopDefault(require('is-integer'));
 
 const isstring = function (v) {
   return typeof v === "string";
+};
+
+const isnumber = function (v) {
+  return typeof v === "number" && !isNaN(v);
 };
 
 const isfunction = function (v) {
@@ -48,29 +51,41 @@ const Type = {
     },
 
     safe(v) {
-      return isstring(v) ? v : "";
+      return isstring(v) ? v : isundefinednull(v) ? "" : v + "";
     }
 
   },
   number: {
     is(v) {
-      return isNumber(v);
+      return isnumber(v);
     },
 
     isNot(v) {
-      return !isNumber(v);
+      return !isnumber(v);
     },
 
     isinteger(v) {
-      return isInteger(v);
+      return isnumber(v) && isInteger(v);
     },
 
     isNatural(v) {
-      return isInteger(v) && v >= 0;
+      return isnumber(v) && isInteger(v) && v >= 0;
     },
 
     safe(v) {
-      return isNumber(v) ? v : 0;
+      if (isnumber(v)) {
+        return v;
+      } else if (isundefinednull(v)) {
+        return 0;
+      } else {
+        v = new Number(v).valueOf();
+
+        if (isnumber(v)) {
+          return v;
+        }
+      }
+
+      return 0;
     }
 
   },
@@ -137,10 +152,13 @@ const Type = {
       return !isfunction(v);
     },
 
-    safeExecu(v, ...arg) {
-      if (isfunction(v)) {
-        return v.apply(null, arg);
-      }
+    safe(v, context) {
+      return function () {
+        if (isfunction(v)) {
+          context = context || isnull(context) ? context : this;
+          return v.apply(context, Array.prototype.slice.apply(arguments));
+        }
+      };
     }
 
   },
@@ -668,7 +686,7 @@ const schemaVerify = (data, claim, hint, parent) => {
 
 const customVerify = (data, claim, hint, parent) => {
   try {
-    const isPass = type.function.safeExecu(claim, data, parent);
+    const isPass = type.function.safe(claim)(data, parent);
 
     if (!isPass) {
       throw new Error(hint || "未知");

@@ -102,30 +102,36 @@ schema.verify(data, true);
 // throw Error: 属性 address: 属性 city: type 校验不通过, 错误信息：需要 string 类型
 ```
 
-## 校验规则
+## 目录
 
 <!-- TOC -->
 
--   [type](#type)
--   [pattern](#pattern)
--   [match](#match)
--   [length](#length)
--   [minLength](#minLength)
--   [maxLength](#maxLength)
--   [enum](#enum)
--   [range](#range)
--   [min](#min)
--   [max](#max)
--   [integer](#integer)
--   [natural](#natural)
--   [props](#props)
--   [required](#required)
--   [restrict](#restrict)
--   [elements](#elements)
--   [index](#index)
--   [schema](#schema)
--   [custom](#custom)
--   [hint](#hint)
+-   [Schema 规则](#Schema规则)
+    -   [type](#type)
+    -   [pattern](#pattern)
+    -   [match](#match)
+    -   [length](#length)
+    -   [minLength](#minLength)
+    -   [maxLength](#maxLength)
+    -   [enum](#enum)
+    -   [range](#range)
+    -   [min](#min)
+    -   [max](#max)
+    -   [integer](#integer)
+    -   [natural](#natural)
+    -   [props](#props)
+    -   [required](#required)
+    -   [restrict](#restrict)
+    -   [elements](#elements)
+    -   [index](#index)
+    -   [schema](#schema)
+    -   [custom](#custom)
+    -   [hint](#hint)
+-   [Type 校验](#type校验)
+    -   [Type api](#typeapi)
+-   [Pattern 校验](#Pattern校验)
+
+## Schema 规则
 
 ### type
 
@@ -854,4 +860,262 @@ const schemaInfo = {
 const schema = new Schema(schemaInfo);
 schema.verify(1, true);
 // throw Error: 数据类型错误，需要字符串类型
+```
+
+## Type 校验
+
+如果你仅仅想校验数据的类型，可以使用 Type 来校验
+
+```js
+const { Type } = require("schema-verify");
+Type.string.is("a");
+//true
+Type.string.is(0);
+//false
+```
+
+### Type api
+
+#### string
+
+    string 类型相关
+
+##### is
+
+     是否是 string 类型
+
+##### isNot
+
+     是否不是 string 类型
+
+##### isEmpty
+
+     是否是空字符串
+
+##### isNotEmpty
+
+     是否是非空字符串
+
+##### safe
+
+     转换为 string 类型
+
+```js
+Type.string.isNot(0);
+//true
+Type.string.isEmpty("");
+//true
+Type.string.isNotEmpty("a");
+//true
+Type.string.safe(null);
+//""
+```
+
+#### number
+
+    number 类型相关
+
+##### is
+
+     是否是 number 类型
+
+##### isNot
+
+     是否不是 number 类型
+
+##### isinteger
+
+     是否是整数
+
+##### isNatural
+
+     是否是自然数
+
+##### safe
+
+     转换为 number 类型
+
+```js
+Type.number.is(1);
+//true
+Type.number.isNot("a");
+//true
+Type.number.isinteger(1);
+//true
+Type.number.isNatural(1);
+//true
+Type.number.safe(null);
+//0
+```
+
+#### boolean
+
+    boolean 类型相关
+
+##### is
+
+     是否是 boolean 类型
+
+##### isNot
+
+     是否不是 boolean 类型
+
+```js
+Type.boolean.is(false);
+//true
+Type.boolean.isNot(undefined);
+//true
+```
+
+#### array
+
+    array 类型相关
+
+##### is
+
+     是否是 array 类型
+
+##### isNot
+
+     是否不是 array 类型
+
+##### isEmpty
+
+     是否是空数组
+
+##### isNotEmpty
+
+     是否是非数组
+
+##### safe
+
+     转换为 array 类型
+
+```js
+Type.array.is(["a"]);
+//true
+Type.array.isNot(null);
+//true
+Type.array.isEmpty([]);
+//true
+Type.array.isNotEmpty(["a"]);
+//true
+Type.array.safe(null);
+//[]
+```
+
+#### object
+
+    object 类型相关
+
+##### is
+
+     是否是 object 类型
+
+##### isNot
+
+     是否不是 object 类型
+
+##### isEmpty
+
+     是否是空对象
+
+##### isNotEmpty
+
+     是否是非对象
+
+##### safe
+
+     转换为 object 类型
+
+```js
+Type.object.is({});
+//true
+Type.object.isNot(null);
+//true
+Type.object.isEmpty({});
+//true
+Type.object.isNotEmpty({
+    a: 1
+});
+//true
+Type.object.safe(null);
+//{}
+```
+
+#### function
+
+    function 类型相关
+
+##### is
+
+     是否是 function 类型
+
+##### isNot
+
+     是否不是 function 类型
+
+##### safe
+
+     转换为 function 类型
+
+```js
+Type.function.is(() => {});
+//true
+Type.function.isNot("a");
+//true
+Type.function.safe(a => {
+    return a;
+})("a");
+//a
+Type.function.safe(null)("a");
+//undefined
+```
+
+#### null
+
+    null相关
+
+##### is
+
+     是否是 null
+
+##### isNot
+
+     是否不是 null
+
+#### undefined
+
+    undefined 相关
+
+##### is
+
+     是否是 undefined
+
+##### isNot
+
+     是否不是 undefined
+
+## Pattern 校验
+
+可以单独使用 Schema 规则中的 pattern 规则
+
+-   phone， 手机号
+-   uri， 链接
+-   email， 邮箱地址
+-   color， 颜色
+-   version， 版本号
+-   sign， 仅允许由字母，数字和下划线组成，首字符必须为字母或者下划线
+-   numStr， 仅允许数字组成
+-   jsonStr， json 字符串，代码用 JSON.parse 实现校验
+-   time， 时间格式，代码用 new Date(time) 实现校验
+
+```js
+const { Pattern } = require("schema-verify");
+Pattern.phone.is("13332222111");
+//true
+Pattern.phone.is("10000");
+//false
+Pattern.email.is("aaa@123.bbb");
+//false
 ```

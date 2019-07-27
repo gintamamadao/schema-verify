@@ -27,21 +27,24 @@ describe("string", () => {
     test(`string:safe`, () => {
         expect(Type.string.safe(null)).toEqual("");
         expect(Type.string.safe("a")).toEqual("a");
+        expect(Type.string.safe(0)).toEqual("0");
     });
 });
 
 describe("number", () => {
     test(`number:is`, () => {
         expect(Type.number.is("a")).toBeFalsy();
-        expect(Type.number.is("1")).toBeTruthy();
+        expect(Type.number.is("1")).toBeFalsy();
         expect(Type.number.is(1)).toBeTruthy();
+        expect(Type.number.is(1.1)).toBeTruthy();
         expect(Type.number.is("1a")).toBeFalsy();
     });
 
     test(`number:isNot`, () => {
         expect(Type.number.isNot("a")).toBeTruthy();
-        expect(Type.number.isNot("1")).toBeFalsy();
+        expect(Type.number.isNot("1")).toBeTruthy();
         expect(Type.number.isNot(1)).toBeFalsy();
+        expect(Type.number.isNot(1.1)).toBeFalsy();
         expect(Type.number.isNot("1a")).toBeTruthy();
     });
 
@@ -63,6 +66,8 @@ describe("number", () => {
         expect(Type.number.safe(0)).toEqual(0);
         expect(Type.number.safe(1)).toEqual(1);
         expect(Type.number.safe(null)).toEqual(0);
+        expect(Type.number.safe("1")).toEqual(1);
+        expect(Type.number.safe("1.1")).toEqual(1.1);
     });
 });
 
@@ -186,6 +191,14 @@ describe("function", () => {
         expect(Type.function.isNot(1)).toBeTruthy();
         expect(Type.function.isNot(() => {})).toBeFalsy();
         expect(Type.function.isNot(async () => {})).toBeFalsy();
+    });
+
+    test(`function:safe`, () => {
+        const fn = p => {
+            return p;
+        };
+        expect(Type.function.safe(fn)("a")).toEqual("a");
+        expect(Type.function.safe(null)("a")).toEqual(undefined);
     });
 });
 

@@ -1,10 +1,13 @@
 const isarray = require("isarray");
 const isobject = require("isobject");
-const isnumber = require("is-number");
 const isinteger = require("is-integer");
 
 const isstring = function(v) {
     return typeof v === "string";
+};
+
+const isnumber = function(v) {
+    return typeof v === "number" && !isNaN(v);
 };
 
 const isfunction = function(v) {
@@ -38,7 +41,7 @@ const Type = {
             return isstring(v) && v.length >= 1;
         },
         safe(v) {
-            return isstring(v) ? v : "";
+            return isstring(v) ? v : isundefinednull(v) ? "" : v + "";
         }
     },
     number: {
@@ -49,13 +52,23 @@ const Type = {
             return !isnumber(v);
         },
         isinteger(v) {
-            return isinteger(v);
+            return isnumber(v) && isinteger(v);
         },
         isNatural(v) {
-            return isinteger(v) && v >= 0;
+            return isnumber(v) && isinteger(v) && v >= 0;
         },
         safe(v) {
-            return isnumber(v) ? v : 0;
+            if (isnumber(v)) {
+                return v;
+            } else if (isundefinednull(v)) {
+                return 0;
+            } else {
+                v = new Number(v).valueOf();
+                if (isnumber(v)) {
+                    return v;
+                }
+            }
+            return 0;
         }
     },
     boolean: {
@@ -107,10 +120,16 @@ const Type = {
         isNot(v) {
             return !isfunction(v);
         },
-        safeExecu(v, ...arg) {
-            if (isfunction(v)) {
-                return v.apply(null, arg);
-            }
+        safe(v, context) {
+            return function() {
+                if (isfunction(v)) {
+                    context = context || isnull(context) ? context : this;
+                    return v.apply(
+                        context,
+                        Array.prototype.slice.apply(arguments)
+                    );
+                }
+            };
         }
     },
     undefinedNull: {
