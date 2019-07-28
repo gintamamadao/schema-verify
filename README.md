@@ -1,6 +1,6 @@
 # schema-verify
 
-verify data type and schema
+javascript validate object or array
 
 ## 项目简介
 
