@@ -107,6 +107,14 @@ describe("array", () => {
         expect(Type.array.safe(null)).toEqual([]);
         expect(Type.array.safe("a")).toEqual([]);
     });
+
+    test(`array:pure`, () => {
+        expect(Type.array.pure(["a"])).toEqual(["a"]);
+        expect(Type.array.pure(["a", null])).toEqual(["a"]);
+        expect(Type.array.pure(["a", undefined])).toEqual(["a"]);
+        expect(Type.array.pure(null)).toEqual([]);
+        expect(Type.array.pure("a")).toEqual([]);
+    });
 });
 
 describe("object", () => {
@@ -174,6 +182,30 @@ describe("object", () => {
         });
         expect(Type.object.safe(null)).toEqual({});
         expect(Type.object.safe("a")).toEqual({});
+    });
+
+    test(`object:pure`, () => {
+        expect(
+            Type.object.pure({
+                a: "a"
+            })
+        ).toEqual({
+            a: "a"
+        });
+        expect(
+            Type.object.pure({
+                a: null
+            })
+        ).toEqual({});
+        expect(
+            Type.object.pure({
+                a: undefined,
+                b: "b"
+            })
+        ).toEqual({
+            b: "b"
+        });
+        expect(Type.object.pure(null)).toEqual({});
     });
 });
 

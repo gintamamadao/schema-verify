@@ -94,6 +94,18 @@ const Type = {
         },
         safe(v) {
             return isarray(v) ? v : [];
+        },
+        pure(v) {
+            if (!isarray(v)) {
+                return [];
+            }
+            const t = [];
+            v.forEach(item => {
+                if (!isundefinednull(item)) {
+                    t.push(item);
+                }
+            });
+            return t;
         }
     },
     object: {
@@ -111,6 +123,18 @@ const Type = {
         },
         safe(v) {
             return isobject(v) ? v : {};
+        },
+        pure(v) {
+            if (!isobject(v)) {
+                return {};
+            }
+            const t = Object.assign({}, v);
+            Object.keys(t).forEach(k => {
+                if (isundefinednull(t[k])) {
+                    delete t[k];
+                }
+            });
+            return t;
         }
     },
     function: {
