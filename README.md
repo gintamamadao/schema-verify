@@ -110,13 +110,13 @@ schema.verify(data, true);
 
 <!-- TOC -->
 
--   [Schema 规则](#schema-规则)
+-   [Schema Rules](#schema-rules)
     -   [type](#type)
     -   [pattern](#pattern)
     -   [match](#match)
     -   [length](#length)
-    -   [minLength](#minLength)
-    -   [maxLength](#maxLength)
+    -   [minLength](#minlength)
+    -   [maxLength](#maxlength)
     -   [enum](#enum)
     -   [range](#range)
     -   [min](#min)
@@ -131,9 +131,9 @@ schema.verify(data, true);
     -   [schema](#schema)
     -   [custom](#custom)
     -   [hint](#hint)
--   [Type 校验](#type-校验)
+-   [Type Verify](#type-verify)
     -   [Type api](#type-api)
--   [Pattern 校验](#pattern-校验)
+-   [Pattern Verify](#pattern-verify)
 
 ## Schema 规则
 
