@@ -4,7 +4,7 @@ javascript validate object or array
 
 ## 项目简介
 
-js 本身是一种弱类型语音，但有时候我们需要严格限制数据的类型或者结构，本项目设计的目的是能对 js 中的数据类型和数据结构根据一定规则进行校验分析。
+js 本身是一种弱类型语音，但有时候我们需要严格限制数据的类型或者结构，本项目设计的目的是按照数据结构类型要求生成一个校验实例，通过这个校验实例校验数据是否符合要求。
 
 ## 安装
 
@@ -17,6 +17,7 @@ npm i schema-verify --save
 ```js
 const { Schema } = require("schema-verify");
 
+//数据结构类型要求
 const schemaInfo = {
     type: Object,
     restrict: true,
@@ -57,8 +58,10 @@ const schemaInfo = {
     }
 };
 
+//生成一个校验实例
 const schema = new Schema(schemaInfo);
 
+//需要校验的数据
 const data = {
     id: 1,
     email: "abc@abc.abc",
@@ -69,13 +72,14 @@ const data = {
     }
 };
 
+//校验
 schema.verify(data);
 //true
 ```
 
 ### 变量说明
 
--   schemaInfo 即我们设计的数据结构的规则
+-   schemaInfo 即数据结构类型要求
 -   schema 就是我们基于规则 schemaInfo 新建的一个校验实例
 -   data 就是实际要校验的数据
 -   schema.verify 表示对数据按照规则进行校验
@@ -478,34 +482,7 @@ schema.verify({
 // false
 ```
 
-props 的规则描述既可以是对象也可以数组，当为数组时需要 index 规则来说明是哪一个属性的校验规则
-
-```js
-const schemaInfo = {
-    type: Object,
-    props: [
-        {
-            index: "a",
-            type: Number
-        }
-    ]
-};
-const schema = new Schema(schemaInfo);
-schema.verify({
-    a: 1
-});
-// true
-schema.verify({
-    b: 1
-});
-// true
-schema.verify({
-    a: "a"
-});
-// false
-```
-
-上面的例子是根据 index 的值来针对某个属性的校验，也可以设置一个属性的通用校验。
+上面的例子是根据 props 的键名来对应某个属性的校验，也可以设置所有属性的通用校验。
 
 ```js
 const schemaInfo = {
@@ -582,42 +559,6 @@ const schemaInfo = {
         ]
     }
 };
-```
-
-或者以下这样
-
-```js
-const schemaInfo = {
-    type: Object,
-    props: [
-        [
-            {
-                index: "a",
-                type: String
-            },
-            {
-                type: Number
-            }
-        ]
-    ]
-};
-const schema = new Schema(schemaInfo);
-schema.verify({
-    a: 1
-});
-// true
-schema.verify({
-    a: "a"
-});
-// true
-schema.verify({
-    a: null
-});
-// false
-schema.verify({
-    a: {}
-});
-// false
 ```
 
 ### required

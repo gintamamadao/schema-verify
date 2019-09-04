@@ -1,6 +1,13 @@
-const { Schema } = require("../src/index");
+const SchemaVerify = require("../src/index");
+const Schema = SchemaVerify.Schema;
 
 describe("common", () => {
+    test(`type`, () => {
+        const schemaInfo = {
+            type: String
+        };
+        new SchemaVerify(schemaInfo);
+    });
     test(`type`, () => {
         const schemaInfo = {
             type: String
