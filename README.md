@@ -135,7 +135,7 @@ schema.verify(data, true);
     -   [Type api](#type-api)
 -   [Pattern Verify](#pattern-verify)
 
-## Schema 规则
+## Schema Rules
 
 ### type
 
@@ -803,7 +803,7 @@ schema.verify(1, true);
 // throw Error: 数据类型错误，需要字符串类型
 ```
 
-## Type 校验
+## Type Verify
 
 如果你仅仅想校验数据的类型，可以使用 Type 来校验
 
@@ -1037,7 +1037,7 @@ Type.function.safe(null)("a");
 
      是否不是 undefined
 
-## Pattern 校验
+## Pattern Verify
 
 可以单独使用 Schema 规则中的 pattern 规则
 
