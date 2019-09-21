@@ -1,6 +1,6 @@
 {
     "name": "schema-verify",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "description": "javascript validate object or array",
     "main": "./dist/schema-verify.js",
     "scripts": {
@@ -34,8 +34,6 @@
     "devDependencies": {
         "babel-runtime": "^6.26.0",
         "@babel/core": "^7.4.5",
-        "@babel/plugin-external-helpers": "^7.2.0",
-        "@babel/plugin-transform-runtime": "^7.4.4",
         "@babel/preset-env": "^7.4.5",
         "jest": "^24.8.0",
         "rollup": "^1.14.3",

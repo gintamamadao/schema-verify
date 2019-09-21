@@ -18,8 +18,7 @@ const babelOptions = {
                 }
             }
         ]
-    ],
-    plugins: ["@babel/external-helpers", "@babel/transform-runtime"]
+    ]
 };
 
 module.exports = {
