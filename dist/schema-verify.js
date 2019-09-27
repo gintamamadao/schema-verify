@@ -443,6 +443,7 @@ const {
   TYPES: TYPES$1,
   METHODS: METHODS$1
 } = constant;
+
 const CHECK_METHODS = COMMON_METHODS$1.slice(0, COMMON_METHODS$1.length - 2);
 
 const typeVerify = (data, claim, hint) => {
@@ -875,6 +876,7 @@ const {
   TYPES: TYPES$2,
   METHODS: METHODS$2
 } = constant;
+
 const PATTERNS = Object.keys(pattern);
 
 const schemaCheck = function (info) {
