@@ -1,6 +1,6 @@
 {
     "name": "schema-verify",
-    "version": "1.2.6",
+    "version": "1.2.7",
     "description": "javascript validate object or array",
     "main": "./dist/schema-verify.js",
     "scripts": {
@@ -27,7 +27,6 @@
         "check"
     ],
     "dependencies": {
-        "@babel/runtime": "^7.6.2",
         "is-integer": "^1.0.7",
         "isarray": "^2.0.5",
         "isobject": "^4.0.0"
