@@ -106,7 +106,7 @@ schema.verify(data, true);
 // throw Error: 属性 address: 属性 city: type 校验不通过, 错误信息：需要 string 类型
 ```
 
-## 目录
+# 目录
 
 <!-- TOC -->
 
@@ -135,9 +135,9 @@ schema.verify(data, true);
     -   [Type api](#type-api)
 -   [Pattern Verify](#pattern-verify)
 
-## Schema Rules
+# Schema Rules
 
-### type
+## type
 
 数据类型校验规则，校验实例必须要有的校验规则，但如果规则中有 schema 校验实例规则的话，type 规则可以省略，因为会自动取 schema 校验实例的 type 规则
 
@@ -201,7 +201,7 @@ const schemaInfo = {
 const schema = new Schema(schemaInfo);
 ```
 
-### pattern
+## pattern
 
 特殊字符串格式校验规则。
 
@@ -227,7 +227,7 @@ schema.verify("abc");
 // false
 ```
 
-### match
+## match
 
 自定义特殊字符串格式校验规则，如果 pattern 中的规则不符合你的需求，可以在 match 里定义自己的正则规则。
 
@@ -244,7 +244,7 @@ schema.verify("bcd");
 // false
 ```
 
-### length
+## length
 
 字符串或者数组的长度校验规则。
 
@@ -285,7 +285,7 @@ schema.verify("");
 // false
 ```
 
-### minLength
+## minLength
 
 字符串或者数组的最小长度校验规则。
 
@@ -303,7 +303,7 @@ schema.verify("aaa");
 // true
 ```
 
-### maxLength
+## maxLength
 
 字符串或者数组的最大长度校验规则。
 
@@ -321,7 +321,7 @@ schema.verify("aaa");
 // false
 ```
 
-### enum
+## enum
 
 合法值枚举校验规则，字符串或者数字只能是一组值中的某一个。
 
@@ -359,7 +359,7 @@ schema.verify("a");
 // false
 ```
 
-### range
+## range
 
 数值的范围校验规则，仅数值类型可用。
 
@@ -382,7 +382,7 @@ schema.verify(0);
 // false
 ```
 
-### min
+## min
 
 数值的最小值校验规则。
 
@@ -400,7 +400,7 @@ schema.verify(3);
 // true
 ```
 
-### max
+## max
 
 数值的最大值校验规则。
 
@@ -418,7 +418,7 @@ schema.verify(3);
 // false
 ```
 
-### integer
+## integer
 
 数字是否是整数。
 
@@ -436,7 +436,7 @@ schema.verify(0.5);
 // false
 ```
 
-### natural
+## natural
 
 数字是否是自然数。
 
@@ -454,7 +454,7 @@ schema.verify(0.5);
 // false
 ```
 
-### props
+## props
 
 该规则只有类型为 Object 才能设置，是用于设置对象属性的校验规则。
 
@@ -561,7 +561,7 @@ const schemaInfo = {
 };
 ```
 
-### required
+## required
 
 属性是否必须存在，该规则只有 props 或者 elements 里的规则设置才有效。
 
@@ -589,7 +589,7 @@ schema.verify({
 // false
 ```
 
-### restrict
+## restrict
 
 属性是否要被限制，该规则只有类型为 Object 才能设置, 当规则设置为 true，对象的属性只能是 props 中出现的属性。
 
@@ -628,7 +628,7 @@ schema.verify({
 // false
 ```
 
-### elements
+## elements
 
 该规则只有类型为 Array 才能设置，是用于设置数组元素的校验规则。规则内容可以为对象或者数组，对象表示所有元素用同一个规则，数组则可以指定某个元素用特定规则
 
@@ -724,7 +724,7 @@ schema.verify([null]);
 // false
 ```
 
-### index
+## index
 
 设置要校验元素或者属性的索引
 
@@ -751,7 +751,7 @@ schema.verify(["a", "b"]);
 // false
 ```
 
-### schema
+## schema
 
 可以设置一个校验实例作为规则，如果规则中没有 type 规则，就会自动取 schema 校验实例的 type 规则
 
@@ -770,7 +770,7 @@ schema.verify("aaa");
 // false
 ```
 
-### custom
+## custom
 
 如果没有校验符合你的需求，也可以设置自己的校验函数。自定义校验函数会在最后执行，函数会传入两个默认参数，一个是当前值，一个是父节点值。
 
@@ -787,7 +787,7 @@ schema.verify("b");
 // false
 ```
 
-### hint
+## hint
 
 项目本身对各个规则有默认的错误提示，但也可以通过设置 hint 改变某些规则错误后抛出的错误提示，schema.verify 的第二个参数为 true 时错误才会抛出。
 
@@ -815,29 +815,29 @@ Type.string.is(0);
 //false
 ```
 
-### Type api
+# Type api
 
-#### string
+## string
 
     string 类型相关
 
-##### is
+### is
 
      是否是 string 类型
 
-##### isNot
+### isNot
 
      是否不是 string 类型
 
-##### isEmpty
+### isEmpty
 
      是否是空字符串
 
-##### isNotEmpty
+### isNotEmpty
 
      是否是非空字符串
 
-##### safe
+### safe
 
      转换为 string 类型
 
@@ -852,27 +852,27 @@ Type.string.safe(null);
 //""
 ```
 
-#### number
+## number
 
     number 类型相关
 
-##### is
+### is
 
      是否是 number 类型
 
-##### isNot
+### isNot
 
      是否不是 number 类型
 
-##### isinteger
+### isinteger
 
      是否是整数
 
-##### isNatural
+### isNatural
 
      是否是自然数
 
-##### safe
+### safe
 
      转换为 number 类型
 
@@ -889,15 +889,15 @@ Type.number.safe(null);
 //0
 ```
 
-#### boolean
+## boolean
 
     boolean 类型相关
 
-##### is
+### is
 
      是否是 boolean 类型
 
-##### isNot
+### isNot
 
      是否不是 boolean 类型
 
@@ -908,27 +908,27 @@ Type.boolean.isNot(undefined);
 //true
 ```
 
-#### array
+## array
 
     array 类型相关
 
-##### is
+### is
 
      是否是 array 类型
 
-##### isNot
+### isNot
 
      是否不是 array 类型
 
-##### isEmpty
+### isEmpty
 
      是否是空数组
 
-##### isNotEmpty
+### isNotEmpty
 
      是否是非数组
 
-##### safe
+### safe
 
      转换为 array 类型
 
@@ -945,27 +945,27 @@ Type.array.safe(null);
 //[]
 ```
 
-#### object
+## object
 
     object 类型相关
 
-##### is
+### is
 
      是否是 object 类型
 
-##### isNot
+### isNot
 
      是否不是 object 类型
 
-##### isEmpty
+### isEmpty
 
      是否是空对象
 
-##### isNotEmpty
+### isNotEmpty
 
      是否是非对象
 
-##### safe
+### safe
 
      转换为 object 类型
 
@@ -984,19 +984,19 @@ Type.object.safe(null);
 //{}
 ```
 
-#### function
+## function
 
     function 类型相关
 
-##### is
+### is
 
      是否是 function 类型
 
-##### isNot
+### isNot
 
      是否不是 function 类型
 
-##### safe
+### safe
 
      转换为 function 类型
 
@@ -1013,27 +1013,27 @@ Type.function.safe(null)("a");
 //undefined
 ```
 
-#### null
+## null
 
     null相关
 
-##### is
+### is
 
      是否是 null
 
-##### isNot
+### isNot
 
      是否不是 null
 
-#### undefined
+## undefined
 
     undefined 相关
 
-##### is
+### is
 
      是否是 undefined
 
-##### isNot
+### isNot
 
      是否不是 undefined
 
@@ -1061,7 +1061,7 @@ Pattern.email.is("aaa@123.bbb");
 //false
 ```
 
-## Tests
+# Tests
 
 Tests are using jest, to run the tests use:
 
@@ -1069,7 +1069,7 @@ Tests are using jest, to run the tests use:
 $ npm run test
 ```
 
-## License (MIT)
+# License (MIT)
 
 ```
 Copyright (c) 2019 gintamamadao
