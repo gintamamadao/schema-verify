@@ -1,10 +1,10 @@
 # schema-verify
 
-javascript validate object or array
+> Verify Data Legal
 
 ## 项目简介
 
-js 本身是一种弱类型语音，但有时候我们需要严格限制数据的类型或者结构，本项目设计的目的是按照数据结构类型要求生成一个校验实例，通过这个校验实例校验数据是否符合要求。
+> js 本身是一种弱类型语音，但有时候我们需要严格限制数据的类型或者结构，本项目设计的目的是按照数据结构类型要求生成一个校验实例，通过这个校验实例校验数据是否符合要求。
 
 ## 安装
 
@@ -77,7 +77,7 @@ schema.verify(data);
 //true
 ```
 
-### 变量说明
+**变量说明**
 
 -   schemaInfo 即数据结构类型要求
 -   schema 就是我们基于规则 schemaInfo 新建的一个校验实例
@@ -86,7 +86,7 @@ schema.verify(data);
 
 schemaInfo 既可以为对象，也可以为数组，当为数组时只要满足某一个校验规则元素就视为通过。
 
-### 抛出错误
+**抛出错误**
 
 校验可以选择是否抛出错误，错误会带有信息说明校验不通过的地方。
 
@@ -139,7 +139,7 @@ schema.verify(data, true);
 
 ## type
 
-数据类型校验规则，校验实例必须要有的校验规则，但如果规则中有 schema 校验实例规则的话，type 规则可以省略，因为会自动取 schema 校验实例的 type 规则
+> 数据类型校验规则，校验实例必须要有的校验规则，但如果规则中有 schema 校验实例规则的话，type 规则可以省略，因为会自动取 schema 校验实例的 type 规则
 
 -   String， 字符串
 -   Number， 数字
@@ -149,7 +149,7 @@ schema.verify(data, true);
 -   Boolean， 布尔
 -   null， 空值
 
-有些校验规则是某特定类型才能设置
+> 有些校验规则是某特定类型才能设置
 
 ```js
 const schemaInfo = {
@@ -162,7 +162,7 @@ schema.verify(1);
 // false
 ```
 
-如果一个数据有可能是 String 或者 Number，可以这样设置：
+> 如果一个数据有可能是 String 或者 Number，可以这样设置：
 
 ```js
 const schemaInfo = [
@@ -184,7 +184,7 @@ schema.verify({});
 // false
 ```
 
-也可以用字符串表示
+> 也可以用字符串表示
 
 -   string， 字符串
 -   number， 数字
@@ -203,7 +203,7 @@ const schema = new Schema(schemaInfo);
 
 ## pattern
 
-特殊字符串格式校验规则。
+> 特殊字符串格式校验规则。
 
 -   phone， 手机号
 -   uri， 链接
@@ -229,7 +229,7 @@ schema.verify("abc");
 
 ## match
 
-自定义特殊字符串格式校验规则，如果 pattern 中的规则不符合你的需求，可以在 match 里定义自己的正则规则。
+> 自定义特殊字符串格式校验规则，如果 pattern 中的规则不符合你的需求，可以在 match 里定义自己的正则规则。
 
 ```js
 const schemaInfo = {
@@ -246,7 +246,7 @@ schema.verify("bcd");
 
 ## length
 
-字符串或者数组的长度校验规则。
+> 字符串或者数组的长度校验规则。
 
 -   min， 最小长度，字符串（数组）的长度必须大于或等于最小长度
 -   max， 最大长度，字符串（数组）的长度必须小于或等于最大长度
@@ -267,7 +267,7 @@ schema.verify("");
 // false
 ```
 
-规则值也可以为某一个数字，表示固定某一长度
+> 规则值也可以为某一个数字，表示固定某一长度
 
 ```js
 const schemaInfo = {
@@ -287,7 +287,7 @@ schema.verify("");
 
 ## minLength
 
-字符串或者数组的最小长度校验规则。
+> 字符串或者数组的最小长度校验规则。
 
 ```js
 const schemaInfo = {
@@ -305,7 +305,7 @@ schema.verify("aaa");
 
 ## maxLength
 
-字符串或者数组的最大长度校验规则。
+> 字符串或者数组的最大长度校验规则。
 
 ```js
 const schemaInfo = {
@@ -323,7 +323,7 @@ schema.verify("aaa");
 
 ## enum
 
-合法值枚举校验规则，字符串或者数字只能是一组值中的某一个。
+> 合法值枚举校验规则，字符串或者数字只能是一组值中的某一个。
 
 ```js
 const schemaInfo = {
@@ -339,7 +339,7 @@ schema.verify("d");
 // false
 ```
 
-enum 规则的值可以是数组，也可以是对象，但规则的值是对象的时候，有效值是对象的所有可读值
+> enum 规则的值可以是数组，也可以是对象，但规则的值是对象的时候，有效值是对象的所有可读值
 
 ```js
 const schemaInfo = {
@@ -361,12 +361,12 @@ schema.verify("a");
 
 ## range
 
-数值的范围校验规则，仅数值类型可用。
+> 数值的范围校验规则，仅数值类型可用。
 
 -   min， 最小值，数值必须大于或等于最小值
 -   max， 最大值，数值必须小于或等于最大值
 
-规则中，min，max 两个属性中必须要有一个
+> 规则中，min，max 两个属性中必须要有一个
 
 ```js
 const schemaInfo = {
@@ -384,7 +384,7 @@ schema.verify(0);
 
 ## min
 
-数值的最小值校验规则。
+> 数值的最小值校验规则。
 
 ```js
 const schemaInfo = {
@@ -402,7 +402,7 @@ schema.verify(3);
 
 ## max
 
-数值的最大值校验规则。
+> 数值的最大值校验规则。
 
 ```js
 const schemaInfo = {
@@ -420,7 +420,7 @@ schema.verify(3);
 
 ## integer
 
-数字是否是整数。
+> 数字是否是整数。
 
 ```js
 const schemaInfo = {
@@ -438,7 +438,7 @@ schema.verify(0.5);
 
 ## natural
 
-数字是否是自然数。
+> 数字是否是自然数。
 
 ```js
 const schemaInfo = {
@@ -456,7 +456,7 @@ schema.verify(0.5);
 
 ## props
 
-该规则只有类型为 Object 才能设置，是用于设置对象属性的校验规则。
+> 该规则只有类型为 Object 才能设置，是用于设置对象属性的校验规则。
 
 ```js
 const schemaInfo = {
@@ -482,7 +482,7 @@ schema.verify({
 // false
 ```
 
-上面的例子是根据 props 的键名来对应某个属性的校验，也可以设置所有属性的通用校验。
+> 上面的例子是根据 props 的键名来对应某个属性的校验，也可以设置所有属性的通用校验。
 
 ```js
 const schemaInfo = {
@@ -514,7 +514,7 @@ schema.verify({
 // false
 ```
 
-也可以用一个校验实例作为对象属性的校验规则。
+> 也可以用一个校验实例作为对象属性的校验规则。
 
 ```js
 const schemaRule = new Schema({
@@ -543,7 +543,7 @@ schema.verify({
 // false
 ```
 
-如果一个属性有可能是 String 或者 Number，可以这样设置：
+> 如果一个属性有可能是 String 或者 Number，可以这样设置：
 
 ```js
 const schemaInfo = {
@@ -563,7 +563,7 @@ const schemaInfo = {
 
 ## required
 
-属性是否必须存在，该规则只有 props 或者 elements 里的规则设置才有效。
+> 属性是否必须存在，该规则只有 props 或者 elements 里的规则设置才有效。
 
 ```js
 const schemaInfo = {
@@ -591,7 +591,7 @@ schema.verify({
 
 ## restrict
 
-属性是否要被限制，该规则只有类型为 Object 才能设置, 当规则设置为 true，对象的属性只能是 props 中出现的属性。
+> 属性是否要被限制，该规则只有类型为 Object 才能设置, 当规则设置为 true，对象的属性只能是 props 中出现的属性。
 
 ```js
 const schemaInfo = {
@@ -630,7 +630,7 @@ schema.verify({
 
 ## elements
 
-该规则只有类型为 Array 才能设置，是用于设置数组元素的校验规则。规则内容可以为对象或者数组，对象表示所有元素用同一个规则，数组则可以指定某个元素用特定规则
+> 该规则只有类型为 Array 才能设置，是用于设置数组元素的校验规则。规则内容可以为对象或者数组，对象表示所有元素用同一个规则，数组则可以指定某个元素用特定规则
 
 ```js
 const schemaInfo = {
@@ -651,7 +651,7 @@ schema.verify([1]);
 // false
 ```
 
-也可以用 index 指定校验哪个元素
+> 也可以用 index 指定校验哪个元素
 
 ```js
 const schemaInfo = {
@@ -675,7 +675,7 @@ schema.verify([1]);
 // false，因为 required 为 true，位置在 1 的元素不能为空
 ```
 
-也可以用一个校验实例作为元素的校验规则。
+> 也可以用一个校验实例作为元素的校验规则。
 
 ```js
 const schemaRuleA = new Schema({
@@ -699,7 +699,7 @@ schema.verify(["a", "b"]);
 // false
 ```
 
-如果一个元素有可能是 String 或者 Number，可以这样设置：
+> 如果一个元素有可能是 String 或者 Number，可以这样设置：
 
 ```js
 const schemaInfo = {
@@ -726,7 +726,7 @@ schema.verify([null]);
 
 ## index
 
-设置要校验元素或者属性的索引
+> 设置要校验元素或者属性的索引
 
 ```js
 const schemaInfo = {
@@ -753,7 +753,7 @@ schema.verify(["a", "b"]);
 
 ## schema
 
-可以设置一个校验实例作为规则，如果规则中没有 type 规则，就会自动取 schema 校验实例的 type 规则
+> 可以设置一个校验实例作为规则，如果规则中没有 type 规则，就会自动取 schema 校验实例的 type 规则
 
 ```js
 const schemaRule = new Schema({
@@ -772,7 +772,7 @@ schema.verify("aaa");
 
 ## custom
 
-如果没有校验符合你的需求，也可以设置自己的校验函数。自定义校验函数会在最后执行，函数会传入两个默认参数，一个是当前值，一个是父节点值。
+> 如果没有校验符合你的需求，也可以设置自己的校验函数。自定义校验函数会在最后执行，函数会传入两个默认参数，一个是当前值，一个是父节点值。
 
 ```js
 const schemaInfo = {
@@ -789,7 +789,7 @@ schema.verify("b");
 
 ## hint
 
-项目本身对各个规则有默认的错误提示，但也可以通过设置 hint 改变某些规则错误后抛出的错误提示，schema.verify 的第二个参数为 true 时错误才会抛出。
+> 项目本身对各个规则有默认的错误提示，但也可以通过设置 hint 改变某些规则错误后抛出的错误提示，schema.verify 的第二个参数为 true 时错误才会抛出。
 
 ```js
 const schemaInfo = {
@@ -805,7 +805,7 @@ schema.verify(1, true);
 
 ## Type Verify
 
-如果你仅仅想校验数据的类型，可以使用 Type 来校验
+> 如果你仅仅想校验数据的类型，可以使用 Type 来校验
 
 ```js
 const { Type } = require("schema-verify");
@@ -819,27 +819,27 @@ Type.string.is(0);
 
 ## string
 
-    string 类型相关
+> string 类型相关
 
 ### is
 
-     是否是 string 类型
+> 是否是 string 类型
 
 ### isNot
 
-     是否不是 string 类型
+> 是否不是 string 类型
 
 ### isEmpty
 
-     是否是空字符串
+> 是否是空字符串
 
 ### isNotEmpty
 
-     是否是非空字符串
+> 是否是非空字符串
 
 ### safe
 
-     转换为 string 类型
+> 转换为 string 类型
 
 ```js
 Type.string.isNot(0);
@@ -854,27 +854,27 @@ Type.string.safe(null);
 
 ## number
 
-    number 类型相关
+> number 类型相关
 
 ### is
 
-     是否是 number 类型
+> 是否是 number 类型
 
 ### isNot
 
-     是否不是 number 类型
+> 是否不是 number 类型
 
 ### isinteger
 
-     是否是整数
+> 是否是整数
 
 ### isNatural
 
-     是否是自然数
+> 是否是自然数
 
 ### safe
 
-     转换为 number 类型
+> 转换为 number 类型
 
 ```js
 Type.number.is(1);
@@ -891,15 +891,15 @@ Type.number.safe(null);
 
 ## boolean
 
-    boolean 类型相关
+> boolean 类型相关
 
 ### is
 
-     是否是 boolean 类型
+> 是否是 boolean 类型
 
 ### isNot
 
-     是否不是 boolean 类型
+> 是否不是 boolean 类型
 
 ```js
 Type.boolean.is(false);
@@ -910,27 +910,27 @@ Type.boolean.isNot(undefined);
 
 ## array
 
-    array 类型相关
+> array 类型相关
 
 ### is
 
-     是否是 array 类型
+> 是否是 array 类型
 
 ### isNot
 
-     是否不是 array 类型
+> 是否不是 array 类型
 
 ### isEmpty
 
-     是否是空数组
+> 是否是空数组
 
 ### isNotEmpty
 
-     是否是非数组
+> 是否是非数组
 
 ### safe
 
-     转换为 array 类型
+> 转换为 array 类型
 
 ```js
 Type.array.is(["a"]);
@@ -947,27 +947,27 @@ Type.array.safe(null);
 
 ## object
 
-    object 类型相关
+> object 类型相关
 
 ### is
 
-     是否是 object 类型
+> 是否是 object 类型
 
 ### isNot
 
-     是否不是 object 类型
+> 是否不是 object 类型
 
 ### isEmpty
 
-     是否是空对象
+> 是否是空对象
 
 ### isNotEmpty
 
-     是否是非对象
+> 是否是非对象
 
 ### safe
 
-     转换为 object 类型
+> 转换为 object 类型
 
 ```js
 Type.object.is({});
@@ -986,19 +986,19 @@ Type.object.safe(null);
 
 ## function
 
-    function 类型相关
+> function 类型相关
 
 ### is
 
-     是否是 function 类型
+> 是否是 function 类型
 
 ### isNot
 
-     是否不是 function 类型
+> 是否不是 function 类型
 
 ### safe
 
-     转换为 function 类型
+> 转换为 function 类型
 
 ```js
 Type.function.is(() => {});
@@ -1015,27 +1015,27 @@ Type.function.safe(null)("a");
 
 ## null
 
-    null相关
+> null 相关
 
 ### is
 
-     是否是 null
+> 是否是 null
 
 ### isNot
 
-     是否不是 null
+> 是否不是 null
 
 ## undefined
 
-    undefined 相关
+> undefined 相关
 
 ### is
 
-     是否是 undefined
+> 是否是 undefined
 
 ### isNot
 
-     是否不是 undefined
+> 是否不是 undefined
 
 ## Pattern Verify
 
@@ -1063,7 +1063,7 @@ Pattern.email.is("aaa@123.bbb");
 
 # Tests
 
-Tests are using jest, to run the tests use:
+> Tests are using jest, to run the tests use:
 
 ```sh
 $ npm run test
