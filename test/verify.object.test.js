@@ -1,7 +1,7 @@
 const { Schema } = require("../src/index");
 
-describe("object:restrict", () => {
-    test(`restrict`, () => {
+describe("object: restrict", () => {
+    test(`restrict: empty`, () => {
         const schemaInfo = {
             type: Object,
             restrict: true,
@@ -23,7 +23,7 @@ describe("object:restrict", () => {
             })()
         ).toBeFalsy();
     });
-    test(`restrict`, () => {
+    test(`restrict: not empty`, () => {
         const schemaInfo = {
             type: Object,
             restrict: true,
@@ -58,7 +58,7 @@ describe("object:restrict", () => {
             })()
         ).toBeFalsy();
     });
-    test(`restrict`, () => {
+    test(`restrict: duplicate claim`, () => {
         const schemaInfo = {
             type: Object,
             restrict: true,
@@ -84,6 +84,14 @@ describe("object:restrict", () => {
         ).toBeTruthy();
         expect(
             (() => {
+                const data = {
+                    a: "1"
+                };
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
                 const data = {};
                 return schema.verify(data);
             })()
@@ -97,7 +105,7 @@ describe("object:restrict", () => {
             })()
         ).toBeFalsy();
     });
-    test(`restrict`, () => {
+    test(`restrict: single arr`, () => {
         const schemaInfo = {
             type: Object,
             restrict: true,
@@ -147,7 +155,7 @@ describe("object:restrict", () => {
     });
 });
 
-describe("object:props", () => {
+describe("object: props", () => {
     test(`props:arr`, () => {
         const schemaInfo = {
             type: Object,
@@ -182,7 +190,7 @@ describe("object:props", () => {
             })()
         ).toBeFalsy();
     });
-    test(`props:arr`, () => {
+    test(`props: arr`, () => {
         const schemaInfo = {
             type: Object,
             props: [
@@ -218,7 +226,7 @@ describe("object:props", () => {
             })()
         ).toBeFalsy();
     });
-    test(`props:arr`, () => {
+    test(`props: single arr`, () => {
         const schemaInfo = {
             type: Object,
             props: [
@@ -277,7 +285,7 @@ describe("object:props", () => {
             })()
         ).toBeFalsy();
     });
-    test(`props:arr`, () => {
+    test(`props:single arr default`, () => {
         const schemaInfo = {
             type: Object,
             props: [
@@ -337,7 +345,7 @@ describe("object:props", () => {
             })()
         ).toBeFalsy();
     });
-    test(`props:obj`, () => {
+    test(`props:key obj`, () => {
         const schemaInfo = {
             type: Object,
             props: {
@@ -370,7 +378,7 @@ describe("object:props", () => {
             })()
         ).toBeFalsy();
     });
-    test(`props:obj`, () => {
+    test(`props:key obj required`, () => {
         const schemaInfo = {
             type: Object,
             props: {
@@ -420,7 +428,7 @@ describe("object:props", () => {
             return schema.verify(data, true);
         }).toThrowError("属性");
     });
-    test(`props:arr`, () => {
+    test(`props:key obj arr`, () => {
         const schemaInfo = {
             type: Object,
             props: {
@@ -478,7 +486,50 @@ describe("object:props", () => {
             })()
         ).toBeFalsy();
     });
-    test(`props:obj`, () => {
+    test(`props: default`, () => {
+        const schemaInfo = {
+            type: Object,
+            props: {
+                type: String
+            }
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = {
+                    a: "a"
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    a: "a",
+                    b: "b"
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    a: 1
+                };
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+        expect(
+            (() => {
+                const data = {
+                    a: "a",
+                    b: 1
+                };
+                return schema.verify(data);
+            })()
+        ).toBeFalsy();
+    });
+    test(`props: key obj $_PROPS_DEFAULT_INFO`, () => {
         const schemaInfo = {
             type: Object,
             props: {
@@ -540,8 +591,8 @@ describe("object:props", () => {
     });
 });
 
-describe("object:schema", () => {
-    test(`schema`, () => {
+describe("object: schema schemaObj", () => {
+    test(`schema schemaObj`, () => {
         const schemaRule = new Schema({
             type: String,
             required: true,
@@ -617,7 +668,7 @@ describe("object:schema", () => {
             })()
         ).toBeFalsy();
     });
-    test(`schema`, () => {
+    test(`schema: key schemaObj`, () => {
         const schemaRule = new Schema({
             type: String,
             required: true,
@@ -655,7 +706,7 @@ describe("object:schema", () => {
             })()
         ).toBeFalsy();
     });
-    test(`schema`, () => {
+    test(`schema: key schemaObj`, () => {
         const schemaRule = new Schema({
             type: Number
         });
