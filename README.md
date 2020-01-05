@@ -456,7 +456,7 @@ schema.verify(0.5);
 
 ## props
 
-> 该规则只有类型为 Object 才能设置，是用于设置对象属性的校验规则。
+> 该规则只有类型为 Object 才能设置，是用于设置对象属性的校验规则，规则内容可以为对象或者数组，为对象时根属性为对应要校验的属性
 
 ```js
 const schemaInfo = {
@@ -466,6 +466,33 @@ const schemaInfo = {
             type: Number
         }
     }
+};
+const schema = new Schema(schemaInfo);
+schema.verify({
+    a: 1
+});
+// true
+schema.verify({
+    b: 1
+});
+// true
+schema.verify({
+    a: "a"
+});
+// false
+```
+
+> 数组形式表示时用 index 指明属性名
+
+```js
+const schemaInfo = {
+    type: Object,
+    props: [
+        {
+            index: "a",
+            type: Number
+        }
+    ]
 };
 const schema = new Schema(schemaInfo);
 schema.verify({
@@ -568,13 +595,12 @@ const schemaInfo = {
 ```js
 const schemaInfo = {
     type: Object,
-    props: [
-        {
-            index: "a",
+    props: {
+        a: {
             type: String,
             required: true
         }
-    ]
+    }
 };
 const schema = new Schema(schemaInfo);
 schema.verify({
@@ -597,16 +623,14 @@ schema.verify({
 const schemaInfo = {
     type: Object,
     restrict: true,
-    props: [
-        {
-            index: "a",
+    props: {
+        a: {
             type: String
         },
-        {
-            index: "b:",
+        b: {
             type: String
         }
-    ]
+    }
 };
 const schema = new Schema(schemaInfo);
 schema.verify({
