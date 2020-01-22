@@ -23,6 +23,28 @@ describe("object: restrict", () => {
             })()
         ).toBeFalsy();
     });
+    test(`restrict: empty`, () => {
+        const schemaInfo = {
+            type: Object,
+            restrict: false,
+            props: []
+        };
+        const schema = new Schema(schemaInfo);
+        expect(
+            (() => {
+                const data = {};
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+        expect(
+            (() => {
+                const data = {
+                    a: "a"
+                };
+                return schema.verify(data);
+            })()
+        ).toBeTruthy();
+    });
     test(`restrict: not empty`, () => {
         const schemaInfo = {
             type: Object,

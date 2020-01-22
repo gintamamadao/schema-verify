@@ -143,6 +143,10 @@ describe("time", () => {
         expect(Pattern.time.is("2019-12-31")).toBeTruthy();
     });
 
+    test(`time:is`, () => {
+        expect(Pattern.time.is({})).toBeFalsy();
+    });
+
     test(`time:isCommon`, () => {
         expect(Pattern.time.isCommon("2019-12-31")).toBeFalsy();
     });

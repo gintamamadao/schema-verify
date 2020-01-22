@@ -54,35 +54,29 @@ const typeCheck = function(info) {
             info = stringCheck(info);
             info.type = TYPES.string;
             break;
-
         case TYPES.number:
         case Number:
             info = numberCheck(info);
             info.type = TYPES.number;
             break;
-
         case TYPES.object:
         case Object:
             info = objectCheck(info);
             info.type = TYPES.object;
             break;
-
         case TYPES.array:
         case Array:
             info = arrayCheck(info);
             info.type = TYPES.array;
             break;
-
         case TYPES.function:
         case Function:
             info.type = TYPES.function;
             break;
-
         case TYPES.boolean:
         case Boolean:
             info.type = TYPES.boolean;
             break;
-
         case TYPES.null:
         case null:
             info.type = TYPES.null;
@@ -319,10 +313,18 @@ const objectCheck = function(info) {
         const formatArrProps = (props, info) => {
             const propMap = props.reduce((map, item) => {
                 let index;
-                if (Type.object.is(item)) {
+                if (
+                    Type.object.is(item) &&
+                    item.hasOwnProperty(METHODS.index)
+                ) {
                     index = item[METHODS.index];
-                    if (!Type.string.isNotEmpty(index)) {
-                        delete item[METHODS.index];
+                    if (
+                        !Type.string.isNotEmpty(index) &&
+                        !Type.number.is(index)
+                    ) {
+                        throw new Error(
+                            ErrorMsg.illegalVerifyProps(METHODS.index)
+                        );
                     }
                 }
                 if (Type.array.is(item) && Type.object.is(item[0])) {
@@ -371,15 +373,27 @@ const arrayCheck = function(info) {
             const elementMap = elements.reduce((map, item) => {
                 let index;
                 if (Type.object.is(item)) {
-                    index = item.index;
-                    if (Type.number.isNot(index)) {
-                        delete item["index"];
+                    if (
+                        item.hasOwnProperty(METHODS.index) &&
+                        Type.number.isNot(item.index)
+                    ) {
+                        throw new Error(
+                            ErrorMsg.illegalVerifyProps(METHODS.index)
+                        );
+                    } else {
+                        index = item.index;
                     }
                 }
                 if (Type.array.is(item) && Type.object.is(item[0])) {
-                    index = item[0].index;
-                    if (Type.number.isNot(index)) {
-                        delete item[0]["index"];
+                    if (
+                        item[0].hasOwnProperty(METHODS.index) &&
+                        Type.number.isNot(item[0].index)
+                    ) {
+                        throw new Error(
+                            ErrorMsg.illegalVerifyProps(METHODS.index)
+                        );
+                    } else {
+                        index = item[0].index;
                     }
                 }
                 if (Type.number.isNot(index)) {

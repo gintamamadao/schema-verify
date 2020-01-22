@@ -68,6 +68,7 @@ describe("number", () => {
         expect(Type.number.safe(null)).toEqual(0);
         expect(Type.number.safe("1")).toEqual(1);
         expect(Type.number.safe("1.1")).toEqual(1.1);
+        expect(Type.number.safe({})).toEqual(0);
     });
 });
 

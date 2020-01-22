@@ -94,10 +94,8 @@ const requiredVerify = (data, index, claim, hint) => {
 
 const patternVerify = (data, claim, hint) => {
     const isFn = (Pattern[claim] || {}).is;
-    if (Type.function.isNot(isFn)) {
-        return true;
-    }
-    const isPass = isFn.call(Pattern[claim], data);
+    const isPass =
+        typeof isFn === "function" && isFn.call(Pattern[claim], data);
     if (!isPass) {
         throw new Error(
             ErrorMsg.verifyErrorHint(

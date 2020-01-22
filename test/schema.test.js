@@ -3,6 +3,11 @@ const Schema = SchemaVerify.Schema;
 
 describe("common", () => {
     test(`type`, () => {
+        expect(() => {
+            new SchemaVerify(null);
+        }).toThrowError("属性信息不能为空");
+    });
+    test(`type`, () => {
         const schemaInfo = {
             type: String
         };
@@ -10,7 +15,37 @@ describe("common", () => {
     });
     test(`type`, () => {
         const schemaInfo = {
-            type: String
+            type: Function
+        };
+        new Schema(schemaInfo);
+    });
+    test(`type`, () => {
+        const schemaInfo = {
+            type: "function"
+        };
+        new Schema(schemaInfo);
+    });
+    test(`type`, () => {
+        const schemaInfo = {
+            type: Boolean
+        };
+        new Schema(schemaInfo);
+    });
+    test(`type`, () => {
+        const schemaInfo = {
+            type: "boolean"
+        };
+        new Schema(schemaInfo);
+    });
+    test(`type`, () => {
+        const schemaInfo = {
+            type: null
+        };
+        new Schema(schemaInfo);
+    });
+    test(`type`, () => {
+        const schemaInfo = {
+            type: "null"
         };
         new Schema(schemaInfo);
     });
@@ -105,6 +140,29 @@ describe("common", () => {
 });
 
 describe("string", () => {
+    test(`match`, () => {
+        const schemaInfo = {
+            type: String,
+            match: "a"
+        };
+        new Schema(schemaInfo);
+    });
+    test(`match`, () => {
+        const schemaInfo = {
+            type: String,
+            match: /a/
+        };
+        new Schema(schemaInfo);
+    });
+    test(`match`, () => {
+        expect(() => {
+            const schemaInfo = {
+                type: String,
+                match: null
+            };
+            new Schema(schemaInfo);
+        }).toThrowError("非法的校验属性：match");
+    });
     test(`pattern`, () => {
         const schemaInfo = {
             type: String,
@@ -177,6 +235,16 @@ describe("string", () => {
             };
             new Schema(schemaInfo);
         }).toThrowError("空的枚举信息");
+    });
+    test(`enum`, () => {
+        const schemaInfo = {
+            type: String,
+            enum: {
+                a: "1",
+                b: "2"
+            }
+        };
+        new Schema(schemaInfo);
     });
     test(`enum`, () => {
         expect(() => {
@@ -280,6 +348,16 @@ describe("number", () => {
         }).toThrowError("空的枚举信息");
     });
     test(`enum`, () => {
+        const schemaInfo = {
+            type: Number,
+            enum: {
+                a: 1,
+                b: 2
+            }
+        };
+        new Schema(schemaInfo);
+    });
+    test(`enum`, () => {
         expect(() => {
             const schemaInfo = {
                 type: Number,
@@ -291,6 +369,18 @@ describe("number", () => {
 });
 
 describe("object", () => {
+    test(`object`, () => {
+        const schemaInfo = {
+            type: Object
+        };
+        new Schema(schemaInfo);
+    });
+    test(`object`, () => {
+        const schemaInfo = {
+            type: "object"
+        };
+        new Schema(schemaInfo);
+    });
     test(`restrict`, () => {
         const schemaInfo = {
             type: Object,
@@ -309,6 +399,15 @@ describe("object", () => {
         }).toThrowError("非法的校验属性");
     });
     test(`restrict`, () => {
+        expect(() => {
+            const schemaInfo = {
+                type: Object,
+                restrict: null
+            };
+            new Schema(schemaInfo);
+        }).toThrowError("非法的校验属性");
+    });
+    test(`props`, () => {
         const schemaInfo = {
             type: Object,
             props: {
@@ -317,7 +416,21 @@ describe("object", () => {
         };
         new Schema(schemaInfo);
     });
-    test(`restrict`, () => {
+    test(`props`, () => {
+        expect(() => {
+            const schemaInfo = {
+                type: Object,
+                props: [
+                    {
+                        index: null,
+                        type: String
+                    }
+                ]
+            };
+            new Schema(schemaInfo);
+        }).toThrowError("非法的校验属性：index");
+    });
+    test(`props`, () => {
         const schemaInfo = {
             type: Object,
             props: [
@@ -351,6 +464,32 @@ describe("object", () => {
             new Schema(schemaInfo);
         }).toThrowError("非法的校验属性");
     });
+    test(`props:schema`, () => {
+        const stringSchema = new Schema({
+            type: String
+        });
+        const schemaInfo = {
+            type: Object,
+            props: {
+                schema: stringSchema
+            }
+        };
+        new Schema(schemaInfo);
+    });
+    test(`props:schema`, () => {
+        expect(() => {
+            const stringSchema = {
+                type: String
+            };
+            const schemaInfo = {
+                type: Object,
+                props: {
+                    schema: null
+                }
+            };
+            new Schema(schemaInfo);
+        }).toThrowError("非法的校验属性");
+    });
 });
 
 describe("array", () => {
@@ -375,6 +514,39 @@ describe("array", () => {
             ]
         };
         new Schema(schemaInfo);
+    });
+    test(`elements:index`, () => {
+        expect(() => {
+            const schemaInfo = {
+                type: Array,
+                elements: [
+                    {
+                        index: null,
+                        type: String
+                    }
+                ]
+            };
+            new Schema(schemaInfo);
+        }).toThrowError("非法的校验属性");
+    });
+    test(`elements:index`, () => {
+        expect(() => {
+            const schemaInfo = {
+                type: Array,
+                elements: [
+                    [
+                        {
+                            index: null,
+                            type: String
+                        },
+                        {
+                            type: Number
+                        }
+                    ]
+                ]
+            };
+            new Schema(schemaInfo);
+        }).toThrowError("非法的校验属性");
     });
     test(`elements`, () => {
         expect(() => {

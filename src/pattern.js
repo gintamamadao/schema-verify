@@ -63,15 +63,11 @@ const Pattern = {
     },
     time: {
         is(v) {
-            try {
-                const timeInfo = new Date(v);
-                return (
-                    Type.object.is(timeInfo) &&
-                    timeInfo.toString() !== "Invalid Date"
-                );
-            } catch (e) {
-                return false;
-            }
+            const timeInfo = new Date(v);
+            return (
+                Type.object.is(timeInfo) &&
+                timeInfo.toString() !== "Invalid Date"
+            );
         },
         isCommon(v) {
             return Type.string.isNotEmpty(v) && commonTimeReg.test(v);
