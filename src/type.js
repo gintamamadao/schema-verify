@@ -137,7 +137,7 @@ const Type = {
             return t;
         }
     },
-    function: {
+    func: {
         is(v) {
             return isfunction(v);
         },
@@ -164,7 +164,7 @@ const Type = {
             return !isundefinednull(v);
         }
     },
-    null: {
+    nul: {
         is(v) {
             return isnull(v);
         },

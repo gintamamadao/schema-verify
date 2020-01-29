@@ -112,7 +112,7 @@ const typeCommonCheck = info => {
     }
     if (info.hasOwnProperty(METHODS.custom)) {
         const custom = info[METHODS.custom];
-        if (Type.function.isNot(custom)) {
+        if (Type.func.isNot(custom)) {
             throw new Error(ErrorMsg.illegalVerifyProps(METHODS.custom));
         }
     }
@@ -285,8 +285,8 @@ const objectCheck = function(info) {
         }
         const formatObjProps = (props, info) => {
             if (
-                Type.function.isNot(props[METHODS.type]) &&
-                Type.null.isNot(props[METHODS.type]) &&
+                Type.func.isNot(props[METHODS.type]) &&
+                Type.nul.isNot(props[METHODS.type]) &&
                 Type.string.isNot(TYPES[props[METHODS.type]]) &&
                 !props.hasOwnProperty(METHODS.schema) &&
                 !(props instanceof Schema)

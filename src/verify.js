@@ -26,13 +26,13 @@ const typeVerify = (data, claim, hint) => {
             isPass = Type.array.is(data);
             break;
         case TYPES.function:
-            isPass = Type.function.is(data);
+            isPass = Type.func.is(data);
             break;
         case TYPES.boolean:
             isPass = Type.boolean.is(data);
             break;
         case TYPES.null:
-            isPass = Type.null.is(data);
+            isPass = Type.nul.is(data);
             break;
     }
     if (!isPass) {
@@ -320,7 +320,7 @@ const schemaVerify = (data, claim, hint, parent) => {
 
 const customVerify = (data, claim, hint, parent) => {
     try {
-        const isPass = Type.function.safe(claim)(data, parent);
+        const isPass = Type.func.safe(claim)(data, parent);
         if (!isPass) {
             throw new Error(hint || "未知");
         }

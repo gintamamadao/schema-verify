@@ -212,26 +212,26 @@ describe("object", () => {
 
 describe("function", () => {
     test(`function:is`, () => {
-        expect(Type.function.is("a")).toBeFalsy();
-        expect(Type.function.is(null)).toBeFalsy();
-        expect(Type.function.is(() => {})).toBeTruthy();
-        expect(Type.function.is(async () => {})).toBeTruthy();
-        expect(Type.function.is(0)).toBeFalsy();
+        expect(Type.func.is("a")).toBeFalsy();
+        expect(Type.func.is(null)).toBeFalsy();
+        expect(Type.func.is(() => {})).toBeTruthy();
+        expect(Type.func.is(async () => {})).toBeTruthy();
+        expect(Type.func.is(0)).toBeFalsy();
     });
 
     test(`function:isNot`, () => {
-        expect(Type.function.isNot("a")).toBeTruthy();
-        expect(Type.function.isNot(1)).toBeTruthy();
-        expect(Type.function.isNot(() => {})).toBeFalsy();
-        expect(Type.function.isNot(async () => {})).toBeFalsy();
+        expect(Type.func.isNot("a")).toBeTruthy();
+        expect(Type.func.isNot(1)).toBeTruthy();
+        expect(Type.func.isNot(() => {})).toBeFalsy();
+        expect(Type.func.isNot(async () => {})).toBeFalsy();
     });
 
     test(`function:safe`, () => {
         const fn = p => {
             return p;
         };
-        expect(Type.function.safe(fn)("a")).toEqual("a");
-        expect(Type.function.safe(null)("a")).toEqual(undefined);
+        expect(Type.func.safe(fn)("a")).toEqual("a");
+        expect(Type.func.safe(null)("a")).toEqual(undefined);
     });
 });
 
@@ -253,17 +253,17 @@ describe("undefinedNull", () => {
 
 describe("null", () => {
     test(`null:is`, () => {
-        expect(Type.null.is(null)).toBeTruthy();
-        expect(Type.null.is(undefined)).toBeFalsy();
-        expect(Type.null.is(0)).toBeFalsy();
-        expect(Type.null.is("")).toBeFalsy();
+        expect(Type.nul.is(null)).toBeTruthy();
+        expect(Type.nul.is(undefined)).toBeFalsy();
+        expect(Type.nul.is(0)).toBeFalsy();
+        expect(Type.nul.is("")).toBeFalsy();
     });
 
     test(`null:isNot`, () => {
-        expect(Type.null.isNot(null)).toBeFalsy();
-        expect(Type.null.isNot(undefined)).toBeTruthy();
-        expect(Type.null.isNot(0)).toBeTruthy();
-        expect(Type.null.isNot("")).toBeTruthy();
+        expect(Type.nul.isNot(null)).toBeFalsy();
+        expect(Type.nul.isNot(undefined)).toBeTruthy();
+        expect(Type.nul.isNot(0)).toBeTruthy();
+        expect(Type.nul.isNot("")).toBeTruthy();
     });
 });
 

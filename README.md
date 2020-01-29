@@ -1016,15 +1016,15 @@ Type.object.safe(null);
 > 转换为 function 类型
 
 ```js
-Type.function.is(() => {});
+Type.func.is(() => {});
 //true
-Type.function.isNot("a");
+Type.func.isNot("a");
 //true
-Type.function.safe(a => {
+Type.func.safe(a => {
     return a;
 })("a");
 //a
-Type.function.safe(null)("a");
+Type.func.safe(null)("a");
 //undefined
 ```
 
