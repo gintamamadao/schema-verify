@@ -52,6 +52,37 @@ declare namespace Type {
     }
 }
 
+declare namespace Pattern {
+    namespace phone {
+        let is: (v: any) => boolean;
+    }
+    namespace uri {
+        let is: (v: any) => boolean;
+    }
+    namespace email {
+        let is: (v: any) => boolean;
+    }
+    namespace color {
+        let is: (v: any) => boolean;
+    }
+    namespace version {
+        let is: (v: any) => boolean;
+    }
+    namespace sign {
+        let is: (v: any) => boolean;
+    }
+    namespace numStr {
+        let is: (v: any) => boolean;
+    }
+    namespace jsonStr {
+        let is: (v: any) => boolean;
+    }
+    namespace time {
+        let is: (v: any) => boolean;
+        let isCommon: (v: any) => boolean;
+    }
+}
+
 export default class Schema {
     constructor(info: any);
     verify(data: any, throwError?: boolean, parent?: any): boolean;

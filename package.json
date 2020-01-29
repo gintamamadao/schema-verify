@@ -1,6 +1,6 @@
 {
     "name": "schema-verify",
-    "version": "1.4.2",
+    "version": "1.4.3",
     "description": "javascript validate object or array",
     "main": "./src/index.js",
     "scripts": {
