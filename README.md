@@ -125,6 +125,7 @@ schema.verify(data, true);
 -   [Type Verify](#type-verify)
     -   [Type api](#type-api)
 -   [Pattern Verify](#pattern-verify)
+-   [Test Report](#test-report)
 
 # Schema Rules
 
@@ -1076,7 +1077,7 @@ Pattern.email.is("aaa@123.bbb");
 //false
 ```
 
-# Tests
+# Test Report
 
 > 单元测试用例 226 个，语句覆盖率 100%，查看报告可以执行
 
@@ -1103,6 +1104,12 @@ All files         |      100 |    95.32 |      100 |      100 |                 
   schema_error.js |      100 |      100 |      100 |      100 |                   |
   verify_error.js |      100 |       60 |      100 |      100 |                57 |
 ------------------|----------|----------|----------|----------|-------------------|
+
+Test Suites: 10 passed, 10 total
+Tests:       226 passed, 226 total
+Snapshots:   0 total
+Time:        3.588s
+Ran all test suites.
 ```
 
 # License (MIT)
