@@ -1,3 +1,4 @@
 export default class Schema {
-    verify(data: any, throwError: boolean, parent: any): boolean;
+    constructor(info: any);
+    verify(data: any, throwError?: boolean, parent?: any): boolean;
 }
