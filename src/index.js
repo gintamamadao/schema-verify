@@ -2,13 +2,8 @@ const Type = require("./type.js");
 const Pattern = require("./pattern.js");
 const Schema = require("./schema.js");
 
-function SchemaVerify(info) {
-    const schema = new Schema(info);
-    return schema;
-}
+Schema.Type = Type;
+Schema.Pattern = Pattern;
+Schema.Schema = Schema;
 
-SchemaVerify.Type = Type;
-SchemaVerify.Pattern = Pattern;
-SchemaVerify.Schema = Schema;
-
-module.exports = SchemaVerify;
+module.exports = Schema;
