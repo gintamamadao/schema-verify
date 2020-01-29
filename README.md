@@ -879,7 +879,7 @@ Type.string.safe(null);
 
 > 是否不是 number 类型
 
-### isinteger
+### isInteger
 
 > 是否是整数
 
@@ -896,7 +896,7 @@ Type.number.is(1);
 //true
 Type.number.isNot("a");
 //true
-Type.number.isinteger(1);
+Type.number.isInteger(1);
 //true
 Type.number.isNatural(1);
 //true

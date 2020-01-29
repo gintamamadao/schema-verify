@@ -48,11 +48,11 @@ describe("number", () => {
         expect(Type.number.isNot("1a")).toBeTruthy();
     });
 
-    test(`number:isinteger`, () => {
-        expect(Type.number.isinteger(1)).toBeTruthy();
-        expect(Type.number.isinteger("1")).toBeFalsy();
-        expect(Type.number.isinteger(1.1)).toBeFalsy();
-        expect(Type.number.isinteger(-1)).toBeTruthy();
+    test(`number:isInteger`, () => {
+        expect(Type.number.isInteger(1)).toBeTruthy();
+        expect(Type.number.isInteger("1")).toBeFalsy();
+        expect(Type.number.isInteger(1.1)).toBeFalsy();
+        expect(Type.number.isInteger(-1)).toBeTruthy();
     });
 
     test(`number:isNatural`, () => {

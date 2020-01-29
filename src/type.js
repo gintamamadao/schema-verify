@@ -51,7 +51,7 @@ const Type = {
         isNot(v) {
             return !isnumber(v);
         },
-        isinteger(v) {
+        isInteger(v) {
             return isnumber(v) && isinteger(v);
         },
         isNatural(v) {

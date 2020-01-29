@@ -147,7 +147,7 @@ const enumVerify = (data, claim, hint) => {
 };
 
 const integerVerify = (data, claim, hint) => {
-    if (claim && !Type.number.isinteger(data)) {
+    if (claim && !Type.number.isInteger(data)) {
         throw new Error(
             ErrorMsg.verifyErrorHint(
                 METHODS.integer,
