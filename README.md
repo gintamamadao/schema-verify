@@ -4,8 +4,6 @@
 [![NPM Weekly Downloads](https://badgen.net/npm/dw/schema-verify)](https://www.npmjs.com/package/schema-verify)
 [![License](https://badgen.net/npm/license/schema-verify)](https://www.npmjs.com/package/schema-verify)
 
-> 校验数据合法性
-
 ## 项目简介
 
 > js 本身是一种弱类型语音，但在有些情况下，例如 node.js 后端的项目中，对数据的类型或者结构有严格的要求，本项目可以自定义规则生成一个校验实例，通过这个校验实例校验数据是否符合要求。本项目单元测试用例 226 个，语句覆盖率 100%。
