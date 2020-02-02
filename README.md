@@ -1,5 +1,9 @@
 # schema-verify
 
+[![NPM version](https://badgen.net/npm/v/schema-verify)](https://www.npmjs.com/package/schema-verify)
+[![NPM Weekly Downloads](https://badgen.net/npm/dw/schema-verify)](https://www.npmjs.com/package/schema-verify)
+[![License](https://badgen.net/npm/license/schema-verify)](https://www.npmjs.com/package/schema-verify)
+
 > 校验数据合法性
 
 ## 项目简介
