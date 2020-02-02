@@ -18,20 +18,20 @@ declare namespace Type {
         let isNot: (v: any) => boolean;
     }
     namespace array {
-        let is: <T>(v: any) => v is T;
+        let is: <T = any>(v: any) => v is T;
         let isNot: (v: any) => boolean;
         let isEmpty: (v: any) => boolean;
         let isNotEmpty: (v: any) => boolean;
-        let safe: <T>(v: any) => T;
-        let pure: <T>(v: any) => T;
+        let safe: <T = any>(v: any) => T;
+        let pure: <T = any>(v: any) => T;
     }
     namespace object {
-        let is: <T>(v: any) => v is T;
+        let is: <T = any>(v: any) => v is T;
         let isNot: (v: any) => boolean;
         let isEmpty: (v: any) => boolean;
         let isNotEmpty: (v: any) => boolean;
-        let safe: <T>(v: any) => T;
-        let pure: <T>(v: any) => T;
+        let safe: <T = any>(v: any) => T;
+        let pure: <T = any>(v: any) => T;
     }
     namespace func {
         let is: (v: any) => v is Function;
