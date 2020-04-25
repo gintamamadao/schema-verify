@@ -83,13 +83,15 @@ declare interface Pattern {
     };
 }
 
-declare class Schema {
+declare class SchemaClass {
     constructor(info: any);
     verify(data: any, throwError?: boolean, parent?: any): boolean;
 }
 
-declare module Schema {
-    const Type: Type;
-    const Pattern: Pattern;
-    const Schema: Schema;
+declare interface Schema {
+    Type: Type;
+    Pattern: Pattern;
+    Schema: Schema;
 }
+
+export = Schema;
