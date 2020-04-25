@@ -1,3 +1,19 @@
 {
-    "files": ["./index.d.ts"]
-}
+    "compilerOptions": {
+      "lib": ["es2017"],
+      "module": "commonjs",
+      "noImplicitReturns": true,    
+      "esModuleInterop": true,
+      "outDir": "dist",
+      "sourceMap": true,
+      "target": "es5",
+      "declaration": true,
+      "types": [
+        "mocha", "node", "chai"
+      ]
+    },
+    "compileOnSave": true,
+    "include": [
+      "src"
+    ]
+  }
