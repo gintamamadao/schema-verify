@@ -2,20 +2,9 @@
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
+var isarray = _interopDefault(require('isarray'));
 var isobject = _interopDefault(require('isobject'));
-var _isFinite = _interopDefault(require('is-finite'));
-
-var toString = {}.toString;
-
-var isarray = Array.isArray || function (arr) {
-  return toString.call(arr) == '[object Array]';
-};
-
-// http://people.mozilla.org/~jorendorff/es6-draft.html#sec-number.isinteger
-
-var isInteger = Number.isInteger || function (val) {
-  return typeof val === "number" && _isFinite(val) && Math.floor(val) === val;
-};
+var isInteger = _interopDefault(require('is-integer'));
 
 const isstring = function (v) {
   return typeof v === "string";
@@ -452,80 +441,41 @@ const {
 } = constant;
 const CHECK_METHODS = COMMON_METHODS$1.slice(0, COMMON_METHODS$1.length - 2);
 
-class SchemaErrorHint extends error {
-  constructor() {
-    super();
-    this.propsInfoEmpty = "属性信息不能为空";
-    this.emptyLengthInfo = "空的长度信息";
-    this.emptyEnumInfo = "空的枚举信息";
-    this.errorEnumInfo = "错误的枚举信息";
-    this.emptyHintInfo = "空的提示信息";
-    this.emptyRangeInfo = "空的范围信息";
-  }
-
-  unIdentifyType(v) {
-    return `不可识别的属性类型：${v}`;
-  }
-
-  illegalHintInfo(v) {
-    return `非法的提示信息属性：${v}`;
-  }
-
-  illegalVerifyProps(v) {
-    return `非法的校验属性：${v}`;
-  }
-
-  illegalPatternType(v) {
-    return `非法的格式类型：${v}`;
-  }
-
-}
-
-var schema_error = new SchemaErrorHint();
-
-const {
-  COMMON_METHODS: COMMON_METHODS$2,
-  TYPE_METHODS: TYPE_METHODS$2,
-  TYPES: TYPES$2,
-  METHODS: METHODS$2
-} = constant;
-const CHECK_METHODS$1 = COMMON_METHODS$2.slice(0, COMMON_METHODS$2.length - 2);
-
 const typeVerify = (data, claim, hint) => {
   let isPass = false;
 
   switch (claim) {
-    case TYPES$2.string:
+    case TYPES$1.string:
       isPass = type.string.is(data);
       break;
 
-    case TYPES$2.number:
+    case TYPES$1.number:
       isPass = type.number.is(data);
       break;
 
-    case TYPES$2.object:
+    case TYPES$1.object:
       isPass = type.object.is(data);
       break;
 
-    case TYPES$2.array:
+    case TYPES$1.array:
       isPass = type.array.is(data);
       break;
 
-    case TYPES$2.function:
+    case TYPES$1.function:
       isPass = type.func.is(data);
       break;
 
-    case TYPES$2.boolean:
+    case TYPES$1.boolean:
       isPass = type.boolean.is(data);
       break;
 
-    case TYPES$2.null:
+    case TYPES$1.null:
       isPass = type.nul.is(data);
       break;
   }
 
   if (!isPass) {
-    throw new Error(verify_error.verifyErrorHint(METHODS$2.type, hint, verify_error.typeNeedHint(claim)));
+    throw new Error(verify_error.verifyErrorHint(METHODS$1.type, hint, verify_error.typeNeedHint(claim)));
   }
 
   return true;
@@ -555,7 +505,7 @@ const restrictVerify = (data, claim, propsClaims, hint) => {
 
   for (const key of dataKeys) {
     if (!restrictKeys.includes(key)) {
-      throw new Error(verify_error.verifyErrorHint(METHODS$2.restrict, hint, verify_error.propRestrictHint(key)));
+      throw new Error(verify_error.verifyErrorHint(METHODS$1.restrict, hint, verify_error.propRestrictHint(key)));
     }
   }
 
@@ -579,7 +529,7 @@ const patternVerify = (data, claim, hint) => {
   const isPass = typeof isFn === "function" && isFn.call(pattern[claim], data);
 
   if (!isPass) {
-    throw new Error(verify_error.verifyErrorHint(METHODS$2.pattern, hint, verify_error.patternNeedHint(claim)));
+    throw new Error(verify_error.verifyErrorHint(METHODS$1.pattern, hint, verify_error.patternNeedHint(claim)));
   }
 
   return true;
@@ -591,11 +541,11 @@ const lengthVerify = (data, claim, hint) => {
   const length = data.length;
 
   if (type.number.is(min) && length < min) {
-    throw new Error(verify_error.verifyErrorHint(METHODS$2.length, hint, verify_error.minLenHint(min)));
+    throw new Error(verify_error.verifyErrorHint(METHODS$1.length, hint, verify_error.minLenHint(min)));
   }
 
   if (type.number.is(max) && length > max) {
-    throw new Error(verify_error.verifyErrorHint(METHODS$2.length, hint, verify_error.maxLenHint(max)));
+    throw new Error(verify_error.verifyErrorHint(METHODS$1.length, hint, verify_error.maxLenHint(max)));
   }
 
   return true;
@@ -603,7 +553,7 @@ const lengthVerify = (data, claim, hint) => {
 
 const enumVerify = (data, claim, hint) => {
   if (!claim.includes(data)) {
-    throw new Error(verify_error.verifyErrorHint(METHODS$2.enum, hint, verify_error.enumHint(data)));
+    throw new Error(verify_error.verifyErrorHint(METHODS$1.enum, hint, verify_error.enumHint(data)));
   }
 
   return true;
@@ -611,7 +561,7 @@ const enumVerify = (data, claim, hint) => {
 
 const integerVerify = (data, claim, hint) => {
   if (claim && !type.number.isInteger(data)) {
-    throw new Error(verify_error.verifyErrorHint(METHODS$2.integer, hint, verify_error.integerHint(data)));
+    throw new Error(verify_error.verifyErrorHint(METHODS$1.integer, hint, verify_error.integerHint(data)));
   }
 
   return true;
@@ -619,7 +569,7 @@ const integerVerify = (data, claim, hint) => {
 
 const naturalVerify = (data, claim, hint) => {
   if (claim && !type.number.isNatural(data)) {
-    throw new Error(verify_error.verifyErrorHint(METHODS$2.natural, hint, verify_error.naturalHint(data)));
+    throw new Error(verify_error.verifyErrorHint(METHODS$1.natural, hint, verify_error.naturalHint(data)));
   }
 
   return true;
@@ -631,7 +581,7 @@ const matchVerify = (data, claim, hint) => {
   }
 
   if (!claim.test(data)) {
-    throw new Error(verify_error.verifyErrorHint(METHODS$2.match, hint, verify_error.matchHint(data)));
+    throw new Error(verify_error.verifyErrorHint(METHODS$1.match, hint, verify_error.matchHint(data)));
   }
 
   return true;
@@ -642,11 +592,11 @@ const rangeVerify = (data, claim, hint) => {
   const max = claim.max;
 
   if (type.number.is(min) && data < min) {
-    throw new Error(verify_error.verifyErrorHint(METHODS$2.range, hint, verify_error.minValueHint(min)));
+    throw new Error(verify_error.verifyErrorHint(METHODS$1.range, hint, verify_error.minValueHint(min)));
   }
 
   if (type.number.is(max) && data > max) {
-    throw new Error(verify_error.verifyErrorHint(METHODS$2.range, hint, verify_error.maxValueHint(max)));
+    throw new Error(verify_error.verifyErrorHint(METHODS$1.range, hint, verify_error.maxValueHint(max)));
   }
 
   return true;
@@ -666,8 +616,8 @@ const elePropVerify = (data, claims, type$1) => {
       hint = type.object.safe(itemClaim.hint);
     }
 
-    const getHint = type$1 === TYPES$2.object ? verify_error.propNeedHint : verify_error.elementNeedHint;
-    const requiredHint = hint[METHODS$2.required] || getHint(index);
+    const getHint = type$1 === TYPES$1.object ? verify_error.propNeedHint : verify_error.elementNeedHint;
+    const requiredHint = hint[METHODS$1.required] || getHint(index);
     const isRequiredPass = requiredVerify(data, index, required, requiredHint);
 
     if (isRequiredPass) {
@@ -677,7 +627,7 @@ const elePropVerify = (data, claims, type$1) => {
     try {
       verify(itemData, itemClaim, data);
     } catch (e) {
-      const getHint = type$1 === TYPES$2.object ? verify_error.propErrorHint : verify_error.elementErrorHint;
+      const getHint = type$1 === TYPES$1.object ? verify_error.propErrorHint : verify_error.elementErrorHint;
       throw new Error(getHint(index, e));
     }
   };
@@ -695,11 +645,11 @@ const elePropVerify = (data, claims, type$1) => {
       hint = type.object.safe(itemClaim.hint);
     }
 
-    const indexArr = type$1 === TYPES$2.object ? Object.keys(data) : Array.from("a".repeat(data.length)).map((s, i) => i);
-    const emptyHint = type$1 === TYPES$2.object ? verify_error.propEmptyHint : verify_error.elementEmptyHint;
+    const indexArr = type$1 === TYPES$1.object ? Object.keys(data) : Array.from("a".repeat(data.length)).map((s, i) => i);
+    const emptyHint = type$1 === TYPES$1.object ? verify_error.propEmptyHint : verify_error.elementEmptyHint;
 
     if (required && indexArr.length <= 0) {
-      throw new Error(hint[METHODS$2.required] || emptyHint);
+      throw new Error(hint[METHODS$1.required] || emptyHint);
     }
 
     for (let index of indexArr) {
@@ -745,7 +695,7 @@ const schemaVerify = (data, claim, hint, parent) => {
   try {
     claim.verify(data, true, parent);
   } catch (e) {
-    throw new Error(verify_error.verifyErrorHint(METHODS$2.schema, hint || `${verify_error.safeErrorHint(e)}`));
+    throw new Error(verify_error.verifyErrorHint(METHODS$1.schema, hint || `${verify_error.safeErrorHint(e)}`));
   }
 
   return true;
@@ -759,7 +709,7 @@ const customVerify = (data, claim, hint, parent) => {
       throw new Error(hint || "未知");
     }
   } catch (e) {
-    throw new Error(verify_error.verifyErrorHint(METHODS$2.custom, `${verify_error.safeErrorHint(e)}`));
+    throw new Error(verify_error.verifyErrorHint(METHODS$1.custom, `${verify_error.safeErrorHint(e)}`));
   }
 
   return true;
@@ -769,8 +719,8 @@ const claimsVerify = (data, claims, parent) => {
   const fn = () => {
     const hint = type.object.safe(claims.hint);
     const type$1 = claims.type;
-    const claimMethods = [].concat(CHECK_METHODS$1, TYPE_METHODS$2[type$1]);
-    claimMethods.push(METHODS$2.custom);
+    const claimMethods = [].concat(CHECK_METHODS, TYPE_METHODS$1[type$1]);
+    claimMethods.push(METHODS$1.custom);
 
     for (const claimKey of claimMethods) {
       if (!claims.hasOwnProperty(claimKey)) {
@@ -782,55 +732,55 @@ const claimsVerify = (data, claims, parent) => {
       const claimHint = hint[claimKey];
 
       switch (claimKey) {
-        case METHODS$2.type:
+        case METHODS$1.type:
           typeVerify(data, claimValue, claimHint);
           break;
 
-        case METHODS$2.restrict:
+        case METHODS$1.restrict:
           restrictVerify(data, claimValue, propsClaims, claimHint);
           break;
 
-        case METHODS$2.pattern:
+        case METHODS$1.pattern:
           patternVerify(data, claimValue, claimHint);
           break;
 
-        case METHODS$2.length:
+        case METHODS$1.length:
           lengthVerify(data, claimValue, claimHint);
           break;
 
-        case METHODS$2.enum:
+        case METHODS$1.enum:
           enumVerify(data, claimValue, claimHint);
           break;
 
-        case METHODS$2.match:
+        case METHODS$1.match:
           matchVerify(data, claimValue, claimHint);
           break;
 
-        case METHODS$2.range:
+        case METHODS$1.range:
           rangeVerify(data, claimValue, claimHint);
           break;
 
-        case METHODS$2.integer:
+        case METHODS$1.integer:
           integerVerify(data, claimValue, claimHint);
           break;
 
-        case METHODS$2.natural:
+        case METHODS$1.natural:
           naturalVerify(data, claimValue, claimHint);
           break;
 
-        case METHODS$2.elements:
+        case METHODS$1.elements:
           elePropVerify(data, claimValue, type$1);
           break;
 
-        case METHODS$2.props:
+        case METHODS$1.props:
           elePropVerify(data, claimValue, type$1);
           break;
 
-        case METHODS$2.schema:
+        case METHODS$1.schema:
           schemaVerify(data, claimValue, claimHint, parent);
           break;
 
-        case METHODS$2.custom:
+        case METHODS$1.custom:
           customVerify(data, claimValue, claimHint, parent);
           break;
       }
@@ -879,7 +829,7 @@ const verify = (data, info, parent) => {
 
 var verify_1 = verify;
 
-class SchemaErrorHint$1 extends error {
+class SchemaErrorHint extends error {
   constructor() {
     super();
     this.propsInfoEmpty = "属性信息不能为空";
@@ -908,19 +858,19 @@ class SchemaErrorHint$1 extends error {
 
 }
 
-var schema_error$1 = new SchemaErrorHint$1();
+var schema_error = new SchemaErrorHint();
 
 const {
-  COMMON_METHODS: COMMON_METHODS$3,
-  TYPE_METHODS: TYPE_METHODS$3,
-  TYPES: TYPES$3,
-  METHODS: METHODS$3
+  COMMON_METHODS: COMMON_METHODS$2,
+  TYPE_METHODS: TYPE_METHODS$2,
+  TYPES: TYPES$2,
+  METHODS: METHODS$2
 } = constant;
 const PATTERNS = Object.keys(pattern);
 
 const schemaCheck = function (info) {
   if (type.object.isNot(info) && !type.array.isNotEmpty(info)) {
-    throw new Error(schema_error$1.propsInfoEmpty);
+    throw new Error(schema_error.propsInfoEmpty);
   }
 
   if (type.array.isNotEmpty(info)) {
@@ -939,16 +889,16 @@ const schemaCheck = function (info) {
     };
   }
 
-  if (info.hasOwnProperty(METHODS$3.schema)) {
-    const schema = info[METHODS$3.schema];
+  if (info.hasOwnProperty(METHODS$2.schema)) {
+    const schema = info[METHODS$2.schema];
 
     if (type.object.isNot(schema) || !(schema instanceof Schema)) {
-      throw new Error(schema_error$1.illegalVerifyProps(METHODS$3.schema));
+      throw new Error(schema_error.illegalVerifyProps(METHODS$2.schema));
     }
 
     const schemaRuleInfo = schema.info;
 
-    for (const method of [METHODS$3.type, METHODS$3.required, METHODS$3.index]) {
+    for (const method of [METHODS$2.type, METHODS$2.required, METHODS$2.index]) {
       if (!info.hasOwnProperty(method) && schemaRuleInfo.hasOwnProperty(method)) {
         info[method] = schemaRuleInfo[method];
       }
@@ -963,43 +913,43 @@ const typeCheck = function (info) {
   const type = info.type;
 
   switch (type) {
-    case TYPES$3.string:
+    case TYPES$2.string:
     case String:
       info = stringCheck(info);
-      info.type = TYPES$3.string;
+      info.type = TYPES$2.string;
       break;
 
-    case TYPES$3.number:
+    case TYPES$2.number:
     case Number:
       info = numberCheck(info);
-      info.type = TYPES$3.number;
+      info.type = TYPES$2.number;
       break;
 
-    case TYPES$3.object:
+    case TYPES$2.object:
     case Object:
       info = objectCheck(info);
-      info.type = TYPES$3.object;
+      info.type = TYPES$2.object;
       break;
 
-    case TYPES$3.array:
+    case TYPES$2.array:
     case Array:
       info = arrayCheck(info);
-      info.type = TYPES$3.array;
+      info.type = TYPES$2.array;
       break;
 
-    case TYPES$3.function:
+    case TYPES$2.function:
     case Function:
-      info.type = TYPES$3.function;
+      info.type = TYPES$2.function;
       break;
 
-    case TYPES$3.boolean:
+    case TYPES$2.boolean:
     case Boolean:
-      info.type = TYPES$3.boolean;
+      info.type = TYPES$2.boolean;
       break;
 
-    case TYPES$3.null:
+    case TYPES$2.null:
     case null:
-      info.type = TYPES$3.null;
+      info.type = TYPES$2.null;
       break;
   }
 
@@ -1007,49 +957,49 @@ const typeCheck = function (info) {
 };
 
 const typeCommonCheck = info => {
-  const methods = TYPE_METHODS$3[info.type];
+  const methods = TYPE_METHODS$2[info.type];
 
   if (type.array.isNot(methods)) {
-    throw new Error(schema_error$1.unIdentifyType(methods));
+    throw new Error(schema_error.unIdentifyType(methods));
   }
 
   for (const key in info) {
-    if (COMMON_METHODS$3.includes(key) || methods.includes(key)) {
+    if (COMMON_METHODS$2.includes(key) || methods.includes(key)) {
       continue;
     } else {
-      throw new Error(schema_error$1.illegalVerifyProps(key));
+      throw new Error(schema_error.illegalVerifyProps(key));
     }
   }
 
-  if (info.hasOwnProperty(METHODS$3.hint)) {
-    const hint = info[METHODS$3.hint];
+  if (info.hasOwnProperty(METHODS$2.hint)) {
+    const hint = info[METHODS$2.hint];
 
     if (!type.object.is(hint)) {
-      throw new Error(schema_error$1.illegalVerifyProps(METHODS$3.hint));
+      throw new Error(schema_error.illegalVerifyProps(METHODS$2.hint));
     }
 
     for (const key in hint) {
-      if (COMMON_METHODS$3.includes(key) || methods.includes(key)) {
+      if (COMMON_METHODS$2.includes(key) || methods.includes(key)) {
         continue;
       } else {
-        throw new Error(schema_error$1.illegalHintInfo(key));
+        throw new Error(schema_error.illegalHintInfo(key));
       }
     }
   }
 
-  if (info.hasOwnProperty(METHODS$3.custom)) {
-    const custom = info[METHODS$3.custom];
+  if (info.hasOwnProperty(METHODS$2.custom)) {
+    const custom = info[METHODS$2.custom];
 
     if (type.func.isNot(custom)) {
-      throw new Error(schema_error$1.illegalVerifyProps(METHODS$3.custom));
+      throw new Error(schema_error.illegalVerifyProps(METHODS$2.custom));
     }
   }
 
-  if (info.hasOwnProperty(METHODS$3.index)) {
-    const index = info[METHODS$3.index];
+  if (info.hasOwnProperty(METHODS$2.index)) {
+    const index = info[METHODS$2.index];
 
     if (type.string.isNot(index) && type.number.isNot(index)) {
-      throw new Error(schema_error$1.illegalVerifyProps(METHODS$3.index));
+      throw new Error(schema_error.illegalVerifyProps(METHODS$2.index));
     }
   }
 
@@ -1057,55 +1007,55 @@ const typeCommonCheck = info => {
 };
 
 const stringCheck = function (info) {
-  if (info.hasOwnProperty(METHODS$3.pattern)) {
-    const pattern = info[METHODS$3.pattern];
+  if (info.hasOwnProperty(METHODS$2.pattern)) {
+    const pattern = info[METHODS$2.pattern];
 
     if (!PATTERNS.includes(pattern)) {
-      throw new Error(schema_error$1.illegalPatternType(pattern));
+      throw new Error(schema_error.illegalPatternType(pattern));
     }
   }
 
-  if (info.hasOwnProperty(METHODS$3.minLength)) {
-    const minLength = info[METHODS$3.minLength];
+  if (info.hasOwnProperty(METHODS$2.minLength)) {
+    const minLength = info[METHODS$2.minLength];
 
     if (type.number.isNatural(minLength)) {
-      let length = info[METHODS$3.length];
+      let length = info[METHODS$2.length];
       const minInfo = {
         min: minLength
       };
-      info[METHODS$3.length] = type.object.is(length) ? Object.assign({}, length, minInfo) : minInfo;
-      delete info[METHODS$3.minLength];
+      info[METHODS$2.length] = type.object.is(length) ? Object.assign({}, length, minInfo) : minInfo;
+      delete info[METHODS$2.minLength];
     }
   }
 
-  if (info.hasOwnProperty(METHODS$3.maxLength)) {
-    const maxLength = info[METHODS$3.maxLength];
+  if (info.hasOwnProperty(METHODS$2.maxLength)) {
+    const maxLength = info[METHODS$2.maxLength];
 
     if (type.number.isNatural(maxLength)) {
-      let length = info[METHODS$3.length];
+      let length = info[METHODS$2.length];
       const maxInfo = {
         max: maxLength
       };
-      info[METHODS$3.length] = type.object.is(length) ? Object.assign({}, length, maxInfo) : maxInfo;
-      delete info[METHODS$3.maxLength];
+      info[METHODS$2.length] = type.object.is(length) ? Object.assign({}, length, maxInfo) : maxInfo;
+      delete info[METHODS$2.maxLength];
     }
   }
 
-  if (info.hasOwnProperty(METHODS$3.length)) {
-    let length = info[METHODS$3.length];
+  if (info.hasOwnProperty(METHODS$2.length)) {
+    let length = info[METHODS$2.length];
 
     if (!type.object.isNotEmpty(length) && !type.number.isNatural(length)) {
-      throw new Error(schema_error$1.emptyLengthInfo);
+      throw new Error(schema_error.emptyLengthInfo);
     }
 
     if (type.number.isNatural(length)) {
-      info[METHODS$3.length] = {
+      info[METHODS$2.length] = {
         min: length,
         max: length
       };
     } else if (type.object.isNotEmpty(length)) {
       if (!type.number.isNatural(length.min) && !type.number.isNatural(length.max)) {
-        throw new Error(schema_error$1.emptyLengthInfo);
+        throw new Error(schema_error.emptyLengthInfo);
       }
 
       type.number.isNatural(length.min) && (length.min = +length.min);
@@ -1113,8 +1063,8 @@ const stringCheck = function (info) {
     }
   }
 
-  if (info.hasOwnProperty(METHODS$3.enum)) {
-    const enumData = info[METHODS$3.enum];
+  if (info.hasOwnProperty(METHODS$2.enum)) {
+    const enumData = info[METHODS$2.enum];
     let arr;
 
     if (type.object.isNotEmpty(enumData)) {
@@ -1126,23 +1076,23 @@ const stringCheck = function (info) {
     }
 
     if (!type.array.isNotEmpty(arr)) {
-      throw new Error(schema_error$1.emptyEnumInfo);
+      throw new Error(schema_error.emptyEnumInfo);
     }
 
     const isAllStr = arr.every(s => type.string.is(s));
 
     if (!isAllStr) {
-      throw new Error(schema_error$1.errorEnumInfo);
+      throw new Error(schema_error.errorEnumInfo);
     }
 
-    info[METHODS$3.enum] = arr;
+    info[METHODS$2.enum] = arr;
   }
 
-  if (info.hasOwnProperty(METHODS$3.match)) {
-    const match = info[METHODS$3.match];
+  if (info.hasOwnProperty(METHODS$2.match)) {
+    const match = info[METHODS$2.match];
 
     if (!type.string.isNotEmpty(match) && !(match instanceof RegExp)) {
-      throw new Error(schema_error$1.illegalVerifyProps(METHODS$3.match));
+      throw new Error(schema_error.illegalVerifyProps(METHODS$2.match));
     }
   }
 
@@ -1150,65 +1100,65 @@ const stringCheck = function (info) {
 };
 
 const numberCheck = function (info) {
-  if (info.hasOwnProperty(METHODS$3.min)) {
-    const min = info[METHODS$3.min];
+  if (info.hasOwnProperty(METHODS$2.min)) {
+    const min = info[METHODS$2.min];
 
     if (type.number.isNatural(min)) {
-      let range = info[METHODS$3.range];
+      let range = info[METHODS$2.range];
       const minInfo = {
         min
       };
-      info[METHODS$3.range] = type.object.is(range) ? Object.assign({}, range, minInfo) : minInfo;
-      delete info[METHODS$3.min];
+      info[METHODS$2.range] = type.object.is(range) ? Object.assign({}, range, minInfo) : minInfo;
+      delete info[METHODS$2.min];
     }
   }
 
-  if (info.hasOwnProperty(METHODS$3.max)) {
-    const max = info[METHODS$3.max];
+  if (info.hasOwnProperty(METHODS$2.max)) {
+    const max = info[METHODS$2.max];
 
     if (type.number.isNatural(max)) {
-      let range = info[METHODS$3.range];
+      let range = info[METHODS$2.range];
       const maxInfo = {
         max
       };
-      info[METHODS$3.range] = type.object.is(range) ? Object.assign({}, range, maxInfo) : maxInfo;
-      delete info[METHODS$3.max];
+      info[METHODS$2.range] = type.object.is(range) ? Object.assign({}, range, maxInfo) : maxInfo;
+      delete info[METHODS$2.max];
     }
   }
 
-  if (info.hasOwnProperty(METHODS$3.range)) {
-    const range = info[METHODS$3.range];
+  if (info.hasOwnProperty(METHODS$2.range)) {
+    const range = info[METHODS$2.range];
 
     if (type.object.isEmpty(range)) {
-      throw new Error(schema_error$1.emptyRangeInfo);
+      throw new Error(schema_error.emptyRangeInfo);
     }
 
     if (type.number.isNot(range.min) && type.number.isNot(range.max)) {
-      throw new Error(schema_error$1.emptyRangeInfo);
+      throw new Error(schema_error.emptyRangeInfo);
     }
 
     range.min = +range.min;
     range.max = +range.max;
   }
 
-  if (info.hasOwnProperty(METHODS$3.integer)) {
-    const integer = info[METHODS$3.integer];
+  if (info.hasOwnProperty(METHODS$2.integer)) {
+    const integer = info[METHODS$2.integer];
 
     if (type.boolean.isNot(integer)) {
-      throw new Error(schema_error$1.illegalVerifyProps(METHODS$3.integer));
+      throw new Error(schema_error.illegalVerifyProps(METHODS$2.integer));
     }
   }
 
-  if (info.hasOwnProperty(METHODS$3.natural)) {
-    const natural = info[METHODS$3.natural];
+  if (info.hasOwnProperty(METHODS$2.natural)) {
+    const natural = info[METHODS$2.natural];
 
     if (type.boolean.isNot(natural)) {
-      throw new Error(schema_error$1.illegalVerifyProps(METHODS$3.natural));
+      throw new Error(schema_error.illegalVerifyProps(METHODS$2.natural));
     }
   }
 
-  if (info.hasOwnProperty(METHODS$3.enum)) {
-    const enumData = info[METHODS$3.enum];
+  if (info.hasOwnProperty(METHODS$2.enum)) {
+    const enumData = info[METHODS$2.enum];
     let arr;
 
     if (type.object.isNotEmpty(enumData)) {
@@ -1220,31 +1170,31 @@ const numberCheck = function (info) {
     }
 
     if (!type.array.isNotEmpty(arr)) {
-      throw new Error(schema_error$1.emptyEnumInfo);
+      throw new Error(schema_error.emptyEnumInfo);
     }
 
     const isAllNum = arr.every(s => type.number.is(s));
 
     if (!isAllNum) {
-      throw new Error(schema_error$1.errorEnumInfo);
+      throw new Error(schema_error.errorEnumInfo);
     }
 
-    info[METHODS$3.enum] = arr;
+    info[METHODS$2.enum] = arr;
   }
 
   return info;
 };
 
 const objectCheck = function (info) {
-  if (info.hasOwnProperty(METHODS$3.props)) {
-    const props = info[METHODS$3.props];
+  if (info.hasOwnProperty(METHODS$2.props)) {
+    const props = info[METHODS$2.props];
 
     if (!type.object.isNotEmpty(props) && !type.array.is(props)) {
-      throw new Error(schema_error$1.illegalVerifyProps(METHODS$3.props));
+      throw new Error(schema_error.illegalVerifyProps(METHODS$2.props));
     }
 
     const formatObjProps = (props, info) => {
-      if (type.func.isNot(props[METHODS$3.type]) && type.nul.isNot(props[METHODS$3.type]) && type.string.isNot(TYPES$3[props[METHODS$3.type]]) && !props.hasOwnProperty(METHODS$3.schema) && !(props instanceof Schema)) {
+      if (type.func.isNot(props[METHODS$2.type]) && type.nul.isNot(props[METHODS$2.type]) && type.string.isNot(TYPES$2[props[METHODS$2.type]]) && !props.hasOwnProperty(METHODS$2.schema) && !(props instanceof Schema)) {
         props = Object.keys(props).map(key => {
           const item = props[key];
 
@@ -1253,18 +1203,18 @@ const objectCheck = function (info) {
           }
 
           if (type.object.is(item)) {
-            item[METHODS$3.index] = key;
+            item[METHODS$2.index] = key;
           }
 
           if (type.array.is(item) && type.object.is(item[0])) {
-            item[0][METHODS$3.index] = key;
+            item[0][METHODS$2.index] = key;
           }
 
           return item;
         });
         formatArrProps(props, info);
       } else {
-        delete props[METHODS$3.index];
+        delete props[METHODS$2.index];
         info.props = [schemaCheck(props)];
       }
     };
@@ -1273,19 +1223,19 @@ const objectCheck = function (info) {
       const propMap = props.reduce((map, item) => {
         let index;
 
-        if (type.object.is(item) && item.hasOwnProperty(METHODS$3.index)) {
-          index = item[METHODS$3.index];
+        if (type.object.is(item) && item.hasOwnProperty(METHODS$2.index)) {
+          index = item[METHODS$2.index];
 
           if (!type.string.isNotEmpty(index) && !type.number.is(index)) {
-            throw new Error(schema_error$1.illegalVerifyProps(METHODS$3.index));
+            throw new Error(schema_error.illegalVerifyProps(METHODS$2.index));
           }
         }
 
         if (type.array.is(item) && type.object.is(item[0])) {
-          index = item[0][METHODS$3.index];
+          index = item[0][METHODS$2.index];
 
           if (!type.string.isNotEmpty(index)) {
-            delete item[0][METHODS$3.index];
+            delete item[0][METHODS$2.index];
           }
         }
 
@@ -1296,7 +1246,7 @@ const objectCheck = function (info) {
         map[index] = schemaCheck(item);
         return map;
       }, {});
-      info[METHODS$3.props] = Object.keys(propMap).map(key => propMap[key]);
+      info[METHODS$2.props] = Object.keys(propMap).map(key => propMap[key]);
     };
 
     if (type.object.isNotEmpty(props)) {
@@ -1306,16 +1256,16 @@ const objectCheck = function (info) {
     }
   }
 
-  if (info.hasOwnProperty(METHODS$3.restrict)) {
-    const restrict = info[METHODS$3.restrict];
-    const props = info[METHODS$3.props];
+  if (info.hasOwnProperty(METHODS$2.restrict)) {
+    const restrict = info[METHODS$2.restrict];
+    const props = info[METHODS$2.props];
 
     if (type.boolean.isNot(restrict)) {
-      throw new Error(schema_error$1.illegalVerifyProps(METHODS$3.restrict));
+      throw new Error(schema_error.illegalVerifyProps(METHODS$2.restrict));
     }
 
     if (restrict && type.array.isNot(props)) {
-      throw new Error(schema_error$1.illegalVerifyProps(METHODS$3.props));
+      throw new Error(schema_error.illegalVerifyProps(METHODS$2.props));
     }
   }
 
@@ -1323,11 +1273,11 @@ const objectCheck = function (info) {
 };
 
 const arrayCheck = function (info) {
-  if (info.hasOwnProperty(METHODS$3.elements)) {
-    const elements = info[METHODS$3.elements];
+  if (info.hasOwnProperty(METHODS$2.elements)) {
+    const elements = info[METHODS$2.elements];
 
     if (!type.object.isNotEmpty(elements) && !type.array.is(elements)) {
-      throw new Error(schema_error$1.illegalVerifyProps(METHODS$3.elements));
+      throw new Error(schema_error.illegalVerifyProps(METHODS$2.elements));
     }
 
     if (type.object.isNotEmpty(elements)) {
@@ -1338,16 +1288,16 @@ const arrayCheck = function (info) {
         let index;
 
         if (type.object.is(item)) {
-          if (item.hasOwnProperty(METHODS$3.index) && type.number.isNot(item.index)) {
-            throw new Error(schema_error$1.illegalVerifyProps(METHODS$3.index));
+          if (item.hasOwnProperty(METHODS$2.index) && type.number.isNot(item.index)) {
+            throw new Error(schema_error.illegalVerifyProps(METHODS$2.index));
           } else {
             index = item.index;
           }
         }
 
         if (type.array.is(item) && type.object.is(item[0])) {
-          if (item[0].hasOwnProperty(METHODS$3.index) && type.number.isNot(item[0].index)) {
-            throw new Error(schema_error$1.illegalVerifyProps(METHODS$3.index));
+          if (item[0].hasOwnProperty(METHODS$2.index) && type.number.isNot(item[0].index)) {
+            throw new Error(schema_error.illegalVerifyProps(METHODS$2.index));
           } else {
             index = item[0].index;
           }
@@ -1360,51 +1310,51 @@ const arrayCheck = function (info) {
         map[index] = schemaCheck(item);
         return map;
       }, {});
-      info[METHODS$3.elements] = Object.keys(elementMap).map(key => elementMap[key]);
+      info[METHODS$2.elements] = Object.keys(elementMap).map(key => elementMap[key]);
     }
   }
 
-  if (info.hasOwnProperty(METHODS$3.minLength)) {
-    const minLength = info[METHODS$3.minLength];
+  if (info.hasOwnProperty(METHODS$2.minLength)) {
+    const minLength = info[METHODS$2.minLength];
 
     if (type.number.isNatural(minLength)) {
-      let length = info[METHODS$3.length];
+      let length = info[METHODS$2.length];
       const minInfo = {
         min: minLength
       };
-      info[METHODS$3.length] = type.object.is(length) ? Object.assign({}, length, minInfo) : minInfo;
-      delete info[METHODS$3.minLength];
+      info[METHODS$2.length] = type.object.is(length) ? Object.assign({}, length, minInfo) : minInfo;
+      delete info[METHODS$2.minLength];
     }
   }
 
-  if (info.hasOwnProperty(METHODS$3.maxLength)) {
-    const maxLength = info[METHODS$3.maxLength];
+  if (info.hasOwnProperty(METHODS$2.maxLength)) {
+    const maxLength = info[METHODS$2.maxLength];
 
     if (type.number.isNatural(maxLength)) {
-      let length = info[METHODS$3.length];
+      let length = info[METHODS$2.length];
       const maxInfo = {
         max: maxLength
       };
-      info[METHODS$3.length] = type.object.is(length) ? Object.assign({}, length, maxInfo) : maxInfo;
-      delete info[METHODS$3.maxLength];
+      info[METHODS$2.length] = type.object.is(length) ? Object.assign({}, length, maxInfo) : maxInfo;
+      delete info[METHODS$2.maxLength];
     }
   }
 
-  if (info.hasOwnProperty(METHODS$3.length)) {
-    let length = info[METHODS$3.length];
+  if (info.hasOwnProperty(METHODS$2.length)) {
+    let length = info[METHODS$2.length];
 
     if (!type.object.isNotEmpty(length) && !type.number.isNatural(length)) {
-      throw new Error(schema_error$1.emptyLengthInfo);
+      throw new Error(schema_error.emptyLengthInfo);
     }
 
     if (type.number.isNatural(length)) {
-      info[METHODS$3.length] = {
+      info[METHODS$2.length] = {
         min: length,
         max: length
       };
     } else if (type.object.isNotEmpty(length)) {
       if (!type.number.isNatural(length.min) && !type.number.isNatural(length.max)) {
-        throw new Error(schema_error$1.emptyLengthInfo);
+        throw new Error(schema_error.emptyLengthInfo);
       }
 
       type.number.isNatural(length.min) && (length.min = +length.min);

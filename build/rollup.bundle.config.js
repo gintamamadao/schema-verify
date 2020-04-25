@@ -4,7 +4,7 @@ const baseConfig = require("./rollup.config");
 module.exports = {
     ...baseConfig,
     output: {
-        file: util.resolve("dist/js-sql-query.js"),
+        file: util.resolve("dist/schema-verify.js"),
         format: "cjs"
     }
 };

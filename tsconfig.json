@@ -6,5 +6,5 @@
         "module": "es6",
         "target": "es2017"
     },
-    "include": ["./src/**/*", "global.d.ts"]
+    "include": ["./src/**/*"]
 }
