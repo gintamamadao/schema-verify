@@ -88,9 +88,10 @@ declare class Schema {
     verify(data: any, throwError?: boolean, parent?: any): boolean;
 }
 
-declare module "schema-verify" {
+declare module SchemaVerify {
     export let Type: Type;
     export let Pattern: Pattern;
     export let Schema: Schema;
-    export default Schema;
 }
+
+export default SchemaVerify;
