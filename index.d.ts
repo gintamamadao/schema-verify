@@ -88,8 +88,8 @@ declare class Schema {
     verify(data: any, throwError?: boolean, parent?: any): boolean;
 }
 
-declare namespace Schema {
-    let Type: Type;
-    let Pattern: Pattern;
-    let Schema: Schema;
+declare module Schema {
+    const Type: Type;
+    const Pattern: Pattern;
+    const Schema: Schema;
 }
