@@ -83,7 +83,14 @@ declare namespace Pattern {
     }
 }
 
-export default class Schema {
+declare namespace Schema {
+    let Type: Type;
+    let Pattern: Pattern;
+    let Schema: Schema;
+    let verify: (data: any, throwError?: boolean, parent?: any) => boolean;
+}
+
+declare class Schema {
     constructor(info: any);
     verify(data: any, throwError?: boolean, parent?: any): boolean;
 }
