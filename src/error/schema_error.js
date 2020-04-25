@@ -1,4 +1,4 @@
-const ErrorHint = require("./error");
+import ErrorHint from "./error";
 
 class SchemaErrorHint extends ErrorHint {
     constructor() {
@@ -24,4 +24,4 @@ class SchemaErrorHint extends ErrorHint {
     }
 }
 
-module.exports = new SchemaErrorHint();
+export default new SchemaErrorHint();

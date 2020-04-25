@@ -1,8 +1,6 @@
-const Type = require("./type.js");
-const Pattern = require("./pattern.js");
-const Schema = require("./schema.js");
+import Type from "./type";
+import Pattern from "./pattern";
+import Schema from "./schema";
 
-module.Type = Type;
-module.Pattern = Pattern;
-module.Schema = Schema;
-module.exports = Schema;
+export { Type, Pattern, Schema };
+export default Schema;

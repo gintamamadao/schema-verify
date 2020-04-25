@@ -1,17 +1,13 @@
-const verify = require("./verify.js");
-const Type = require("./type.js");
-const ErrorMsg = require("./error/schema_error.js");
-const Pattern = require("./pattern.js");
-const {
-    COMMON_METHODS,
-    TYPE_METHODS,
-    TYPES,
-    METHODS
-} = require("./constant.js");
+import verify from "./verify";
+import Type from "./type";
+import Pattern from "./pattern";
+import ErrorMsg from "./error/schema_error.js";
+
+import { COMMON_METHODS, TYPE_METHODS, TYPES, METHODS } from "./constant.js";
 
 const PATTERNS = Object.keys(Pattern);
 
-const schemaCheck = function(info) {
+const schemaCheck = function (info) {
     if (Type.object.isNot(info) && !Type.array.isNotEmpty(info)) {
         throw new Error(ErrorMsg.propsInfoEmpty);
     }
@@ -24,7 +20,7 @@ const schemaCheck = function(info) {
     }
     if (info instanceof Schema) {
         info = {
-            schema: info
+            schema: info,
         };
     }
     if (info.hasOwnProperty(METHODS.schema)) {
@@ -46,7 +42,7 @@ const schemaCheck = function(info) {
     return typeCheck(result);
 };
 
-const typeCheck = function(info) {
+const typeCheck = function (info) {
     const type = info.type;
     switch (type) {
         case TYPES.string:
@@ -85,7 +81,7 @@ const typeCheck = function(info) {
     return typeCommonCheck(info);
 };
 
-const typeCommonCheck = info => {
+const typeCommonCheck = (info) => {
     const methods = TYPE_METHODS[info.type];
     if (Type.array.isNot(methods)) {
         throw new Error(ErrorMsg.unIdentifyType(methods));
@@ -125,7 +121,7 @@ const typeCommonCheck = info => {
     return info;
 };
 
-const stringCheck = function(info) {
+const stringCheck = function (info) {
     if (info.hasOwnProperty(METHODS.pattern)) {
         const pattern = info[METHODS.pattern];
         if (!PATTERNS.includes(pattern)) {
@@ -137,7 +133,7 @@ const stringCheck = function(info) {
         if (Type.number.isNatural(minLength)) {
             let length = info[METHODS.length];
             const minInfo = {
-                min: minLength
+                min: minLength,
             };
             info[METHODS.length] = Type.object.is(length)
                 ? Object.assign({}, length, minInfo)
@@ -150,7 +146,7 @@ const stringCheck = function(info) {
         if (Type.number.isNatural(maxLength)) {
             let length = info[METHODS.length];
             const maxInfo = {
-                max: maxLength
+                max: maxLength,
             };
             info[METHODS.length] = Type.object.is(length)
                 ? Object.assign({}, length, maxInfo)
@@ -166,7 +162,7 @@ const stringCheck = function(info) {
         if (Type.number.isNatural(length)) {
             info[METHODS.length] = {
                 min: length,
-                max: length
+                max: length,
             };
         } else if (Type.object.isNotEmpty(length)) {
             if (
@@ -183,7 +179,7 @@ const stringCheck = function(info) {
         const enumData = info[METHODS.enum];
         let arr;
         if (Type.object.isNotEmpty(enumData)) {
-            arr = Object.keys(enumData).map(key => enumData[key]);
+            arr = Object.keys(enumData).map((key) => enumData[key]);
         }
         if (Type.array.isNotEmpty(enumData)) {
             arr = enumData;
@@ -191,7 +187,7 @@ const stringCheck = function(info) {
         if (!Type.array.isNotEmpty(arr)) {
             throw new Error(ErrorMsg.emptyEnumInfo);
         }
-        const isAllStr = arr.every(s => Type.string.is(s));
+        const isAllStr = arr.every((s) => Type.string.is(s));
         if (!isAllStr) {
             throw new Error(ErrorMsg.errorEnumInfo);
         }
@@ -206,13 +202,13 @@ const stringCheck = function(info) {
     return info;
 };
 
-const numberCheck = function(info) {
+const numberCheck = function (info) {
     if (info.hasOwnProperty(METHODS.min)) {
         const min = info[METHODS.min];
         if (Type.number.isNatural(min)) {
             let range = info[METHODS.range];
             const minInfo = {
-                min
+                min,
             };
             info[METHODS.range] = Type.object.is(range)
                 ? Object.assign({}, range, minInfo)
@@ -225,7 +221,7 @@ const numberCheck = function(info) {
         if (Type.number.isNatural(max)) {
             let range = info[METHODS.range];
             const maxInfo = {
-                max
+                max,
             };
             info[METHODS.range] = Type.object.is(range)
                 ? Object.assign({}, range, maxInfo)
@@ -260,7 +256,7 @@ const numberCheck = function(info) {
         const enumData = info[METHODS.enum];
         let arr;
         if (Type.object.isNotEmpty(enumData)) {
-            arr = Object.keys(enumData).map(key => enumData[key]);
+            arr = Object.keys(enumData).map((key) => enumData[key]);
         }
         if (Type.array.isNotEmpty(enumData)) {
             arr = enumData;
@@ -268,7 +264,7 @@ const numberCheck = function(info) {
         if (!Type.array.isNotEmpty(arr)) {
             throw new Error(ErrorMsg.emptyEnumInfo);
         }
-        const isAllNum = arr.every(s => Type.number.is(s));
+        const isAllNum = arr.every((s) => Type.number.is(s));
         if (!isAllNum) {
             throw new Error(ErrorMsg.errorEnumInfo);
         }
@@ -277,7 +273,7 @@ const numberCheck = function(info) {
     return info;
 };
 
-const objectCheck = function(info) {
+const objectCheck = function (info) {
     if (info.hasOwnProperty(METHODS.props)) {
         const props = info[METHODS.props];
         if (!Type.object.isNotEmpty(props) && !Type.array.is(props)) {
@@ -291,7 +287,7 @@ const objectCheck = function(info) {
                 !props.hasOwnProperty(METHODS.schema) &&
                 !(props instanceof Schema)
             ) {
-                props = Object.keys(props).map(key => {
+                props = Object.keys(props).map((key) => {
                     const item = props[key];
                     if (key === "$_PROPS_DEFAULT_INFO") {
                         return item;
@@ -339,7 +335,9 @@ const objectCheck = function(info) {
                 map[index] = schemaCheck(item);
                 return map;
             }, {});
-            info[METHODS.props] = Object.keys(propMap).map(key => propMap[key]);
+            info[METHODS.props] = Object.keys(propMap).map(
+                (key) => propMap[key]
+            );
         };
         if (Type.object.isNotEmpty(props)) {
             formatObjProps(props, info);
@@ -360,7 +358,7 @@ const objectCheck = function(info) {
     return info;
 };
 
-const arrayCheck = function(info) {
+const arrayCheck = function (info) {
     if (info.hasOwnProperty(METHODS.elements)) {
         const elements = info[METHODS.elements];
         if (!Type.object.isNotEmpty(elements) && !Type.array.is(elements)) {
@@ -403,7 +401,7 @@ const arrayCheck = function(info) {
                 return map;
             }, {});
             info[METHODS.elements] = Object.keys(elementMap).map(
-                key => elementMap[key]
+                (key) => elementMap[key]
             );
         }
     }
@@ -412,7 +410,7 @@ const arrayCheck = function(info) {
         if (Type.number.isNatural(minLength)) {
             let length = info[METHODS.length];
             const minInfo = {
-                min: minLength
+                min: minLength,
             };
             info[METHODS.length] = Type.object.is(length)
                 ? Object.assign({}, length, minInfo)
@@ -425,7 +423,7 @@ const arrayCheck = function(info) {
         if (Type.number.isNatural(maxLength)) {
             let length = info[METHODS.length];
             const maxInfo = {
-                max: maxLength
+                max: maxLength,
             };
             info[METHODS.length] = Type.object.is(length)
                 ? Object.assign({}, length, maxInfo)
@@ -441,7 +439,7 @@ const arrayCheck = function(info) {
         if (Type.number.isNatural(length)) {
             info[METHODS.length] = {
                 min: length,
-                max: length
+                max: length,
             };
         } else if (Type.object.isNotEmpty(length)) {
             if (
@@ -474,4 +472,4 @@ class Schema {
     }
 }
 
-module.exports = Schema;
+export default Schema;

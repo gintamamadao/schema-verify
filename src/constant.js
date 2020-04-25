@@ -5,7 +5,7 @@ const TYPES = {
     array: "array",
     function: "function",
     boolean: "boolean",
-    null: "null"
+    null: "null",
 };
 
 const METHODS = {
@@ -28,7 +28,7 @@ const METHODS = {
     natural: "natural",
     restrict: "restrict",
     props: "props",
-    elements: "elements"
+    elements: "elements",
 };
 
 const COMMON_METHODS = [
@@ -37,7 +37,7 @@ const COMMON_METHODS = [
     METHODS.type,
     METHODS.schema,
     METHODS.custom,
-    METHODS.hint
+    METHODS.hint,
 ];
 
 const TYPE_METHODS = {
@@ -47,7 +47,7 @@ const TYPE_METHODS = {
         METHODS.enum,
         METHODS.match,
         METHODS.minLength,
-        METHODS.maxLength
+        METHODS.maxLength,
     ],
     number: [
         METHODS.range,
@@ -55,23 +55,18 @@ const TYPE_METHODS = {
         METHODS.natural,
         METHODS.enum,
         METHODS.min,
-        METHODS.max
+        METHODS.max,
     ],
     object: [METHODS.restrict, METHODS.props],
     array: [
         METHODS.elements,
         METHODS.length,
         METHODS.minLength,
-        METHODS.maxLength
+        METHODS.maxLength,
     ],
     function: [],
     boolean: [],
-    null: []
+    null: [],
 };
 
-module.exports = {
-    COMMON_METHODS,
-    TYPE_METHODS,
-    TYPES,
-    METHODS
-};
+export { COMMON_METHODS, TYPE_METHODS, TYPES, METHODS };

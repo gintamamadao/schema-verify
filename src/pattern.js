@@ -1,4 +1,4 @@
-const Type = require("./type.js");
+import Type from "./type";
 
 const phoneReg = new RegExp(/^1\d{10}$/);
 const emailReg = new RegExp(
@@ -16,7 +16,7 @@ const Pattern = {
     phone: {
         is(v) {
             return Type.string.isNotEmpty(v) && phoneReg.test(v);
-        }
+        },
     },
     uri: {
         is(v) {
@@ -25,32 +25,32 @@ const Pattern = {
             } catch (e) {
                 return false;
             }
-        }
+        },
     },
     email: {
         is(v) {
             return Type.string.isNotEmpty(v) && emailReg.test(v);
-        }
+        },
     },
     color: {
         is(v) {
             return Type.string.isNotEmpty(v) && colorReg.test(v);
-        }
+        },
     },
     version: {
         is(v) {
             return Type.string.isNotEmpty(v) && versionReg.test(v);
-        }
+        },
     },
     sign: {
         is(v) {
             return Type.string.isNotEmpty(v) && signReg.test(v);
-        }
+        },
     },
     numStr: {
         is(v) {
             return Type.string.isNotEmpty(v) && numStrReg.test(v);
-        }
+        },
     },
     jsonStr: {
         is(v) {
@@ -59,7 +59,7 @@ const Pattern = {
             } catch (e) {
                 return false;
             }
-        }
+        },
     },
     time: {
         is(v) {
@@ -71,8 +71,8 @@ const Pattern = {
         },
         isCommon(v) {
             return Type.string.isNotEmpty(v) && commonTimeReg.test(v);
-        }
-    }
+        },
+    },
 };
 
-module.exports = Pattern;
+export default Pattern;

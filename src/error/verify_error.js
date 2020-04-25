@@ -1,4 +1,4 @@
-const ErrorHint = require("./error");
+import ErrorHint from "./error";
 
 class VerifyErrorHint extends ErrorHint {
     constructor() {
@@ -54,10 +54,10 @@ class VerifyErrorHint extends ErrorHint {
         return `第 ${index} 项: ${this.safeErrorHint(e)}`;
     }
     verifyErrorHint(type, customHint, originHint) {
-        return `${type ? type + " " : ""}校验不通过, 错误信息：${customHint ||
-            originHint ||
-            "未知"}`;
+        return `${type ? type + " " : ""}校验不通过, 错误信息：${
+            customHint || originHint || "未知"
+        }`;
     }
 }
 
-module.exports = new VerifyErrorHint();
+export default new VerifyErrorHint();

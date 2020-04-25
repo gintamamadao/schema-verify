@@ -4,4 +4,4 @@ class ErrorHint {
     }
 }
 
-module.exports = ErrorHint;
+export default ErrorHint;

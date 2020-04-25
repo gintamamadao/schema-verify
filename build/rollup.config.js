@@ -31,8 +31,8 @@ const typescriptOptions = {
 module.exports = {
     input: util.resolve("src/index.js"),
     plugins: [
-        typescript(),
         commonjs({ extensions, ignore: ["conditional-runtime-dependency"] }),
         babel(babelOptions),
     ],
+    external: ["is-integer", "isobject", "isarray"],
 };

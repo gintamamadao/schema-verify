@@ -1,12 +1,8 @@
-const Type = require("./type.js");
-const Pattern = require("./pattern.js");
-const ErrorMsg = require("./error/verify_error.js");
-const {
-    COMMON_METHODS,
-    TYPE_METHODS,
-    TYPES,
-    METHODS
-} = require("./constant.js");
+import Type from "./type";
+import Pattern from "./pattern";
+import ErrorMsg from "./error/verify_error.js";
+
+import { COMMON_METHODS, TYPE_METHODS, TYPES, METHODS } from "./constant.js";
 
 const CHECK_METHODS = COMMON_METHODS.slice(0, COMMON_METHODS.length - 2);
 
@@ -63,7 +59,7 @@ const restrictVerify = (data, claim, propsClaims, hint) => {
             continue;
         }
     }
-    restrictKeys = restrictKeys.filter(s => s);
+    restrictKeys = restrictKeys.filter((s) => s);
     for (const key of dataKeys) {
         if (!restrictKeys.includes(key)) {
             throw new Error(
@@ -278,7 +274,7 @@ const elePropVerify = (data, claims, type) => {
             }
         }
     };
-    const fn = claims => {
+    const fn = (claims) => {
         const checkedMap = {};
         for (const itemClaim of claims) {
             let index;
@@ -412,7 +408,7 @@ const claimsVerify = (data, claims, parent) => {
 };
 
 const verify = (data, info, parent) => {
-    const fn = claimsInfo => {
+    const fn = (claimsInfo) => {
         try {
             claimsVerify(data, claimsInfo, parent);
         } catch (e) {
@@ -441,4 +437,4 @@ const verify = (data, info, parent) => {
     return true;
 };
 
-module.exports = verify;
+export default verify;

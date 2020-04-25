@@ -1,28 +1,28 @@
-const isarray = require("isarray");
-const isobject = require("isobject");
-const isinteger = require("is-integer");
+import isarray from "isarray";
+import isobject from "isobject";
+import isinteger from "is-integer";
 
-const isstring = function(v) {
+const isstring = function (v) {
     return typeof v === "string";
 };
 
-const isnumber = function(v) {
+const isnumber = function (v) {
     return typeof v === "number" && !isNaN(v);
 };
 
-const isfunction = function(v) {
+const isfunction = function (v) {
     return typeof v === "function";
 };
 
-const isnull = function(v) {
+const isnull = function (v) {
     return v === null;
 };
 
-const isundefined = function(v) {
+const isundefined = function (v) {
     return v === undefined;
 };
 
-const isundefinednull = function(v) {
+const isundefinednull = function (v) {
     return v === undefined || v === null;
 };
 
@@ -42,7 +42,7 @@ const Type = {
         },
         safe(v) {
             return isstring(v) ? v : isundefinednull(v) ? "" : v + "";
-        }
+        },
     },
     number: {
         is(v) {
@@ -69,7 +69,7 @@ const Type = {
                 }
             }
             return 0;
-        }
+        },
     },
     boolean: {
         is(v) {
@@ -77,7 +77,7 @@ const Type = {
         },
         isNot(v) {
             return v !== true && v !== false;
-        }
+        },
     },
     array: {
         is(v) {
@@ -100,13 +100,13 @@ const Type = {
                 return [];
             }
             const t = [];
-            v.forEach(item => {
+            v.forEach((item) => {
                 if (!isundefinednull(item)) {
                     t.push(item);
                 }
             });
             return t;
-        }
+        },
     },
     object: {
         is(v) {
@@ -129,13 +129,13 @@ const Type = {
                 return {};
             }
             const t = Object.assign({}, v);
-            Object.keys(t).forEach(k => {
+            Object.keys(t).forEach((k) => {
                 if (isundefinednull(t[k])) {
                     delete t[k];
                 }
             });
             return t;
-        }
+        },
     },
     func: {
         is(v) {
@@ -145,7 +145,7 @@ const Type = {
             return !isfunction(v);
         },
         safe(v, context) {
-            return function() {
+            return function () {
                 if (isfunction(v)) {
                     context = context || isnull(context) ? context : this;
                     return v.apply(
@@ -154,7 +154,7 @@ const Type = {
                     );
                 }
             };
-        }
+        },
     },
     undefinedNull: {
         is(v) {
@@ -162,7 +162,7 @@ const Type = {
         },
         isNot(v) {
             return !isundefinednull(v);
-        }
+        },
     },
     nul: {
         is(v) {
@@ -170,7 +170,7 @@ const Type = {
         },
         isNot(v) {
             return !isnull(v);
-        }
+        },
     },
     undefined: {
         is(v) {
@@ -178,8 +178,8 @@ const Type = {
         },
         isNot(v) {
             return !isundefined(v);
-        }
-    }
+        },
+    },
 };
 
-module.exports = Type;
+export default Type;
