@@ -1,96 +1,95 @@
-declare namespace Type {
-    namespace string {
-        let is: (v: any) => v is string;
-        let isNot: (v: any) => boolean;
-        let isEmpty: (v: any) => boolean;
-        let isNotEmpty: (v: any) => boolean;
-        let safe: (v: any) => string;
-    }
-    namespace number {
-        let is: (v: any) => v is number;
-        let isNot: (v: any) => boolean;
-        let isInteger: (v: any) => boolean;
-        let isNatural: (v: any) => boolean;
-        let safe: (v: any) => number;
-    }
-    namespace boolean {
-        let is: (v: any) => v is boolean;
-        let isNot: (v: any) => boolean;
-    }
-    namespace array {
-        let is: <T = any>(v: any) => v is T;
-        let isNot: (v: any) => boolean;
-        let isEmpty: (v: any) => boolean;
-        let isNotEmpty: (v: any) => boolean;
-        let safe: <T = any>(v: any) => T;
-        let pure: <T = any>(v: any) => T;
-    }
-    namespace object {
-        let is: <T = any>(v: any) => v is T;
-        let isNot: (v: any) => boolean;
-        let isEmpty: (v: any) => boolean;
-        let isNotEmpty: (v: any) => boolean;
-        let safe: <T = any>(v: any) => T;
-        let pure: <T = any>(v: any) => T;
-    }
-    namespace func {
-        let is: (v: any) => v is Function;
-        let isNot: (v: any) => boolean;
-        let safe: (v: any, context: any) => Function;
-    }
-    namespace undefinedNull {
-        let is: (v: any) => boolean;
-        let isNot: (v: any) => boolean;
-    }
-    namespace nul {
-        let is: (v: any) => v is null;
-        let isNot: (v: any) => boolean;
-    }
-    namespace undefined {
-        let is: (v: any) => v is undefined;
-        let isNot: (v: any) => boolean;
-    }
+declare interface Type {
+    string: {
+        is: (v: any) => v is string;
+        isNot: (v: any) => boolean;
+        isEmpty: (v: any) => boolean;
+        isNotEmpty: (v: any) => boolean;
+        safe: (v: any) => string;
+    };
+    number: {
+        is: (v: any) => v is number;
+        isNot: (v: any) => boolean;
+        isInteger: (v: any) => boolean;
+        isNatural: (v: any) => boolean;
+        safe: (v: any) => number;
+    };
+    boolean: {
+        is: (v: any) => v is boolean;
+        isNot: (v: any) => boolean;
+    };
+    array: {
+        is: <T = any>(v: any) => v is T;
+        isNot: (v: any) => boolean;
+        isEmpty: (v: any) => boolean;
+        isNotEmpty: (v: any) => boolean;
+        safe: <T = any>(v: any) => T;
+        pure: <T = any>(v: any) => T;
+    };
+    object: {
+        is: <T = any>(v: any) => v is T;
+        isNot: (v: any) => boolean;
+        isEmpty: (v: any) => boolean;
+        isNotEmpty: (v: any) => boolean;
+        safe: <T = any>(v: any) => T;
+        pure: <T = any>(v: any) => T;
+    };
+    func: {
+        is: (v: any) => v is Function;
+        isNot: (v: any) => boolean;
+        safe: (v: any, context: any) => Function;
+    };
+    undefinedNull: {
+        is: (v: any) => boolean;
+        isNot: (v: any) => boolean;
+    };
+    nul: {
+        is: (v: any) => v is null;
+        isNot: (v: any) => boolean;
+    };
+    undefined: {
+        is: (v: any) => v is undefined;
+        isNot: (v: any) => boolean;
+    };
 }
 
-declare namespace Pattern {
-    namespace phone {
-        let is: (v: any) => boolean;
-    }
-    namespace uri {
-        let is: (v: any) => boolean;
-    }
-    namespace email {
-        let is: (v: any) => boolean;
-    }
-    namespace color {
-        let is: (v: any) => boolean;
-    }
-    namespace version {
-        let is: (v: any) => boolean;
-    }
-    namespace sign {
-        let is: (v: any) => boolean;
-    }
-    namespace numStr {
-        let is: (v: any) => boolean;
-    }
-    namespace jsonStr {
-        let is: (v: any) => boolean;
-    }
-    namespace time {
-        let is: (v: any) => boolean;
-        let isCommon: (v: any) => boolean;
-    }
+declare interface Pattern {
+    phone: {
+        is: (v: any) => boolean;
+    };
+    uri: {
+        is: (v: any) => boolean;
+    };
+    email: {
+        is: (v: any) => boolean;
+    };
+    color: {
+        is: (v: any) => boolean;
+    };
+    version: {
+        is: (v: any) => boolean;
+    };
+    sign: {
+        is: (v: any) => boolean;
+    };
+    numStr: {
+        is: (v: any) => boolean;
+    };
+    jsonStr: {
+        is: (v: any) => boolean;
+    };
+    time: {
+        is: (v: any) => boolean;
+        isCommon: (v: any) => boolean;
+    };
+}
+
+declare class Schema {
+    constructor(info: any);
+    verify(data: any, throwError?: boolean, parent?: any): boolean;
 }
 
 declare namespace Schema {
     let Type: Type;
     let Pattern: Pattern;
     let Schema: Schema;
-    let verify: (data: any, throwError?: boolean, parent?: any) => boolean;
-}
-
-declare class Schema {
-    constructor(info: any);
-    verify(data: any, throwError?: boolean, parent?: any): boolean;
 }
