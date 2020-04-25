@@ -6,6 +6,10 @@ var isarray = _interopDefault(require('isarray'));
 var isobject = _interopDefault(require('isobject'));
 var isInteger = _interopDefault(require('is-integer'));
 
+function createCommonjsModule(fn, module) {
+	return module = { exports: {} }, fn(module, module.exports), module.exports;
+}
+
 const isstring = function (v) {
   return typeof v === "string";
 };
@@ -1388,9 +1392,11 @@ class Schema {
 
 var schema = Schema;
 
-schema.Type = type;
-schema.Pattern = pattern;
-schema.Schema = schema;
-var src = schema;
+var src = createCommonjsModule(function (module) {
+  module.Type = type;
+  module.Pattern = pattern;
+  module.Schema = schema;
+  module.exports = schema;
+});
 
 module.exports = src;
