@@ -1,4 +1,4 @@
-const { Schema } = require("schema-verify");
+const { Schema } = require("../dist/schema-verify");
 describe("example", () => {
     test(`example`, () => {
         const schemaInfo = {
@@ -8,18 +8,18 @@ describe("example", () => {
                 id: {
                     required: true,
                     type: Number,
-                    natural: true
+                    natural: true,
                 },
                 email: {
                     required: true,
                     type: String,
                     pattern: "email",
-                    length: { min: 3, max: 32 }
+                    length: { min: 3, max: 32 },
                 },
                 gender: {
                     required: true,
                     type: String,
-                    enum: ["male", "female"]
+                    enum: ["male", "female"],
                 },
                 address: {
                     required: true,
@@ -29,16 +29,16 @@ describe("example", () => {
                         city: {
                             required: true,
                             type: String,
-                            maxLength: 100
+                            maxLength: 100,
                         },
                         street: {
                             required: true,
                             type: String,
-                            maxLength: 100
-                        }
-                    }
-                }
-            }
+                            maxLength: 100,
+                        },
+                    },
+                },
+            },
         };
         const schema = new Schema(schemaInfo);
         expect(
@@ -49,8 +49,8 @@ describe("example", () => {
                     gender: "male",
                     address: {
                         city: "London",
-                        street: "London street"
-                    }
+                        street: "London street",
+                    },
                 };
                 return schema.verify(data);
             })()
@@ -62,8 +62,8 @@ describe("example", () => {
                 gender: "male",
                 address: {
                     city: 1,
-                    street: "London street"
-                }
+                    street: "London street",
+                },
             };
             return schema.verify(data, true);
         }).toThrowError(

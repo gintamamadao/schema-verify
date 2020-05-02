@@ -30,9 +30,12 @@ const typescriptOptions = {
 
 module.exports = {
     input: util.resolve("src/index.js"),
+    output: {
+        file: util.resolve("dist/schema-verify.js"),
+        format: "cjs",
+    },
     plugins: [
         commonjs({ extensions, ignore: ["conditional-runtime-dependency"] }),
         babel(babelOptions),
     ],
-    external: ["is-integer", "isobject", "isarray"],
 };

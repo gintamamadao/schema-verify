@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "outDir": "./es/",
+        "sourceMap": true,
+        "noImplicitAny": false,
+        "module": "es6",
+        "target": "esnext",
+        "declaration": true,
+        "declarationDir": "./es/",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "noImplicitThis": false,
+        "lib": ["es5", "es6", "dom", "es7", "esnext"],
+        "experimentalDecorators": true,
+        "strict": true
+    },
+    "include": ["./src/**/*", "typing.d.ts"],
+    "exclude": ["node_modules"]
+}

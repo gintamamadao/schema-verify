@@ -1,58 +1,57 @@
-const SchemaVerify = require("../src/index");
-const Schema = SchemaVerify.Schema;
+const { Schema } = require("../dist/schema-verify");
 
 describe("common", () => {
     test(`type`, () => {
         expect(() => {
-            new SchemaVerify(null);
+            new Schema(null);
         }).toThrowError("属性信息不能为空");
     });
     test(`type`, () => {
         const schemaInfo = {
-            type: String
-        };
-        new SchemaVerify(schemaInfo);
-    });
-    test(`type`, () => {
-        const schemaInfo = {
-            type: Function
+            type: String,
         };
         new Schema(schemaInfo);
     });
     test(`type`, () => {
         const schemaInfo = {
-            type: "function"
+            type: Function,
         };
         new Schema(schemaInfo);
     });
     test(`type`, () => {
         const schemaInfo = {
-            type: Boolean
+            type: "function",
         };
         new Schema(schemaInfo);
     });
     test(`type`, () => {
         const schemaInfo = {
-            type: "boolean"
+            type: Boolean,
         };
         new Schema(schemaInfo);
     });
     test(`type`, () => {
         const schemaInfo = {
-            type: null
+            type: "boolean",
         };
         new Schema(schemaInfo);
     });
     test(`type`, () => {
         const schemaInfo = {
-            type: "null"
+            type: null,
+        };
+        new Schema(schemaInfo);
+    });
+    test(`type`, () => {
+        const schemaInfo = {
+            type: "null",
         };
         new Schema(schemaInfo);
     });
     test(`type`, () => {
         expect(() => {
             const schemaInfo = {
-                type: Date
+                type: Date,
             };
             new Schema(schemaInfo);
         }).toThrowError("不可识别的属性类型");
@@ -61,8 +60,8 @@ describe("common", () => {
         expect(() => {
             const schemaInfo = {
                 hint: {
-                    required: "required"
-                }
+                    required: "required",
+                },
             };
             new Schema(schemaInfo);
         }).toThrowError("不可识别的属性类型");
@@ -71,7 +70,7 @@ describe("common", () => {
         expect(() => {
             const schemaInfo = {
                 type: String,
-                a: 1
+                a: 1,
             };
             new Schema(schemaInfo);
         }).toThrowError("非法的校验属性");
@@ -80,8 +79,8 @@ describe("common", () => {
         const schemaInfo = {
             type: String,
             hint: {
-                required: "required"
-            }
+                required: "required",
+            },
         };
         new Schema(schemaInfo);
     });
@@ -89,7 +88,7 @@ describe("common", () => {
         expect(() => {
             const schemaInfo = {
                 type: String,
-                hint: "a"
+                hint: "a",
             };
             new Schema(schemaInfo);
         }).toThrowError("非法的校验属性");
@@ -99,8 +98,8 @@ describe("common", () => {
             const schemaInfo = {
                 type: String,
                 hint: {
-                    a: 1
-                }
+                    a: 1,
+                },
             };
             new Schema(schemaInfo);
         }).toThrowError("非法的提示信息属性");
@@ -108,7 +107,7 @@ describe("common", () => {
     test(`custom`, () => {
         const schemaInfo = {
             type: String,
-            custom: () => true
+            custom: () => true,
         };
         new Schema(schemaInfo);
     });
@@ -116,7 +115,7 @@ describe("common", () => {
         expect(() => {
             const schemaInfo = {
                 type: String,
-                custom: "a"
+                custom: "a",
             };
             new Schema(schemaInfo);
         }).toThrowError("非法的校验属性");
@@ -124,7 +123,7 @@ describe("common", () => {
     test(`index`, () => {
         const schemaInfo = {
             type: String,
-            index: "1"
+            index: "1",
         };
         new Schema(schemaInfo);
     });
@@ -132,7 +131,7 @@ describe("common", () => {
         expect(() => {
             const schemaInfo = {
                 type: String,
-                index: {}
+                index: {},
             };
             new Schema(schemaInfo);
         }).toThrowError("非法的校验属性");
@@ -143,14 +142,14 @@ describe("string", () => {
     test(`match`, () => {
         const schemaInfo = {
             type: String,
-            match: "a"
+            match: "a",
         };
         new Schema(schemaInfo);
     });
     test(`match`, () => {
         const schemaInfo = {
             type: String,
-            match: /a/
+            match: /a/,
         };
         new Schema(schemaInfo);
     });
@@ -158,7 +157,7 @@ describe("string", () => {
         expect(() => {
             const schemaInfo = {
                 type: String,
-                match: null
+                match: null,
             };
             new Schema(schemaInfo);
         }).toThrowError("非法的校验属性：match");
@@ -166,7 +165,7 @@ describe("string", () => {
     test(`pattern`, () => {
         const schemaInfo = {
             type: String,
-            pattern: "email"
+            pattern: "email",
         };
         new Schema(schemaInfo);
     });
@@ -174,7 +173,7 @@ describe("string", () => {
         expect(() => {
             const schemaInfo = {
                 type: String,
-                pattern: "a"
+                pattern: "a",
             };
             new Schema(schemaInfo);
         }).toThrowError("非法的格式类型");
@@ -182,14 +181,14 @@ describe("string", () => {
     test(`length`, () => {
         const schemaInfo = {
             type: String,
-            length: { min: 3, max: 32 }
+            length: { min: 3, max: 32 },
         };
         new Schema(schemaInfo);
     });
     test(`length`, () => {
         const schemaInfo = {
             type: String,
-            length: { min: 3 }
+            length: { min: 3 },
         };
         new Schema(schemaInfo);
     });
@@ -197,7 +196,7 @@ describe("string", () => {
         expect(() => {
             const schemaInfo = {
                 type: String,
-                length: {}
+                length: {},
             };
             new Schema(schemaInfo);
         }).toThrowError("空的长度信息");
@@ -206,7 +205,7 @@ describe("string", () => {
         expect(() => {
             const schemaInfo = {
                 type: String,
-                length: { a: 1 }
+                length: { a: 1 },
             };
             new Schema(schemaInfo);
         }).toThrowError("空的长度信息");
@@ -214,7 +213,7 @@ describe("string", () => {
     test(`enum`, () => {
         const schemaInfo = {
             type: String,
-            enum: ["a", "b"]
+            enum: ["a", "b"],
         };
         new Schema(schemaInfo);
     });
@@ -222,7 +221,7 @@ describe("string", () => {
         expect(() => {
             const schemaInfo = {
                 type: String,
-                enum: []
+                enum: [],
             };
             new Schema(schemaInfo);
         }).toThrowError("空的枚举信息");
@@ -231,7 +230,7 @@ describe("string", () => {
         expect(() => {
             const schemaInfo = {
                 type: String,
-                enum: {}
+                enum: {},
             };
             new Schema(schemaInfo);
         }).toThrowError("空的枚举信息");
@@ -241,8 +240,8 @@ describe("string", () => {
             type: String,
             enum: {
                 a: "1",
-                b: "2"
-            }
+                b: "2",
+            },
         };
         new Schema(schemaInfo);
     });
@@ -250,7 +249,7 @@ describe("string", () => {
         expect(() => {
             const schemaInfo = {
                 type: String,
-                enum: [1, 2]
+                enum: [1, 2],
             };
             new Schema(schemaInfo);
         }).toThrowError("错误的枚举信息");
@@ -261,14 +260,14 @@ describe("number", () => {
     test(`range`, () => {
         const schemaInfo = {
             type: Number,
-            range: { min: 3, max: 32 }
+            range: { min: 3, max: 32 },
         };
         new Schema(schemaInfo);
     });
     test(`range`, () => {
         const schemaInfo = {
             type: Number,
-            range: { min: 3 }
+            range: { min: 3 },
         };
         new Schema(schemaInfo);
     });
@@ -276,7 +275,7 @@ describe("number", () => {
         expect(() => {
             const schemaInfo = {
                 type: Number,
-                range: {}
+                range: {},
             };
             new Schema(schemaInfo);
         }).toThrowError("空的范围信息");
@@ -285,7 +284,7 @@ describe("number", () => {
         expect(() => {
             const schemaInfo = {
                 type: Number,
-                range: { a: 1 }
+                range: { a: 1 },
             };
             new Schema(schemaInfo);
         }).toThrowError("空的范围信息");
@@ -293,7 +292,7 @@ describe("number", () => {
     test(`integer`, () => {
         const schemaInfo = {
             type: Number,
-            integer: true
+            integer: true,
         };
         new Schema(schemaInfo);
     });
@@ -301,7 +300,7 @@ describe("number", () => {
         expect(() => {
             const schemaInfo = {
                 type: Number,
-                integer: "a"
+                integer: "a",
             };
             new Schema(schemaInfo);
         }).toThrowError("非法的校验属性");
@@ -309,7 +308,7 @@ describe("number", () => {
     test(`natural`, () => {
         const schemaInfo = {
             type: Number,
-            natural: true
+            natural: true,
         };
         new Schema(schemaInfo);
     });
@@ -317,7 +316,7 @@ describe("number", () => {
         expect(() => {
             const schemaInfo = {
                 type: Number,
-                natural: "a"
+                natural: "a",
             };
             new Schema(schemaInfo);
         }).toThrowError("非法的校验属性");
@@ -325,7 +324,7 @@ describe("number", () => {
     test(`enum`, () => {
         const schemaInfo = {
             type: Number,
-            enum: [1, 2]
+            enum: [1, 2],
         };
         new Schema(schemaInfo);
     });
@@ -333,7 +332,7 @@ describe("number", () => {
         expect(() => {
             const schemaInfo = {
                 type: Number,
-                enum: []
+                enum: [],
             };
             new Schema(schemaInfo);
         }).toThrowError("空的枚举信息");
@@ -342,7 +341,7 @@ describe("number", () => {
         expect(() => {
             const schemaInfo = {
                 type: Number,
-                enum: {}
+                enum: {},
             };
             new Schema(schemaInfo);
         }).toThrowError("空的枚举信息");
@@ -352,8 +351,8 @@ describe("number", () => {
             type: Number,
             enum: {
                 a: 1,
-                b: 2
-            }
+                b: 2,
+            },
         };
         new Schema(schemaInfo);
     });
@@ -361,7 +360,7 @@ describe("number", () => {
         expect(() => {
             const schemaInfo = {
                 type: Number,
-                enum: ["a", "b"]
+                enum: ["a", "b"],
             };
             new Schema(schemaInfo);
         }).toThrowError("错误的枚举信息");
@@ -371,13 +370,13 @@ describe("number", () => {
 describe("object", () => {
     test(`object`, () => {
         const schemaInfo = {
-            type: Object
+            type: Object,
         };
         new Schema(schemaInfo);
     });
     test(`object`, () => {
         const schemaInfo = {
-            type: "object"
+            type: "object",
         };
         new Schema(schemaInfo);
     });
@@ -385,7 +384,7 @@ describe("object", () => {
         const schemaInfo = {
             type: Object,
             restrict: true,
-            props: []
+            props: [],
         };
         new Schema(schemaInfo);
     });
@@ -393,7 +392,7 @@ describe("object", () => {
         expect(() => {
             const schemaInfo = {
                 type: Object,
-                restrict: true
+                restrict: true,
             };
             new Schema(schemaInfo);
         }).toThrowError("非法的校验属性");
@@ -402,7 +401,7 @@ describe("object", () => {
         expect(() => {
             const schemaInfo = {
                 type: Object,
-                restrict: null
+                restrict: null,
             };
             new Schema(schemaInfo);
         }).toThrowError("非法的校验属性");
@@ -411,8 +410,8 @@ describe("object", () => {
         const schemaInfo = {
             type: Object,
             props: {
-                type: String
-            }
+                type: String,
+            },
         };
         new Schema(schemaInfo);
     });
@@ -423,9 +422,9 @@ describe("object", () => {
                 props: [
                     {
                         index: null,
-                        type: String
-                    }
-                ]
+                        type: String,
+                    },
+                ],
             };
             new Schema(schemaInfo);
         }).toThrowError("非法的校验属性：index");
@@ -436,13 +435,13 @@ describe("object", () => {
             props: [
                 {
                     index: "a",
-                    type: String
+                    type: String,
                 },
                 {
                     index: "b",
-                    type: Number
-                }
-            ]
+                    type: Number,
+                },
+            ],
         };
         new Schema(schemaInfo);
     });
@@ -450,7 +449,7 @@ describe("object", () => {
         expect(() => {
             const schemaInfo = {
                 type: Object,
-                props: {}
+                props: {},
             };
             new Schema(schemaInfo);
         }).toThrowError("非法的校验属性");
@@ -459,33 +458,33 @@ describe("object", () => {
         expect(() => {
             const schemaInfo = {
                 type: Object,
-                props: "a"
+                props: "a",
             };
             new Schema(schemaInfo);
         }).toThrowError("非法的校验属性");
     });
     test(`props:schema`, () => {
         const stringSchema = new Schema({
-            type: String
+            type: String,
         });
         const schemaInfo = {
             type: Object,
             props: {
-                schema: stringSchema
-            }
+                schema: stringSchema,
+            },
         };
         new Schema(schemaInfo);
     });
     test(`props:schema`, () => {
         expect(() => {
             const stringSchema = {
-                type: String
+                type: String,
             };
             const schemaInfo = {
                 type: Object,
                 props: {
-                    schema: null
-                }
+                    schema: null,
+                },
             };
             new Schema(schemaInfo);
         }).toThrowError("非法的校验属性");
@@ -498,8 +497,8 @@ describe("array", () => {
             type: Array,
             elements: {
                 type: String,
-                pattern: "email"
-            }
+                pattern: "email",
+            },
         };
         new Schema(schemaInfo);
     });
@@ -509,9 +508,9 @@ describe("array", () => {
             elements: [
                 {
                     type: String,
-                    pattern: "email"
-                }
-            ]
+                    pattern: "email",
+                },
+            ],
         };
         new Schema(schemaInfo);
     });
@@ -522,9 +521,9 @@ describe("array", () => {
                 elements: [
                     {
                         index: null,
-                        type: String
-                    }
-                ]
+                        type: String,
+                    },
+                ],
             };
             new Schema(schemaInfo);
         }).toThrowError("非法的校验属性");
@@ -537,13 +536,13 @@ describe("array", () => {
                     [
                         {
                             index: null,
-                            type: String
+                            type: String,
                         },
                         {
-                            type: Number
-                        }
-                    ]
-                ]
+                            type: Number,
+                        },
+                    ],
+                ],
             };
             new Schema(schemaInfo);
         }).toThrowError("非法的校验属性");
@@ -552,7 +551,7 @@ describe("array", () => {
         expect(() => {
             const schemaInfo = {
                 type: Array,
-                elements: "a"
+                elements: "a",
             };
             new Schema(schemaInfo);
         }).toThrowError("非法的校验属性");
@@ -560,14 +559,14 @@ describe("array", () => {
     test(`length`, () => {
         const schemaInfo = {
             type: Array,
-            length: { min: 3, max: 32 }
+            length: { min: 3, max: 32 },
         };
         new Schema(schemaInfo);
     });
     test(`length`, () => {
         const schemaInfo = {
             type: Array,
-            length: { min: 3 }
+            length: { min: 3 },
         };
         new Schema(schemaInfo);
     });
@@ -575,7 +574,7 @@ describe("array", () => {
         expect(() => {
             const schemaInfo = {
                 type: Array,
-                length: {}
+                length: {},
             };
             new Schema(schemaInfo);
         }).toThrowError("空的长度信息");
@@ -584,7 +583,7 @@ describe("array", () => {
         expect(() => {
             const schemaInfo = {
                 type: Array,
-                length: { a: 1 }
+                length: { a: 1 },
             };
             new Schema(schemaInfo);
         }).toThrowError("空的长度信息");
@@ -592,11 +591,11 @@ describe("array", () => {
     test(`multiple`, () => {
         const schemaInfo = [
             {
-                type: String
+                type: String,
             },
             {
-                type: Number
-            }
+                type: Number,
+            },
         ];
         new Schema(schemaInfo);
     });

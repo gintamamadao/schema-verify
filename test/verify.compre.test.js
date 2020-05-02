@@ -1,4 +1,4 @@
-const { Schema } = require("../src/index");
+const { Schema } = require("../dist/schema-verify");
 
 describe("compre", () => {
     test(`compre`, () => {

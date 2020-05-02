@@ -2,36 +2,36 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
-
-var isarray = _interopDefault(require('isarray'));
-var isobject = _interopDefault(require('isobject'));
-var isinteger = _interopDefault(require('is-integer'));
-
-const isstring = function (v) {
+const isobject = v => {
+  return v != null && typeof v === "object" && Array.isArray(v) === false;
+};
+const isarray = v => {
+  return Object.prototype.toString.call(v) == "[object Array]";
+};
+const isstring = v => {
   return typeof v === "string";
 };
-
-const isnumber = function (v) {
-  return typeof v === "number" && !isNaN(v);
+const isfinite = v => {
+  return v !== Infinity && v !== -Infinity;
 };
-
-const isfunction = function (v) {
+const isnumber = v => {
+  return typeof v === "number" && !Number.isNaN(v) && isfinite(v);
+};
+const isinteger = v => {
+  return isnumber(v) && Math.floor(v) === v;
+};
+const isfunction = v => {
   return typeof v === "function";
 };
-
-const isnull = function (v) {
+const isnull = v => {
   return v === null;
 };
-
-const isundefined = function (v) {
+const isundefined = v => {
   return v === undefined;
 };
-
-const isundefinednull = function (v) {
+const isundefinednull = v => {
   return v === undefined || v === null;
 };
-
 const Type = {
   string: {
     is(v) {

@@ -1,4 +1,4 @@
-const { Type } = require("../src/index");
+const { Type } = require("../dist/schema-verify");
 
 describe("string", () => {
     test(`string:is`, () => {

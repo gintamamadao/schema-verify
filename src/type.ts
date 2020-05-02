@@ -111,7 +111,7 @@ const Type = {
             if (!isarray(v)) {
                 return [];
             }
-            const t = [];
+            const t: any[] = [];
             v.forEach((item) => {
                 if (!isundefinednull(item)) {
                     t.push(item);
