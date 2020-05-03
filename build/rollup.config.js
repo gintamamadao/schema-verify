@@ -21,20 +21,14 @@ const babelOptions = {
     ],
 };
 
-const typescriptOptions = {
-    strict: true,
-    declaration: true,
-    module: "ES6",
-    target: "es2017",
-};
-
 module.exports = {
-    input: util.resolve("src/index.js"),
+    input: util.resolve("src/index.ts"),
     output: {
         file: util.resolve("dist/schema-verify.js"),
         format: "cjs",
     },
     plugins: [
+        typescript(),
         commonjs({ extensions, ignore: ["conditional-runtime-dependency"] }),
         babel(babelOptions),
     ],

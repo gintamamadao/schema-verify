@@ -30,7 +30,7 @@ const isundefined = v => {
   return v === undefined;
 };
 const isundefinednull = v => {
-  return v === undefined || v === null;
+  return v == null;
 };
 const Type = {
   string: {
@@ -311,8 +311,14 @@ class VerifyErrorHint extends ErrorHint {
     super();
     this.propEmptyHint = "对象缺少属性";
     this.elementEmptyHint = "数组缺少元素";
-    this.propErrorHint = this.propErrorHint.bind(this);
-    this.elementErrorHint = this.elementErrorHint.bind(this);
+
+    this.propErrorHint = (key, e) => {
+      return `属性 ${key}: ${this.safeErrorHint(e)}`;
+    };
+
+    this.elementErrorHint = (index, e) => {
+      return `第 ${index} 项: ${this.safeErrorHint(e)}`;
+    };
   }
 
   minValueHint(min) {
@@ -363,16 +369,8 @@ class VerifyErrorHint extends ErrorHint {
     return `属性 ${key} 不允许`;
   }
 
-  propErrorHint(key, e) {
-    return `属性 ${key}: ${this.safeErrorHint(e)}`;
-  }
-
   elementNeedHint(index) {
     return `第 ${index} 项: 缺少数据`;
-  }
-
-  elementErrorHint(index, e) {
-    return `第 ${index} 项: ${this.safeErrorHint(e)}`;
   }
 
   verifyErrorHint(type, customHint, originHint) {
@@ -478,12 +476,10 @@ const restrictVerify = (data, claim, propsClaims, hint) => {
   for (const item of propsClaims) {
     if (Type.object.is(item)) {
       restrictKeys.push(item.index);
-      continue;
     }
 
     if (Type.array.is(item)) {
       restrictKeys.push(item[0].index);
-      continue;
     }
   }
 
@@ -846,7 +842,7 @@ var ErrorMsg$1 = new SchemaErrorHint();
 
 const PATTERNS = Object.keys(Pattern);
 
-const schemaCheck = function (info) {
+const schemaCheck = info => {
   if (Type.object.isNot(info) && !Type.array.isNotEmpty(info)) {
     throw new Error(ErrorMsg$1.propsInfoEmpty);
   }
@@ -887,7 +883,7 @@ const schemaCheck = function (info) {
   return typeCheck(result);
 };
 
-const typeCheck = function (info) {
+const typeCheck = info => {
   const type = info.type;
 
   switch (type) {
@@ -941,7 +937,7 @@ const typeCommonCheck = info => {
     throw new Error(ErrorMsg$1.unIdentifyType(methods));
   }
 
-  for (const key in info) {
+  for (const key of Object.keys(info)) {
     if (COMMON_METHODS.includes(key) || methods.includes(key)) {
       continue;
     } else {
@@ -956,7 +952,7 @@ const typeCommonCheck = info => {
       throw new Error(ErrorMsg$1.illegalVerifyProps(METHODS.hint));
     }
 
-    for (const key in hint) {
+    for (const key of Object.keys(hint)) {
       if (COMMON_METHODS.includes(key) || methods.includes(key)) {
         continue;
       } else {
@@ -984,7 +980,7 @@ const typeCommonCheck = info => {
   return info;
 };
 
-const stringCheck = function (info) {
+const stringCheck = info => {
   if (info.hasOwnProperty(METHODS.pattern)) {
     const pattern = info[METHODS.pattern];
 
@@ -1077,7 +1073,7 @@ const stringCheck = function (info) {
   return info;
 };
 
-const numberCheck = function (info) {
+const numberCheck = info => {
   if (info.hasOwnProperty(METHODS.min)) {
     const min = info[METHODS.min];
 
@@ -1163,7 +1159,7 @@ const numberCheck = function (info) {
   return info;
 };
 
-const objectCheck = function (info) {
+const objectCheck = info => {
   if (info.hasOwnProperty(METHODS.props)) {
     const props = info[METHODS.props];
 
@@ -1250,7 +1246,7 @@ const objectCheck = function (info) {
   return info;
 };
 
-const arrayCheck = function (info) {
+const arrayCheck = info => {
   if (info.hasOwnProperty(METHODS.elements)) {
     const elements = info[METHODS.elements];
 

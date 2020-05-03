@@ -1,75 +1,75 @@
-export const isobject = (v) => {
+export const isobject = (v: any): boolean => {
     return v != null && typeof v === "object" && Array.isArray(v) === false;
 };
 
-export const isarray = (v) => {
+export const isarray = (v: any): boolean => {
     return Object.prototype.toString.call(v) == "[object Array]";
 };
 
-export const isstring = (v) => {
+export const isstring = (v: any): boolean => {
     return typeof v === "string";
 };
 
-export const isfinite = (v) => {
+export const isfinite = (v: any): boolean => {
     return v !== Infinity && v !== -Infinity;
 };
 
-export const isnumber = (v) => {
+export const isnumber = (v: any): boolean => {
     return typeof v === "number" && !Number.isNaN(v) && isfinite(v);
 };
 
-export const isinteger = (v) => {
+export const isinteger = (v: any): boolean => {
     return isnumber(v) && Math.floor(v) === v;
 };
 
-export const isfunction = (v) => {
+export const isfunction = (v: any): boolean => {
     return typeof v === "function";
 };
 
-export const isnull = (v) => {
+export const isnull = (v: any): boolean => {
     return v === null;
 };
 
-export const isundefined = (v) => {
+export const isundefined = (v: any): boolean => {
     return v === undefined;
 };
 
-export const isundefinednull = (v) => {
-    return v === undefined || v === null;
+export const isundefinednull = (v: any): boolean => {
+    return v == null;
 };
 
 const Type = {
     string: {
-        is(v) {
+        is(v: any): v is string {
             return isstring(v);
         },
-        isNot(v) {
+        isNot(v: any): boolean {
             return !isstring(v);
         },
-        isEmpty(v) {
+        isEmpty(v: any): boolean {
             return isstring(v) && v.length === 0;
         },
-        isNotEmpty(v) {
+        isNotEmpty(v: any): boolean {
             return isstring(v) && v.length >= 1;
         },
-        safe(v) {
+        safe(v: any): string {
             return isstring(v) ? v : isundefinednull(v) ? "" : v + "";
         },
     },
     number: {
-        is(v) {
+        is(v: any): v is number {
             return isnumber(v);
         },
-        isNot(v) {
+        isNot(v: any): boolean {
             return !isnumber(v);
         },
-        isInteger(v) {
+        isInteger(v: any): boolean {
             return isnumber(v) && isinteger(v);
         },
-        isNatural(v) {
+        isNatural(v: any): boolean {
             return isnumber(v) && isinteger(v) && v >= 0;
         },
-        safe(v) {
+        safe(v: any): number {
             if (isnumber(v)) {
                 return v;
             } else if (isundefinednull(v)) {
@@ -84,34 +84,34 @@ const Type = {
         },
     },
     boolean: {
-        is(v) {
+        is(v: any): v is boolean {
             return v === true || v === false;
         },
-        isNot(v) {
+        isNot(v: any): boolean {
             return v !== true && v !== false;
         },
     },
     array: {
-        is(v) {
+        is<T>(v: any): v is T {
             return isarray(v);
         },
-        isNot(v) {
+        isNot(v: any): boolean {
             return !isarray(v);
         },
-        isEmpty(v) {
+        isEmpty(v: any): boolean {
             return isarray(v) && v.length === 0;
         },
-        isNotEmpty(v) {
+        isNotEmpty(v: any): boolean {
             return isarray(v) && v.length >= 1;
         },
-        safe(v) {
+        safe<T>(v: any): T {
             return isarray(v) ? v : [];
         },
-        pure(v) {
+        pure<T>(v: any): T {
             if (!isarray(v)) {
-                return [];
+                return <any>[];
             }
-            const t: any[] = [];
+            const t: any = [];
             v.forEach((item) => {
                 if (!isundefinednull(item)) {
                     t.push(item);
@@ -121,24 +121,24 @@ const Type = {
         },
     },
     object: {
-        is(v) {
+        is<T>(v: any): v is T {
             return isobject(v);
         },
-        isNot(v) {
+        isNot(v: any): boolean {
             return !isobject(v);
         },
-        isEmpty(v) {
+        isEmpty(v: any): boolean {
             return isobject(v) && Object.keys(v).length === 0;
         },
-        isNotEmpty(v) {
+        isNotEmpty(v: any): boolean {
             return isobject(v) && Object.keys(v).length >= 1;
         },
-        safe(v) {
+        safe<T>(v: any): T {
             return isobject(v) ? v : {};
         },
-        pure(v) {
+        pure<T>(v: any): T {
             if (!isobject(v)) {
-                return {};
+                return <any>{};
             }
             const t = Object.assign({}, v);
             Object.keys(t).forEach((k) => {
@@ -150,13 +150,13 @@ const Type = {
         },
     },
     func: {
-        is(v) {
+        is<T>(v: any): v is T {
             return isfunction(v);
         },
-        isNot(v) {
+        isNot(v: any): boolean {
             return !isfunction(v);
         },
-        safe(v, context) {
+        safe(v: any, context?: any): Function {
             return function () {
                 if (isfunction(v)) {
                     context = context || isnull(context) ? context : this;
@@ -169,26 +169,26 @@ const Type = {
         },
     },
     undefinedNull: {
-        is(v) {
+        is(v: any): v is null | undefined {
             return isundefinednull(v);
         },
-        isNot(v) {
+        isNot(v: any): boolean {
             return !isundefinednull(v);
         },
     },
     nul: {
-        is(v) {
+        is(v: any): v is null {
             return isnull(v);
         },
-        isNot(v) {
+        isNot(v: any): boolean {
             return !isnull(v);
         },
     },
     undefined: {
-        is(v) {
+        is(v: any): v is undefined {
             return isundefined(v);
         },
-        isNot(v) {
+        isNot(v: any): boolean {
             return !isundefined(v);
         },
     },

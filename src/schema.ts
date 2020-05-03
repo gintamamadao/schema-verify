@@ -7,12 +7,12 @@ import { COMMON_METHODS, TYPE_METHODS, TYPES, METHODS } from "./constant.js";
 
 const PATTERNS = Object.keys(Pattern);
 
-const schemaCheck = function (info) {
+const schemaCheck = (info: any) => {
     if (Type.object.isNot(info) && !Type.array.isNotEmpty(info)) {
         throw new Error(ErrorMsg.propsInfoEmpty);
     }
     if (Type.array.isNotEmpty(info)) {
-        const result = [];
+        const result: any[] = [];
         for (let i = 0; i < info.length; i++) {
             result[i] = schemaCheck(info[i]);
         }
@@ -42,7 +42,7 @@ const schemaCheck = function (info) {
     return typeCheck(result);
 };
 
-const typeCheck = function (info) {
+const typeCheck = (info: any) => {
     const type = info.type;
     switch (type) {
         case TYPES.string:
@@ -81,12 +81,12 @@ const typeCheck = function (info) {
     return typeCommonCheck(info);
 };
 
-const typeCommonCheck = (info) => {
+const typeCommonCheck = (info: any) => {
     const methods = TYPE_METHODS[info.type];
     if (Type.array.isNot(methods)) {
         throw new Error(ErrorMsg.unIdentifyType(methods));
     }
-    for (const key in info) {
+    for (const key of Object.keys(info)) {
         if (COMMON_METHODS.includes(key) || methods.includes(key)) {
             continue;
         } else {
@@ -95,10 +95,10 @@ const typeCommonCheck = (info) => {
     }
     if (info.hasOwnProperty(METHODS.hint)) {
         const hint = info[METHODS.hint];
-        if (!Type.object.is(hint)) {
+        if (!Type.object.is<any>(hint)) {
             throw new Error(ErrorMsg.illegalVerifyProps(METHODS.hint));
         }
-        for (const key in hint) {
+        for (const key of Object.keys(hint)) {
             if (COMMON_METHODS.includes(key) || methods.includes(key)) {
                 continue;
             } else {
@@ -121,7 +121,7 @@ const typeCommonCheck = (info) => {
     return info;
 };
 
-const stringCheck = function (info) {
+const stringCheck = (info) => {
     if (info.hasOwnProperty(METHODS.pattern)) {
         const pattern = info[METHODS.pattern];
         if (!PATTERNS.includes(pattern)) {
@@ -202,7 +202,7 @@ const stringCheck = function (info) {
     return info;
 };
 
-const numberCheck = function (info) {
+const numberCheck = (info) => {
     if (info.hasOwnProperty(METHODS.min)) {
         const min = info[METHODS.min];
         if (Type.number.isNatural(min)) {
@@ -273,7 +273,7 @@ const numberCheck = function (info) {
     return info;
 };
 
-const objectCheck = function (info) {
+const objectCheck = (info) => {
     if (info.hasOwnProperty(METHODS.props)) {
         const props = info[METHODS.props];
         if (!Type.object.isNotEmpty(props) && !Type.array.is(props)) {
@@ -292,10 +292,13 @@ const objectCheck = function (info) {
                     if (key === "$_PROPS_DEFAULT_INFO") {
                         return item;
                     }
-                    if (Type.object.is(item)) {
+                    if (Type.object.is<any>(item)) {
                         item[METHODS.index] = key;
                     }
-                    if (Type.array.is(item) && Type.object.is(item[0])) {
+                    if (
+                        Type.array.is<any>(item) &&
+                        Type.object.is<any>(item[0])
+                    ) {
                         item[0][METHODS.index] = key;
                     }
                     return item;
@@ -310,7 +313,7 @@ const objectCheck = function (info) {
             const propMap = props.reduce((map, item) => {
                 let index;
                 if (
-                    Type.object.is(item) &&
+                    Type.object.is<any>(item) &&
                     item.hasOwnProperty(METHODS.index)
                 ) {
                     index = item[METHODS.index];
@@ -323,7 +326,7 @@ const objectCheck = function (info) {
                         );
                     }
                 }
-                if (Type.array.is(item) && Type.object.is(item[0])) {
+                if (Type.array.is<any>(item) && Type.object.is<any>(item[0])) {
                     index = item[0][METHODS.index];
                     if (!Type.string.isNotEmpty(index)) {
                         delete item[0][METHODS.index];
@@ -358,7 +361,7 @@ const objectCheck = function (info) {
     return info;
 };
 
-const arrayCheck = function (info) {
+const arrayCheck = (info) => {
     if (info.hasOwnProperty(METHODS.elements)) {
         const elements = info[METHODS.elements];
         if (!Type.object.isNotEmpty(elements) && !Type.array.is(elements)) {
@@ -370,7 +373,7 @@ const arrayCheck = function (info) {
         } else {
             const elementMap = elements.reduce((map, item) => {
                 let index;
-                if (Type.object.is(item)) {
+                if (Type.object.is<any>(item)) {
                     if (
                         item.hasOwnProperty(METHODS.index) &&
                         Type.number.isNot(item.index)
@@ -382,7 +385,7 @@ const arrayCheck = function (info) {
                         index = item.index;
                     }
                 }
-                if (Type.array.is(item) && Type.object.is(item[0])) {
+                if (Type.array.is<any>(item) && Type.object.is<any>(item[0])) {
                     if (
                         item[0].hasOwnProperty(METHODS.index) &&
                         Type.number.isNot(item[0].index)
@@ -455,11 +458,12 @@ const arrayCheck = function (info) {
     return info;
 };
 class Schema {
+    public info: any;
     constructor(info) {
         this.info = schemaCheck(info);
         this.verify = this.verify.bind(this);
     }
-    verify(data, throwError, parent) {
+    verify(data: any, throwError?: boolean, parent?: any) {
         try {
             verify(data, this.info, parent);
             return true;

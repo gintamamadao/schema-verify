@@ -14,12 +14,12 @@ const commonTimeReg = new RegExp(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?/);
 
 const Pattern = {
     phone: {
-        is(v) {
+        is(v: any): boolean {
             return Type.string.isNotEmpty(v) && phoneReg.test(v);
         },
     },
     uri: {
-        is(v) {
+        is(v: any): boolean {
             try {
                 return Type.string.isNotEmpty(v) && Type.object.is(new URL(v));
             } catch (e) {
@@ -28,32 +28,32 @@ const Pattern = {
         },
     },
     email: {
-        is(v) {
+        is(v: any): boolean {
             return Type.string.isNotEmpty(v) && emailReg.test(v);
         },
     },
     color: {
-        is(v) {
+        is(v: any): boolean {
             return Type.string.isNotEmpty(v) && colorReg.test(v);
         },
     },
     version: {
-        is(v) {
+        is(v: any): boolean {
             return Type.string.isNotEmpty(v) && versionReg.test(v);
         },
     },
     sign: {
-        is(v) {
+        is(v: any): boolean {
             return Type.string.isNotEmpty(v) && signReg.test(v);
         },
     },
     numStr: {
-        is(v) {
+        is(v: any): boolean {
             return Type.string.isNotEmpty(v) && numStrReg.test(v);
         },
     },
     jsonStr: {
-        is(v) {
+        is(v: any): boolean {
             try {
                 return Type.string.isNotEmpty(v) && JSON.parse(v);
             } catch (e) {
@@ -62,14 +62,14 @@ const Pattern = {
         },
     },
     time: {
-        is(v) {
+        is(v: any): boolean {
             const timeInfo = new Date(v);
             return (
                 Type.object.is(timeInfo) &&
                 timeInfo.toString() !== "Invalid Date"
             );
         },
-        isCommon(v) {
+        isCommon(v: string): boolean {
             return Type.string.isNotEmpty(v) && commonTimeReg.test(v);
         },
     },

@@ -6,7 +6,7 @@ import { COMMON_METHODS, TYPE_METHODS, TYPES, METHODS } from "./constant.js";
 
 const CHECK_METHODS = COMMON_METHODS.slice(0, COMMON_METHODS.length - 2);
 
-const typeVerify = (data, claim, hint) => {
+const typeVerify = (data: any, claim: string, hint: any) => {
     let isPass = false;
     switch (claim) {
         case TYPES.string:
@@ -43,20 +43,18 @@ const typeVerify = (data, claim, hint) => {
     return true;
 };
 
-const restrictVerify = (data, claim, propsClaims, hint) => {
+const restrictVerify = (data: {}, claim: any, propsClaims: any, hint: any) => {
     if (!claim) {
         return true;
     }
     const dataKeys = Object.keys(data);
-    let restrictKeys = [];
+    let restrictKeys: any = [];
     for (const item of propsClaims) {
-        if (Type.object.is(item)) {
+        if (Type.object.is<any>(item)) {
             restrictKeys.push(item.index);
-            continue;
         }
-        if (Type.array.is(item)) {
+        if (Type.array.is<any>(item)) {
             restrictKeys.push(item[0].index);
-            continue;
         }
     }
     restrictKeys = restrictKeys.filter((s) => s);
@@ -74,7 +72,12 @@ const restrictVerify = (data, claim, propsClaims, hint) => {
     return true;
 };
 
-const requiredVerify = (data, index, claim, hint) => {
+const requiredVerify = (
+    data: { [x: string]: any; hasOwnProperty: (arg0: any) => any },
+    index: string | number,
+    claim: any,
+    hint: string | undefined
+) => {
     if (
         (Type.object.is(data) && !data.hasOwnProperty(index)) ||
         (Type.array.is(data) && Type.undefined.is(data[index]))
@@ -88,7 +91,7 @@ const requiredVerify = (data, index, claim, hint) => {
     return false;
 };
 
-const patternVerify = (data, claim, hint) => {
+const patternVerify = (data: any, claim: string, hint: any) => {
     const isFn = (Pattern[claim] || {}).is;
     const isPass =
         typeof isFn === "function" && isFn.call(Pattern[claim], data);
@@ -104,7 +107,11 @@ const patternVerify = (data, claim, hint) => {
     return true;
 };
 
-const lengthVerify = (data, claim, hint) => {
+const lengthVerify = (
+    data: string | any[],
+    claim: { min: any; max: any },
+    hint: any
+) => {
     const min = claim.min;
     const max = claim.max;
     const length = data.length;
@@ -129,7 +136,7 @@ const lengthVerify = (data, claim, hint) => {
     return true;
 };
 
-const enumVerify = (data, claim, hint) => {
+const enumVerify = (data: string, claim: string | any[], hint: any) => {
     if (!claim.includes(data)) {
         throw new Error(
             ErrorMsg.verifyErrorHint(
@@ -142,7 +149,7 @@ const enumVerify = (data, claim, hint) => {
     return true;
 };
 
-const integerVerify = (data, claim, hint) => {
+const integerVerify = (data: string, claim: any, hint: any) => {
     if (claim && !Type.number.isInteger(data)) {
         throw new Error(
             ErrorMsg.verifyErrorHint(
@@ -155,7 +162,7 @@ const integerVerify = (data, claim, hint) => {
     return true;
 };
 
-const naturalVerify = (data, claim, hint) => {
+const naturalVerify = (data: string, claim: any, hint: any) => {
     if (claim && !Type.number.isNatural(data)) {
         throw new Error(
             ErrorMsg.verifyErrorHint(
@@ -168,7 +175,7 @@ const naturalVerify = (data, claim, hint) => {
     return true;
 };
 
-const matchVerify = (data, claim, hint) => {
+const matchVerify = (data: string, claim: string | RegExp, hint: any) => {
     if (Type.string.is(claim)) {
         claim = new RegExp(claim);
     }
@@ -184,7 +191,11 @@ const matchVerify = (data, claim, hint) => {
     return true;
 };
 
-const rangeVerify = (data, claim, hint) => {
+const rangeVerify = (
+    data: number,
+    claim: { min: any; max: any },
+    hint: any
+) => {
     const min = claim.min;
     const max = claim.max;
     if (Type.number.is(min) && data < min) {
@@ -208,10 +219,14 @@ const rangeVerify = (data, claim, hint) => {
     return true;
 };
 
-const elePropVerify = (data, claims, type) => {
-    const verifyItem = (itemData, itemClaim, index) => {
-        let required;
-        let hint;
+const elePropVerify = (data: any, claims: any, type: string) => {
+    const verifyItem = (
+        itemData: any,
+        itemClaim: any,
+        index: string | number
+    ) => {
+        let required: any;
+        let hint: { [x: string]: string };
         if (Type.array.isNotEmpty(itemClaim)) {
             const itemItemClaim = itemClaim[0];
             required = itemItemClaim.required;
@@ -244,9 +259,12 @@ const elePropVerify = (data, claims, type) => {
             throw new Error(getHint(index, e));
         }
     };
-    const verifyArr = (itemClaim, checkedMap) => {
-        let required;
-        let hint;
+    const verifyArr = (
+        itemClaim: any,
+        checkedMap: { [x: string]: boolean }
+    ) => {
+        let required: any;
+        let hint: { [x: string]: any };
         if (Type.array.isNotEmpty(itemClaim)) {
             const itemItemClaim = itemClaim[0];
             required = itemItemClaim.required;
@@ -274,10 +292,10 @@ const elePropVerify = (data, claims, type) => {
             }
         }
     };
-    const fn = (claims) => {
+    const fn = (claims: any) => {
         const checkedMap = {};
         for (const itemClaim of claims) {
-            let index;
+            let index: string | number;
             if (Type.array.isNotEmpty(itemClaim)) {
                 const itemItemClaim = itemClaim[0];
                 index = itemItemClaim.index;
@@ -300,7 +318,12 @@ const elePropVerify = (data, claims, type) => {
     }
 };
 
-const schemaVerify = (data, claim, hint, parent) => {
+const schemaVerify = (
+    data: any,
+    claim: { verify: (arg0: any, arg1: boolean, arg2: any) => void },
+    hint: any,
+    parent: any
+) => {
     try {
         claim.verify(data, true, parent);
     } catch (e) {
@@ -314,7 +337,7 @@ const schemaVerify = (data, claim, hint, parent) => {
     return true;
 };
 
-const customVerify = (data, claim, hint, parent) => {
+const customVerify = (data: any, claim: any, hint: any, parent: any) => {
     try {
         const isPass = Type.func.safe(claim)(data, parent);
         if (!isPass) {
@@ -331,11 +354,14 @@ const customVerify = (data, claim, hint, parent) => {
     return true;
 };
 
-const claimsVerify = (data, claims, parent) => {
+const claimsVerify = (data: any, claims: any, parent: any) => {
     const fn = () => {
-        const hint = Type.object.safe(claims.hint);
+        const hint = Type.object.safe<any>(claims.hint);
         const type = claims.type;
-        const claimMethods = [].concat(CHECK_METHODS, TYPE_METHODS[type]);
+        const claimMethods = (<string[]>[]).concat(
+            CHECK_METHODS,
+            TYPE_METHODS[type]
+        );
         claimMethods.push(METHODS.custom);
         for (const claimKey of claimMethods) {
             if (!claims.hasOwnProperty(claimKey)) {
@@ -407,8 +433,8 @@ const claimsVerify = (data, claims, parent) => {
     }
 };
 
-const verify = (data, info, parent) => {
-    const fn = (claimsInfo) => {
+const verify = (data: any, info: string | any[], parent: any) => {
+    const fn = (claimsInfo: unknown) => {
         try {
             claimsVerify(data, claimsInfo, parent);
         } catch (e) {
@@ -421,7 +447,7 @@ const verify = (data, info, parent) => {
     }
 
     if (Type.array.is(info)) {
-        const errorMsgs = [];
+        const errorMsgs: string[] = [];
         for (let i = 0; i < info.length; i++) {
             try {
                 fn(info[i]);

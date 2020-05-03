@@ -1,0 +1,41 @@
+export declare const TYPES: {
+    string: string;
+    number: string;
+    object: string;
+    array: string;
+    function: string;
+    boolean: string;
+    null: string;
+};
+export declare const METHODS: {
+    index: string;
+    required: string;
+    type: string;
+    schema: string;
+    custom: string;
+    hint: string;
+    pattern: string;
+    length: string;
+    minLength: string;
+    maxLength: string;
+    min: string;
+    max: string;
+    enum: string;
+    match: string;
+    range: string;
+    integer: string;
+    natural: string;
+    restrict: string;
+    props: string;
+    elements: string;
+};
+export declare const COMMON_METHODS: string[];
+export declare const TYPE_METHODS: {
+    string: string[];
+    number: string[];
+    object: string[];
+    array: string[];
+    function: never[];
+    boolean: never[];
+    null: never[];
+};

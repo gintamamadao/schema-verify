@@ -1,4 +1,4 @@
-const TYPES = {
+export const TYPES = {
     string: "string",
     number: "number",
     object: "object",
@@ -8,7 +8,7 @@ const TYPES = {
     null: "null",
 };
 
-const METHODS = {
+export const METHODS = {
     index: "index",
     required: "required",
     type: "type",
@@ -31,7 +31,7 @@ const METHODS = {
     elements: "elements",
 };
 
-const COMMON_METHODS = [
+export const COMMON_METHODS = [
     METHODS.index,
     METHODS.required,
     METHODS.type,
@@ -40,7 +40,7 @@ const COMMON_METHODS = [
     METHODS.hint,
 ];
 
-const TYPE_METHODS = {
+export const TYPE_METHODS = {
     string: [
         METHODS.pattern,
         METHODS.length,
@@ -68,5 +68,3 @@ const TYPE_METHODS = {
     boolean: [],
     null: [],
 };
-
-export { COMMON_METHODS, TYPE_METHODS, TYPES, METHODS };

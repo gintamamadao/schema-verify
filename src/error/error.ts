@@ -1,5 +1,5 @@
 class ErrorHint {
-    safeErrorHint(e) {
+    safeErrorHint(e: Error | string) {
         return typeof e === "string" ? e : e && e.message ? e.message : "未知";
     }
 }
