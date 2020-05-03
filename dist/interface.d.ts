@@ -1,5 +1,6 @@
 import { Schema } from "./schema";
-export declare type TypeTypes = "string" | "number" | "object" | "array" | "function" | "boolean" | "null";
+export declare type ArrType = typeof Array;
+export declare type TypeTypes = "string" | "number" | "object" | "array" | "function" | "boolean" | "null" | String | Number | Object | ArrType | Function | Boolean | null;
 export declare type PatternTypes = "phone" | "uri" | "email" | "color" | "version" | "sign" | "numStr" | "jsonStr" | "time";
 export declare type RangeType = {
     min?: number;

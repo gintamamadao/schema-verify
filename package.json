@@ -1,6 +1,6 @@
 {
     "name": "schema-verify",
-    "version": "1.7.1",
+    "version": "1.7.2",
     "description": "javascript validate object or array",
     "main": "./dist/schema-verify.js",
     "module": "./dist/js-sql-query.js",

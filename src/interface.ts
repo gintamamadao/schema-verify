@@ -1,5 +1,7 @@
 import { Schema } from "./schema";
 
+export type ArrType = typeof Array;
+
 export type TypeTypes =
     | "string"
     | "number"
@@ -7,7 +9,14 @@ export type TypeTypes =
     | "array"
     | "function"
     | "boolean"
-    | "null";
+    | "null"
+    | String
+    | Number
+    | Object
+    | ArrType
+    | Function
+    | Boolean
+    | null;
 
 export type PatternTypes =
     | "phone"
