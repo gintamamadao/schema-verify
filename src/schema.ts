@@ -2,17 +2,18 @@ import verify from "./verify";
 import Type from "./type";
 import Pattern from "./pattern";
 import ErrorMsg from "./error/schema_error.js";
+import { SchemaInfo, SingleSchemaInfo } from "./interface";
 
 import { COMMON_METHODS, TYPE_METHODS, TYPES, METHODS } from "./constant.js";
 
 const PATTERNS = Object.keys(Pattern);
 
-const schemaCheck = (info: any) => {
+const schemaCheck = (info: SchemaInfo) => {
     if (Type.object.isNot(info) && !Type.array.isNotEmpty(info)) {
         throw new Error(ErrorMsg.propsInfoEmpty);
     }
-    if (Type.array.isNotEmpty(info)) {
-        const result: any[] = [];
+    if (Type.array.is<any[]>(info)) {
+        const result: SingleSchemaInfo[] = [];
         for (let i = 0; i < info.length; i++) {
             result[i] = schemaCheck(info[i]);
         }
@@ -457,9 +458,10 @@ const arrayCheck = (info) => {
     }
     return info;
 };
-class Schema {
+
+export class Schema {
     public info: any;
-    constructor(info) {
+    constructor(info: SchemaInfo) {
         this.info = schemaCheck(info);
         this.verify = this.verify.bind(this);
     }

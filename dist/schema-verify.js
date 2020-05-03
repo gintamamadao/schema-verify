@@ -847,7 +847,7 @@ const schemaCheck = info => {
     throw new Error(ErrorMsg$1.propsInfoEmpty);
   }
 
-  if (Type.array.isNotEmpty(info)) {
+  if (Type.array.is(info)) {
     const result = [];
 
     for (let i = 0; i < info.length; i++) {

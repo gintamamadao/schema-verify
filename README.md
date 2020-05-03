@@ -27,18 +27,18 @@ const schemaInfo = {
         id: {
             required: true,
             type: Number,
-            natural: true
+            natural: true,
         },
         email: {
             required: true,
             type: String,
             pattern: "email",
-            length: { min: 3, max: 32 }
+            length: { min: 3, max: 32 },
         },
         gender: {
             required: true,
             type: String,
-            enum: ["male", "female"]
+            enum: ["male", "female"],
         },
         address: {
             required: true,
@@ -48,16 +48,16 @@ const schemaInfo = {
                 city: {
                     required: true,
                     type: String,
-                    maxLength: 100
+                    maxLength: 100,
                 },
                 street: {
                     required: true,
                     type: String,
-                    maxLength: 100
-                }
-            }
-        }
-    }
+                    maxLength: 100,
+                },
+            },
+        },
+    },
 };
 
 //生成一个校验实例
@@ -70,8 +70,8 @@ const data = {
     gender: "male",
     address: {
         city: "London",
-        street: "London street"
-    }
+        street: "London street",
+    },
 };
 
 //校验
@@ -90,8 +90,8 @@ const data = {
     gender: "male",
     address: {
         city: 1,
-        street: "London street"
-    }
+        street: "London street",
+    },
 };
 schema.verify(data, true);
 // 第二参数为 true 时，校验不通过会抛出错误，上面的例子中data 的属性 address 里面的 city 属性类型不正确
@@ -135,19 +135,19 @@ schema.verify(data, true);
 
 > 数据类型校验规则，校验实例必须要有的校验规则，但如果规则中有 schema 校验实例规则的话，type 规则可以省略，因为会自动取 schema 校验实例的 type 规则
 
--   String， 字符串
--   Number， 数字
--   Object， 对象
--   Array， 数组
--   Function， 函数
--   Boolean， 布尔
+-   string， 字符串
+-   number， 数字
+-   object， 对象
+-   array， 数组
+-   function， 函数
+-   boolean， 布尔
 -   null， 空值
 
 > 注意： 有些校验规则是某特定类型才能设置，否则会报错
 
 ```js
 const schemaInfo = {
-    type: String
+    type: "string",
 };
 const schema = new Schema(schemaInfo);
 schema.verify("a");
@@ -161,11 +161,11 @@ schema.verify(1);
 ```js
 const schemaInfo = [
     {
-        type: String
+        type: "string",
     },
     {
-        type: Number
-    }
+        type: "number",
+    },
 ];
 const schema = new Schema(schemaInfo);
 schema.verify("a");
@@ -176,23 +176,6 @@ schema.verify(null);
 // false
 schema.verify({});
 // false
-```
-
-> 也可以用字符串表示
-
--   string， 字符串
--   number， 数字
--   object， 对象
--   array， 数组
--   function， 函数
--   boolean， 布尔
--   null， 空值
-
-```js
-const schemaInfo = {
-    type: "string"
-};
-const schema = new Schema(schemaInfo);
 ```
 
 ## pattern
@@ -212,7 +195,7 @@ const schema = new Schema(schemaInfo);
 ```js
 const schemaInfo = {
     type: String,
-    pattern: "email"
+    pattern: "email",
 };
 const schema = new Schema(schemaInfo);
 schema.verify("abc@abc.abc");
@@ -228,7 +211,7 @@ schema.verify("abc");
 ```js
 const schemaInfo = {
     type: String,
-    match: /abc/
+    match: /abc/,
 };
 const schema = new Schema(schemaInfo);
 return schema.verify(data);
@@ -248,7 +231,7 @@ schema.verify("bcd");
 ```js
 const schemaInfo = {
     type: String,
-    length: { min: 1, max: 2 }
+    length: { min: 1, max: 2 },
 };
 const schema = new Schema(schemaInfo);
 schema.verify("aa");
@@ -266,7 +249,7 @@ schema.verify("");
 ```js
 const schemaInfo = {
     type: String,
-    length: 2
+    length: 2,
 };
 const schema = new Schema(schemaInfo);
 schema.verify("aa");
@@ -286,7 +269,7 @@ schema.verify("");
 ```js
 const schemaInfo = {
     type: String,
-    minLength: 2
+    minLength: 2,
 };
 const schema = new Schema(schemaInfo);
 schema.verify("aa");
@@ -304,7 +287,7 @@ schema.verify("aaa");
 ```js
 const schemaInfo = {
     type: String,
-    maxLength: 2
+    maxLength: 2,
 };
 const schema = new Schema(schemaInfo);
 schema.verify("aa");
@@ -322,7 +305,7 @@ schema.verify("aaa");
 ```js
 const schemaInfo = {
     type: String,
-    enum: ["a", "b", "c"]
+    enum: ["a", "b", "c"],
 };
 const schema = new Schema(schemaInfo);
 schema.verify("a");
@@ -341,8 +324,8 @@ const schemaInfo = {
     enum: {
         a: "1",
         b: "2",
-        c: "3"
-    }
+        c: "3",
+    },
 };
 const schema = new Schema(schemaInfo);
 schema.verify("1");
@@ -365,7 +348,7 @@ schema.verify("a");
 ```js
 const schemaInfo = {
     type: Number,
-    range: { min: 1, max: 2 }
+    range: { min: 1, max: 2 },
 };
 const schema = new Schema(schemaInfo);
 schema.verify(1);
@@ -383,7 +366,7 @@ schema.verify(0);
 ```js
 const schemaInfo = {
     type: Number,
-    min: 2
+    min: 2,
 };
 const schema = new Schema(schemaInfo);
 schema.verify(2);
@@ -401,7 +384,7 @@ schema.verify(3);
 ```js
 const schemaInfo = {
     type: String,
-    max: 2
+    max: 2,
 };
 const schema = new Schema(schemaInfo);
 schema.verify(2);
@@ -419,7 +402,7 @@ schema.verify(3);
 ```js
 const schemaInfo = {
     type: Number,
-    integer: true
+    integer: true,
 };
 const schema = new Schema(schemaInfo);
 schema.verify(1);
@@ -437,7 +420,7 @@ schema.verify(0.5);
 ```js
 const schemaInfo = {
     type: Number,
-    natural: true
+    natural: true,
 };
 const schema = new Schema(schemaInfo);
 schema.verify(1);
@@ -457,21 +440,21 @@ const schemaInfo = {
     type: Object,
     props: {
         a: {
-            type: Number
-        }
-    }
+            type: Number,
+        },
+    },
 };
 const schema = new Schema(schemaInfo);
 schema.verify({
-    a: 1
+    a: 1,
 });
 // true
 schema.verify({
-    b: 1
+    b: 1,
 });
 // true
 schema.verify({
-    a: "a"
+    a: "a",
 });
 // false
 ```
@@ -484,21 +467,21 @@ const schemaInfo = {
     props: [
         {
             index: "a",
-            type: Number
-        }
-    ]
+            type: Number,
+        },
+    ],
 };
 const schema = new Schema(schemaInfo);
 schema.verify({
-    a: 1
+    a: 1,
 });
 // true
 schema.verify({
-    b: 1
+    b: 1,
 });
 // true
 schema.verify({
-    a: "a"
+    a: "a",
 });
 // false
 ```
@@ -509,28 +492,28 @@ schema.verify({
 const schemaInfo = {
     type: Object,
     props: {
-        type: Number
-    }
+        type: Number,
+    },
 };
 const schema = new Schema(schemaInfo);
 schema.verify({
-    a: 1
+    a: 1,
 });
 // true
 schema.verify({
     a: 1,
-    b: 1
+    b: 1,
 });
 // true
 schema.verify({
     a: 1,
     b: 2,
-    c: 3
+    c: 3,
 });
 // true
 schema.verify({
     a: 1,
-    b: "a"
+    b: "a",
 });
 // false
 ```
@@ -539,27 +522,27 @@ schema.verify({
 
 ```js
 const schemaRule = new Schema({
-    type: Number
+    type: Number,
 });
 const schemaInfo = {
     type: Object,
-    props: schemaRule
+    props: schemaRule,
 };
 const schema = new Schema(schemaInfo);
 schema.verify({
-    a: 1
+    a: 1,
 });
 // true
 schema.verify({
-    b: 1
+    b: 1,
 });
 // true
 schema.verify({
-    a: "a"
+    a: "a",
 });
 // false
 schema.verify({
-    b: "b"
+    b: "b",
 });
 // false
 ```
@@ -572,13 +555,13 @@ const schemaInfo = {
     props: {
         a: [
             {
-                type: String
+                type: String,
             },
             {
-                type: Number
-            }
-        ]
-    }
+                type: Number,
+            },
+        ],
+    },
 };
 ```
 
@@ -592,19 +575,19 @@ const schemaInfo = {
     props: {
         a: {
             type: String,
-            required: true
-        }
-    }
+            required: true,
+        },
+    },
 };
 const schema = new Schema(schemaInfo);
 schema.verify({
-    a: "a"
+    a: "a",
 });
 // true
 schema.verify({});
 // false
 schema.verify({
-    b: "b"
+    b: "b",
 });
 // false
 ```
@@ -619,17 +602,17 @@ const schemaInfo = {
     restrict: true,
     props: {
         a: {
-            type: String
+            type: String,
         },
         b: {
-            type: String
-        }
-    }
+            type: String,
+        },
+    },
 };
 const schema = new Schema(schemaInfo);
 schema.verify({
     a: "a",
-    b: "b"
+    b: "b",
 });
 // true
 schema.verify({});
@@ -637,11 +620,11 @@ schema.verify({});
 schema.verify({
     a: "a",
     b: "b",
-    c: "c"
+    c: "c",
 });
 // false
 schema.verify({
-    c: "c"
+    c: "c",
 });
 // false
 ```
@@ -655,8 +638,8 @@ const schemaInfo = {
     type: Array,
     elements: {
         type: String,
-        required: true
-    }
+        required: true,
+    },
 };
 const schema = new Schema(schemaInfo);
 schema.verify(["a"]);
@@ -678,9 +661,9 @@ const schemaInfo = {
         {
             index: 1,
             type: String,
-            required: true
-        }
-    ]
+            required: true,
+        },
+    ],
 };
 const schema = new Schema(schemaInfo);
 schema.verify([1, "a"]);
@@ -698,17 +681,17 @@ schema.verify([1]);
 ```js
 const schemaRuleA = new Schema({
     index: 0,
-    type: String
+    type: String,
 });
 
 const schemaRuleB = new Schema({
     index: 1,
-    type: Number
+    type: Number,
 });
 
 const schemaInfo = {
     type: Array,
-    elements: [schemaRuleA, schemaRuleB]
+    elements: [schemaRuleA, schemaRuleB],
 };
 const schema = new Schema(schemaInfo);
 schema.verify(["a", 1]);
@@ -725,13 +708,13 @@ const schemaInfo = {
     elements: [
         [
             {
-                type: String
+                type: String,
             },
             {
-                type: Number
-            }
-        ]
-    ]
+                type: Number,
+            },
+        ],
+    ],
 };
 const schema = new Schema(schemaInfo);
 schema.verify(["a"]);
@@ -753,14 +736,14 @@ const schemaInfo = {
         {
             index: 0,
             type: String,
-            required: true
+            required: true,
         },
         {
             index: 1,
             type: Number,
-            required: true
-        }
-    ]
+            required: true,
+        },
+    ],
 };
 const schema = new Schema(schemaInfo);
 schema.verify(["a", 1]);
@@ -776,10 +759,10 @@ schema.verify(["a", "b"]);
 ```js
 const schemaRule = new Schema({
     type: String,
-    pattern: "email"
+    pattern: "email",
 });
 const schemaInfo = {
-    schema: schemaRule
+    schema: schemaRule,
 };
 const schema = new Schema(schemaInfo);
 schema.verify("abc@abc.abc");
@@ -795,7 +778,7 @@ schema.verify("aaa");
 ```js
 const schemaInfo = {
     type: String,
-    custom: v => v.match(/a/)
+    custom: (v) => v.match(/a/),
 };
 const schema = new Schema(schemaInfo);
 const data = "a";
@@ -813,8 +796,8 @@ schema.verify("b");
 const schemaInfo = {
     type: String,
     hint: {
-        type: "数据类型错误，需要字符串类型"
-    }
+        type: "数据类型错误，需要字符串类型",
+    },
 };
 const schema = new Schema(schemaInfo);
 schema.verify(1, true);
@@ -995,7 +978,7 @@ Type.object.isNot(null);
 Type.object.isEmpty({});
 //true
 Type.object.isNotEmpty({
-    a: 1
+    a: 1,
 });
 //true
 Type.object.safe(null);
@@ -1023,7 +1006,7 @@ Type.func.is(() => {});
 //true
 Type.func.isNot("a");
 //true
-Type.func.safe(a => {
+Type.func.safe((a) => {
     return a;
 })("a");
 //a
