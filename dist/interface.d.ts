@@ -10,18 +10,16 @@ export declare type LengthTypes = RangeType | number;
 export declare type EnumTypes = string[] | number[] | {
     [prop: string]: string | number;
 };
-export declare type EleType = {
-    index: string | number;
-} & SchemaInfo;
 export declare type PropsType = {
     [prop: string]: SchemaInfo;
-} | EleType[] | Schema;
-export declare type ElementsType = SchemaInfo | EleType[];
+} | Schema | SchemaInfo;
+export declare type ElementsType = SchemaInfo;
 export declare type CustomType = (value: any, pattern: any) => boolean;
 export declare type HintType = {
     [prop: string]: string;
 };
 export declare type SingleSchemaInfo = {
+    index?: string | number;
     type?: TypeTypes;
     pattern?: PatternTypes;
     match?: RegExp;
@@ -37,7 +35,7 @@ export declare type SingleSchemaInfo = {
     props?: PropsType;
     required?: boolean;
     restrict?: boolean;
-    elements?: ElementsType;
+    elements?: SchemaInfo;
     schema?: Schema;
     custom?: CustomType;
     hint?: HintType;

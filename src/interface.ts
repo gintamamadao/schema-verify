@@ -43,18 +43,14 @@ export type EnumTypes =
           [prop: string]: string | number;
       };
 
-export type EleType = {
-    index: string | number;
-} & SchemaInfo;
-
 export type PropsType =
     | {
           [prop: string]: SchemaInfo;
       }
-    | EleType[]
-    | Schema;
+    | Schema
+    | SchemaInfo;
 
-export type ElementsType = SchemaInfo | EleType[];
+export type ElementsType = SchemaInfo;
 
 export type CustomType = (value: any, pattern: any) => boolean;
 
@@ -63,6 +59,7 @@ export type HintType = {
 };
 
 export type SingleSchemaInfo = {
+    index?: string | number;
     type?: TypeTypes;
     pattern?: PatternTypes;
     match?: RegExp;
@@ -78,7 +75,7 @@ export type SingleSchemaInfo = {
     props?: PropsType;
     required?: boolean;
     restrict?: boolean;
-    elements?: ElementsType;
+    elements?: SchemaInfo;
     schema?: Schema;
     custom?: CustomType;
     hint?: HintType;
