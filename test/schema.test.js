@@ -1,4 +1,4 @@
-const { Schema } = require("../es/schema-verify");
+const { Schema } = require("../lib/schema-verify");
 
 describe("common", () => {
     test(`type`, () => {

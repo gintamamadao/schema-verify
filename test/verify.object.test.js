@@ -1,4 +1,4 @@
-const { Schema } = require("../es/schema-verify");
+const { Schema } = require("../lib/schema-verify");
 
 describe("object: restrict", () => {
     test(`restrict: empty`, () => {

@@ -1,12 +1,12 @@
 {
     "compilerOptions": {
-        "outDir": "./es/",
+        "outDir": "./lib/",
         "sourceMap": true,
         "noImplicitAny": false,
         "module": "es6",
         "target": "esnext",
         "declaration": true,
-        "declarationDir": "./es/",
+        "declarationDir": "./lib/",
         "moduleResolution": "node",
         "esModuleInterop": true,
         "skipLibCheck": true,

@@ -1,10 +1,9 @@
 {
     "name": "schema-verify",
-    "version": "1.7.4",
+    "version": "1.7.7",
     "description": "javascript validate object or array",
-    "main": "./es/schema-verify.js",
-    "module": "./es/js-sql-query.js",
-    "types": "./es/index.d.ts",
+    "main": "./lib/schema-verify.js",
+    "types": "./lib/index.d.ts",
     "scripts": {
         "test": "jest --coverage",
         "dev": "node_modules/.bin/rollup -c ./build/rollup.config.js -w",
@@ -29,7 +28,7 @@
         "check"
     ],
     "files": [
-        "dist/"
+        "lib/"
     ],
     "dependencies": {},
     "devDependencies": {
