@@ -1,4 +1,4 @@
-const { Type } = require("../dist/schema-verify");
+const { Type } = require("../es/schema-verify");
 
 describe("string", () => {
     test(`string:is`, () => {

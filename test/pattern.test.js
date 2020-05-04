@@ -1,4 +1,4 @@
-const { Pattern } = require("../dist/schema-verify");
+const { Pattern } = require("../es/schema-verify");
 
 describe("phone", () => {
     test(`phone:is`, () => {
