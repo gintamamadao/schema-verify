@@ -101,7 +101,7 @@ const Type = {
         isEmpty(v: any): boolean {
             return isarray(v) && v.length === 0;
         },
-        isNotEmpty(v: any): boolean {
+        isNotEmpty<T>(v: any): v is T {
             return isarray(v) && v.length >= 1;
         },
         safe<T>(v: any): T {
@@ -130,7 +130,7 @@ const Type = {
         isEmpty(v: any): boolean {
             return isobject(v) && Object.keys(v).length === 0;
         },
-        isNotEmpty(v: any): boolean {
+        isNotEmpty<T>(v: any): v is T {
             return isobject(v) && Object.keys(v).length >= 1;
         },
         safe<T>(v: any): T {

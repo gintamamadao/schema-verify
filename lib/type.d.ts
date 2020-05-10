@@ -31,20 +31,20 @@ declare const Type: {
         is<T>(v: any): v is T;
         isNot(v: any): boolean;
         isEmpty(v: any): boolean;
-        isNotEmpty(v: any): boolean;
-        safe<T_1>(v: any): T_1;
-        pure<T_2>(v: any): T_2;
+        isNotEmpty<T_1>(v: any): v is T_1;
+        safe<T_2>(v: any): T_2;
+        pure<T_3>(v: any): T_3;
     };
     object: {
-        is<T_3>(v: any): v is T_3;
+        is<T_4>(v: any): v is T_4;
         isNot(v: any): boolean;
         isEmpty(v: any): boolean;
-        isNotEmpty(v: any): boolean;
-        safe<T_4>(v: any): T_4;
-        pure<T_5>(v: any): T_5;
+        isNotEmpty<T_5>(v: any): v is T_5;
+        safe<T_6>(v: any): T_6;
+        pure<T_7>(v: any): T_7;
     };
     func: {
-        is<T_6>(v: any): v is T_6;
+        is<T_8>(v: any): v is T_8;
         isNot(v: any): boolean;
         safe(v: any, context?: any): Function;
     };

@@ -36,12 +36,15 @@ export type RangeType = {
 
 export type LengthTypes = RangeType | number;
 
-export type EnumTypes =
-    | string[]
-    | number[]
+export type EnumObj =
     | {
-          [prop: string]: string | number;
+          [prop: string]: string;
+      }
+    | {
+          [prop: string]: number;
       };
+
+export type EnumTypes = string[] | number[] | EnumObj;
 
 export type PropsType =
     | {

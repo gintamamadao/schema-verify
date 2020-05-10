@@ -227,7 +227,7 @@ const elePropVerify = (data: any, claims: any, type: string) => {
     ) => {
         let required: any;
         let hint: { [x: string]: string };
-        if (Type.array.isNotEmpty(itemClaim)) {
+        if (Type.array.isNotEmpty<any[]>(itemClaim)) {
             const itemItemClaim = itemClaim[0];
             required = itemItemClaim.required;
             hint = Type.object.safe(itemItemClaim.hint);
@@ -265,7 +265,7 @@ const elePropVerify = (data: any, claims: any, type: string) => {
     ) => {
         let required: any;
         let hint: { [x: string]: any };
-        if (Type.array.isNotEmpty(itemClaim)) {
+        if (Type.array.isNotEmpty<any[]>(itemClaim)) {
             const itemItemClaim = itemClaim[0];
             required = itemItemClaim.required;
             hint = Type.object.safe(itemItemClaim.hint);
@@ -296,7 +296,7 @@ const elePropVerify = (data: any, claims: any, type: string) => {
         const checkedMap = {};
         for (const itemClaim of claims) {
             let index: string | number;
-            if (Type.array.isNotEmpty(itemClaim)) {
+            if (Type.array.isNotEmpty<any[]>(itemClaim)) {
                 const itemItemClaim = itemClaim[0];
                 index = itemItemClaim.index;
             } else {

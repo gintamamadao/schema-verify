@@ -2,11 +2,98 @@ import verify from "./verify";
 import Type from "./type";
 import Pattern from "./pattern";
 import ErrorMsg from "./error/schema_error.js";
-import { SchemaInfo, SingleSchemaInfo } from "./interface";
-
+import {
+    SchemaInfo,
+    SingleSchemaInfo,
+    EnumObj,
+    EnumTypes,
+    RangeType,
+    LengthTypes,
+} from "./interface";
 import { COMMON_METHODS, TYPE_METHODS, TYPES, METHODS } from "./constant.js";
 
 const PATTERNS = Object.keys(Pattern);
+
+const checkLengthRule = (info: any) => {
+    let length = info[METHODS.length];
+    if (
+        !Type.object.isNotEmpty<LengthTypes>(length) &&
+        !Type.number.isNatural(length)
+    ) {
+        throw new Error(ErrorMsg.emptyLengthInfo);
+    }
+    if (Type.number.isNatural(length)) {
+        info[METHODS.length] = {
+            min: length,
+            max: length,
+        };
+    } else if (Type.object.isNotEmpty<RangeType>(length)) {
+        if (
+            !Type.number.isNatural(length.min) &&
+            !Type.number.isNatural(length.max)
+        ) {
+            throw new Error(ErrorMsg.emptyLengthInfo);
+        }
+        if (!Type.number.isNatural(length.min)) {
+            delete length.min;
+        }
+        if (!Type.number.isNatural(length.max)) {
+            delete length.max;
+        }
+    }
+};
+
+const checkEnumRule = (info: any, isNumberType?: boolean) => {
+    const enumData = info[METHODS.enum];
+    let arr: any;
+    if (Type.object.isNotEmpty<EnumObj>(enumData)) {
+        arr = Object.keys(enumData).map((key) => enumData[key]);
+    }
+    if (Type.array.isNotEmpty<string[] | number[]>(enumData)) {
+        arr = enumData;
+    }
+    if (!Type.array.isNotEmpty<string[] | number[]>(arr)) {
+        throw new Error(ErrorMsg.emptyEnumInfo);
+    }
+    const isAllNum = arr.every((s) => Type.number.is(s));
+    const isAllStr = arr.every((s) => Type.string.is(s));
+    if (!isAllNum && isNumberType) {
+        throw new Error(ErrorMsg.errorEnumInfo);
+    }
+    if (!isAllStr && !isNumberType) {
+        throw new Error(ErrorMsg.errorEnumInfo);
+    }
+    info[METHODS.enum] = arr;
+};
+
+const checkMaxMinLenRule = (info: any) => {
+    if (info.hasOwnProperty(METHODS.minLength)) {
+        const minLength = info[METHODS.minLength];
+        if (Type.number.isNatural(minLength)) {
+            let length = info[METHODS.length];
+            const minInfo = {
+                min: minLength,
+            };
+            info[METHODS.length] = Type.object.is(length)
+                ? Object.assign({}, length, minInfo)
+                : minInfo;
+            delete info[METHODS.minLength];
+        }
+    }
+    if (info.hasOwnProperty(METHODS.maxLength)) {
+        const maxLength = info[METHODS.maxLength];
+        if (Type.number.isNatural(maxLength)) {
+            let length = info[METHODS.length];
+            const maxInfo = {
+                max: maxLength,
+            };
+            info[METHODS.length] = Type.object.is(length)
+                ? Object.assign({}, length, maxInfo)
+                : maxInfo;
+            delete info[METHODS.maxLength];
+        }
+    }
+};
 
 const schemaCheck = (info: SchemaInfo) => {
     if (Type.object.isNot(info) && !Type.array.isNotEmpty(info)) {
@@ -129,70 +216,12 @@ const stringCheck = (info) => {
             throw new Error(ErrorMsg.illegalPatternType(pattern));
         }
     }
-    if (info.hasOwnProperty(METHODS.minLength)) {
-        const minLength = info[METHODS.minLength];
-        if (Type.number.isNatural(minLength)) {
-            let length = info[METHODS.length];
-            const minInfo = {
-                min: minLength,
-            };
-            info[METHODS.length] = Type.object.is(length)
-                ? Object.assign({}, length, minInfo)
-                : minInfo;
-            delete info[METHODS.minLength];
-        }
-    }
-    if (info.hasOwnProperty(METHODS.maxLength)) {
-        const maxLength = info[METHODS.maxLength];
-        if (Type.number.isNatural(maxLength)) {
-            let length = info[METHODS.length];
-            const maxInfo = {
-                max: maxLength,
-            };
-            info[METHODS.length] = Type.object.is(length)
-                ? Object.assign({}, length, maxInfo)
-                : maxInfo;
-            delete info[METHODS.maxLength];
-        }
-    }
+    checkMaxMinLenRule(info);
     if (info.hasOwnProperty(METHODS.length)) {
-        let length = info[METHODS.length];
-        if (!Type.object.isNotEmpty(length) && !Type.number.isNatural(length)) {
-            throw new Error(ErrorMsg.emptyLengthInfo);
-        }
-        if (Type.number.isNatural(length)) {
-            info[METHODS.length] = {
-                min: length,
-                max: length,
-            };
-        } else if (Type.object.isNotEmpty(length)) {
-            if (
-                !Type.number.isNatural(length.min) &&
-                !Type.number.isNatural(length.max)
-            ) {
-                throw new Error(ErrorMsg.emptyLengthInfo);
-            }
-            Type.number.isNatural(length.min) && (length.min = +length.min);
-            Type.number.isNatural(length.max) && (length.max = +length.max);
-        }
+        checkLengthRule(info);
     }
     if (info.hasOwnProperty(METHODS.enum)) {
-        const enumData = info[METHODS.enum];
-        let arr;
-        if (Type.object.isNotEmpty(enumData)) {
-            arr = Object.keys(enumData).map((key) => enumData[key]);
-        }
-        if (Type.array.isNotEmpty(enumData)) {
-            arr = enumData;
-        }
-        if (!Type.array.isNotEmpty(arr)) {
-            throw new Error(ErrorMsg.emptyEnumInfo);
-        }
-        const isAllStr = arr.every((s) => Type.string.is(s));
-        if (!isAllStr) {
-            throw new Error(ErrorMsg.errorEnumInfo);
-        }
-        info[METHODS.enum] = arr;
+        checkEnumRule(info);
     }
     if (info.hasOwnProperty(METHODS.match)) {
         const match = info[METHODS.match];
@@ -254,22 +283,7 @@ const numberCheck = (info) => {
         }
     }
     if (info.hasOwnProperty(METHODS.enum)) {
-        const enumData = info[METHODS.enum];
-        let arr;
-        if (Type.object.isNotEmpty(enumData)) {
-            arr = Object.keys(enumData).map((key) => enumData[key]);
-        }
-        if (Type.array.isNotEmpty(enumData)) {
-            arr = enumData;
-        }
-        if (!Type.array.isNotEmpty(arr)) {
-            throw new Error(ErrorMsg.emptyEnumInfo);
-        }
-        const isAllNum = arr.every((s) => Type.number.is(s));
-        if (!isAllNum) {
-            throw new Error(ErrorMsg.errorEnumInfo);
-        }
-        info[METHODS.enum] = arr;
+        checkEnumRule(info, true);
     }
     return info;
 };
@@ -365,10 +379,13 @@ const objectCheck = (info) => {
 const arrayCheck = (info) => {
     if (info.hasOwnProperty(METHODS.elements)) {
         const elements = info[METHODS.elements];
-        if (!Type.object.isNotEmpty(elements) && !Type.array.is(elements)) {
+        if (
+            !Type.object.isNotEmpty<SingleSchemaInfo>(elements) &&
+            !Type.array.is<SingleSchemaInfo[]>(elements)
+        ) {
             throw new Error(ErrorMsg.illegalVerifyProps(METHODS.elements));
         }
-        if (Type.object.isNotEmpty(elements)) {
+        if (Type.object.isNotEmpty<SingleSchemaInfo>(elements)) {
             delete elements["index"];
             info.elements = [schemaCheck(elements)];
         } else {
@@ -409,52 +426,10 @@ const arrayCheck = (info) => {
             );
         }
     }
-    if (info.hasOwnProperty(METHODS.minLength)) {
-        const minLength = info[METHODS.minLength];
-        if (Type.number.isNatural(minLength)) {
-            let length = info[METHODS.length];
-            const minInfo = {
-                min: minLength,
-            };
-            info[METHODS.length] = Type.object.is(length)
-                ? Object.assign({}, length, minInfo)
-                : minInfo;
-            delete info[METHODS.minLength];
-        }
-    }
-    if (info.hasOwnProperty(METHODS.maxLength)) {
-        const maxLength = info[METHODS.maxLength];
-        if (Type.number.isNatural(maxLength)) {
-            let length = info[METHODS.length];
-            const maxInfo = {
-                max: maxLength,
-            };
-            info[METHODS.length] = Type.object.is(length)
-                ? Object.assign({}, length, maxInfo)
-                : maxInfo;
-            delete info[METHODS.maxLength];
-        }
-    }
+
+    checkMaxMinLenRule(info);
     if (info.hasOwnProperty(METHODS.length)) {
-        let length = info[METHODS.length];
-        if (!Type.object.isNotEmpty(length) && !Type.number.isNatural(length)) {
-            throw new Error(ErrorMsg.emptyLengthInfo);
-        }
-        if (Type.number.isNatural(length)) {
-            info[METHODS.length] = {
-                min: length,
-                max: length,
-            };
-        } else if (Type.object.isNotEmpty(length)) {
-            if (
-                !Type.number.isNatural(length.min) &&
-                !Type.number.isNatural(length.max)
-            ) {
-                throw new Error(ErrorMsg.emptyLengthInfo);
-            }
-            Type.number.isNatural(length.min) && (length.min = +length.min);
-            Type.number.isNatural(length.max) && (length.max = +length.max);
-        }
+        checkLengthRule(info);
     }
     return info;
 };

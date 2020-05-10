@@ -7,9 +7,12 @@ export declare type RangeType = {
     max?: number;
 };
 export declare type LengthTypes = RangeType | number;
-export declare type EnumTypes = string[] | number[] | {
-    [prop: string]: string | number;
+export declare type EnumObj = {
+    [prop: string]: string;
+} | {
+    [prop: string]: number;
 };
+export declare type EnumTypes = string[] | number[] | EnumObj;
 export declare type PropsType = {
     [prop: string]: SchemaInfo;
 } | Schema | SchemaInfo;
