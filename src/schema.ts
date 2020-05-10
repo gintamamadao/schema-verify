@@ -6,7 +6,6 @@ import {
     SchemaInfo,
     SingleSchemaInfo,
     EnumObj,
-    EnumTypes,
     RangeType,
     LengthTypes,
 } from "./interface";
