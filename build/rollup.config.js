@@ -2,6 +2,7 @@ const util = require("./util");
 const typescript = require("rollup-plugin-typescript2");
 const babel = require("rollup-plugin-babel");
 const commonjs = require("rollup-plugin-commonjs");
+const { terser } = require("rollup-plugin-terser");
 
 const extensions = [".js", ".jsx", ".ts", ".tsx"];
 
@@ -31,5 +32,12 @@ module.exports = {
         typescript(),
         commonjs({ extensions, ignore: ["conditional-runtime-dependency"] }),
         babel(babelOptions),
+        terser({
+            compress: {
+                pure_getters: true,
+                unsafe_comps: true,
+                warnings: false,
+            },
+        }),
     ],
 };
