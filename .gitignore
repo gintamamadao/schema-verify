@@ -12,3 +12,4 @@ npm-debug.log
 log/
 access.log
 coverage
+lib/
